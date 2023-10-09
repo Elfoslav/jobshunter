@@ -1,0 +1,16 @@
+.job-item {
+  position: relative;
+  .title {
+    margin-bottom: 4px;
+  }
+  .date {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    display: none;
+
+    @media (max-width: 991px) {
+      display: block;
+    }
+  }
+}

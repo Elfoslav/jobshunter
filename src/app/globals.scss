@@ -1,0 +1,11 @@
+$primary: #27c1eb; // Your desired primary color
+
+// Include Bootstrap styles with your customizations
+@import "~bootstrap/scss/bootstrap";
+
+.btn-primary {
+  color: white;
+  &:hover {
+    color: white;
+  }
+}
