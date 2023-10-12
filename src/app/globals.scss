@@ -5,15 +5,22 @@ $bs-btn-border-color: red;
 @import "~bootstrap/scss/bootstrap";
 
 @font-face {
-  font-family: 'NunitoSans';
+  font-family: 'Nunito Sans';
   src: url('/font/NunitoSans.ttf') format('truetype');
   /* You may need to adjust the path to your font file */
   font-weight: normal;
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'Nunito Sans Bold';
+  src: url('/font/NunitoSansBold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
 body {
-  font-family: 'NunitoSans', sans-serif !important;
+  font-family: 'Nunito Sans', sans-serif !important;
 }
 
 .btn-primary {
@@ -49,4 +56,10 @@ h6 {
 
 h1, h2, h3, h4, h5, h6 {
   color: #626262;
+  font-family: 'Nunito Sans Bold', sans-serif;
+}
+
+.nav-item {
+  font-family: 'Nunito Sans Bold', sans-serif;
+  font-size: 1.1em;
 }

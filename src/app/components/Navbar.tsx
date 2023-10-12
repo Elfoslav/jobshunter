@@ -1,6 +1,6 @@
 'use client'
 
-import { Nav } from 'react-bootstrap'
+import { Container, Nav } from 'react-bootstrap'
 import { usePathname } from 'next/navigation'
 import './Navbar.scss'
 
@@ -12,13 +12,15 @@ export default function Navbar() {
   }
 
   return (
-    <Nav className="justify-content-center" activeKey={getActiveKey()}>
-      <Nav.Item>
-        <Nav.Link href="/">Home</Nav.Link>
-      </Nav.Item>
-      <Nav.Item>
-        <Nav.Link href="/jobs">Jobs</Nav.Link>
-      </Nav.Item>
-    </Nav>
+    <Container>
+      <Nav activeKey={getActiveKey()}>
+        <Nav.Item>
+          <Nav.Link href="/" className="ps-0">Home</Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link href="/jobs">Jobs</Nav.Link>
+        </Nav.Item>
+      </Nav>
+    </Container>
   )
 }
