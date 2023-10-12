@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Select, { MultiValue } from 'react-select'
-import { Form, Button, InputGroup, FormControl } from 'react-bootstrap'
+import { Form, Button, InputGroup, FormControl, Col, Row } from 'react-bootstrap'
 import { Search } from 'react-bootstrap-icons'
 import useQueryParams from '../components/useQueryParams'
 import './JobsList.scss'
@@ -51,31 +51,37 @@ const JobsFilter: React.FC<JobsFilterParams> = ({ search, skillsOptions }) => {
   }
 
   return (
-    <Form onSubmit={handleFormSubmit} className="mb-2">
-      <InputGroup className="mb-2">
-        <FormControl
-          type="text"
-          placeholder="Fulltext search..."
-          aria-label="Search"
-          aria-describedby="search-icon"
-          value={searchText}
-          onChange={onChangeSearchText}
-        />
-        <Button variant="outline-secondary" id="search-icon" type="submit">
-          <Search />
-        </Button>
-      </InputGroup>
+    <Form onSubmit={handleFormSubmit} className="mb-2-sm mb-1">
+      <Row>
+        <Col md={6} lg={3}>
+          <InputGroup className="mb-2">
+            <FormControl
+              type="text"
+              placeholder="Fulltext search..."
+              aria-label="Search"
+              aria-describedby="search-icon"
+              value={searchText}
+              onChange={onChangeSearchText}
+            />
+            <Button variant="outline-secondary" id="search-icon" type="submit">
+              <Search />
+            </Button>
+          </InputGroup>
+        </Col>
 
-      <Form.Group className="mb-2">
-        <Select
-          defaultValue={defaultSkills}
-          options={skillsOptions}
-          closeMenuOnSelect={false}
-          isMulti
-          placeholder="Select skills..."
-          onChange={onSkillChange}
-        />
-      </Form.Group>
+        <Col md={6} lg={4}>
+          <Form.Group>
+            <Select
+              defaultValue={defaultSkills}
+              options={skillsOptions}
+              closeMenuOnSelect={false}
+              isMulti
+              placeholder="Select skills..."
+              onChange={onSkillChange}
+            />
+          </Form.Group>
+        </Col>
+      </Row>
     </Form>
   );
 };
