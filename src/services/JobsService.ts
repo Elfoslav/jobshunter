@@ -7,12 +7,36 @@ import { JOBS_PER_PAGE, JOBS_QUERY_NAME } from '@/lib/consts'
 
 const jobsStore = new JobsStore()
 
-const getJobs = async (page: number, query: string = '', filterName: string = ''): Promise<Job[]> => {
+const filterJobs = (data: Job[], searchQuery: string = '', skills: string[] = []): Job[] => {
+  let filteredJobs = data.sort((job1, job2) => job2.postedAt.getTime() - job1.postedAt.getTime())
+
+  if (searchQuery) {
+    filteredJobs = filteredJobs.filter((job) => (
+      job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      job.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      job.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      !!job.requiredSkills.find((item) => item.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      !!job.optionalSkills.find((item) => item.toLowerCase().includes(searchQuery.toLowerCase()))
+    ))
+  }
+
+  if (skills.length && skills[0] !== '') {
+    filteredJobs = filteredJobs.filter((job) => {
+      const jobSkills = [...job.requiredSkills, ...job.optionalSkills]
+      return skills.every(skill => jobSkills.includes(skill))
+    })
+  }
+
+  return filteredJobs
+}
+
+const getJobs = async (page: number, searchQuery: string = '', skills: string[]): Promise<Job[]> => {
   // const response = await axios.get<Job[]>(API_URL)
   // return response.data
   const offset = (page - 1) * JOBS_PER_PAGE
   const data: Job[] = jobsStore.read()
-  let filteredJobs = data.sort((job1, job2) => job2.postedAt.getTime() - job1.postedAt.getTime())
+  let filteredJobs = filterJobs(data, searchQuery, skills)
+
   filteredJobs = filteredJobs.slice(offset, offset + JOBS_PER_PAGE)
 
   // if (query) {
@@ -34,9 +58,10 @@ const getJobs = async (page: number, query: string = '', filterName: string = ''
   return Promise.resolve(filteredJobs)
 }
 
-const getJobsCount = async (): Promise<number> => {
+const getJobsCount = async (searchQuery: string, skills: string[]): Promise<number> => {
   const data: Job[] = jobsStore.read()
-  return Promise.resolve(data.length)
+  const filteredJobs = filterJobs(data, searchQuery, skills)
+  return Promise.resolve(filteredJobs.length)
 }
 
 const getSimilarJobs = async (job: Job | null | undefined): Promise<Job[]> => {
@@ -44,7 +69,7 @@ const getSimilarJobs = async (job: Job | null | undefined): Promise<Job[]> => {
     return Promise.resolve([])
   }
 
-  const jobs: Job[] = await getJobs(1)
+  const jobs: Job[] = await getJobs(1, '', [])
 
   let filteredJobs = jobs.filter((_job) => {
     if (_job.id === job.id) {
@@ -70,6 +95,13 @@ const getJobById = async (id: string): Promise<Job | null> => {
   return Promise.resolve(job)
 }
 
+const getSkills = async (): Promise<string[]> => {
+  const data: Job[] = jobsStore.read()
+  const requiredSkills: string[] = [...new Set<string>(data.flatMap((job) => job.requiredSkills))]
+  const optionalSkills: string[] = [...new Set<string>(data.flatMap((job) => job.optionalSkills))]
+  return Promise.resolve([...new Set([...requiredSkills, ...optionalSkills])])
+}
+
 const createJob = async (newJob: Job): Promise<void> => {
   // await axios.post(API_URL, newJob)
   // data.push(newJob)
@@ -86,15 +118,15 @@ const deleteJob = async (jobId: string): Promise<void> => {
   jobsStore.delete(jobId)
 }
 
-export const useGetJobs = (page: number, searchQuery: string = '', filterName: string = '') => {
-  const result = useQuery<Job[], unknown>([JOBS_QUERY_NAME, page], async () => {
-    return await getJobs(page, searchQuery, filterName)
+export const useGetJobs = (page: number, searchQuery: string = '', skills: string[] = []) => {
+  const result = useQuery<Job[], unknown>([JOBS_QUERY_NAME, page, searchQuery, skills], async () => {
+    return await getJobs(page, searchQuery, skills)
   })
   return { ...result, count: result.data?.length }
 }
 
-export const useGetJobsCount = () => {
-  const result = useQuery<number, unknown>(['jobs_count'], () => getJobsCount())
+export const useGetJobsCount = (searchQuery: string = '', skills: string[] = []) => {
+  const result = useQuery<number, unknown>(['jobs_count', searchQuery, skills], () => getJobsCount(searchQuery, skills))
   return { ...result }
 }
 
@@ -106,7 +138,12 @@ export const useGetSimilarJobs = (job: Job | null | undefined) => {
 export const useGetJobById = (jobId: string) => {
   const result = useQuery<Job | null, unknown>(['job', jobId], () => getJobById(jobId));
   return result;
-};
+}
+
+export const useGetSkills = () => {
+  const result = useQuery<string[], unknown>(['skills'], () => getSkills())
+  return { ...result }
+}
 
 export const useCreateJob = () => {
   const queryClient = useQueryClient()

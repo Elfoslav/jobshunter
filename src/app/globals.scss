@@ -1,4 +1,5 @@
 $primary: #27c1eb; // Your desired primary color
+$bs-btn-border-color: red;
 
 // Include Bootstrap styles with your customizations
 @import "~bootstrap/scss/bootstrap";
@@ -8,4 +9,8 @@ $primary: #27c1eb; // Your desired primary color
   &:hover {
     color: white;
   }
+}
+
+.btn-outline-secondary {
+  --bs-btn-border-color: #dee2e6;
 }

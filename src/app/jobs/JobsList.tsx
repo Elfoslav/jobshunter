@@ -20,7 +20,7 @@ interface JobsListProps {
 const JobsList: React.FC<JobsListProps> = ({ jobs, totalCount, page }) => {
   const queryClient = useQueryClient()
   const { setQueryParams } = useQueryParams<{
-    page?: number;
+    page?: number
   }>()
 
   const [pageNumber, setpageNumber] = useState(1)
@@ -92,7 +92,7 @@ const JobsList: React.FC<JobsListProps> = ({ jobs, totalCount, page }) => {
               </Col>
               <Col lg={7}>
                 <Skills skills={job.requiredSkills} primary className="mt-1" />
-                <Skills skills={job.requiredSkills} className="mt-2 mb-1" />
+                <Skills skills={job.optionalSkills} className="mt-2 mb-1" />
               </Col>
               <Col className="d-none d-lg-block">
                 <div className={`text-end ${getDaysPassed(job) === 0 ? 'text-success' : ''}`}>
