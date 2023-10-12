@@ -4,6 +4,18 @@ $bs-btn-border-color: red;
 // Include Bootstrap styles with your customizations
 @import "~bootstrap/scss/bootstrap";
 
+@font-face {
+  font-family: 'NunitoSans';
+  src: url('/font/NunitoSans.ttf') format('truetype');
+  /* You may need to adjust the path to your font file */
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'NunitoSans', sans-serif !important;
+}
+
 .btn-primary {
   color: white;
   &:hover {
@@ -13,4 +25,28 @@ $bs-btn-border-color: red;
 
 .btn-outline-secondary {
   --bs-btn-border-color: #dee2e6;
+}
+
+// Typography
+h1 {
+  font-size: 2em;
+}
+h2 {
+  font-size: 1.75em;
+}
+h3 {
+  font-size: 1.5em;
+}
+h4 {
+  font-size: 1.25em;
+}
+h5 {
+  font-size: 1em;
+}
+h6 {
+  font-size: 0.85em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #626262;
 }

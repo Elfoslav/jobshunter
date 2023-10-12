@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { Breadcrumb, Row, Col } from 'react-bootstrap'
-import { GeoAltFill, GlobeAmericas } from 'react-bootstrap-icons'
+import { GeoAltFill, GlobeAmericas, CashCoin } from 'react-bootstrap-icons'
 import DOMPurify from 'dompurify'
 import { useGetJobById, useGetSimilarJobs } from '@/services/JobsService'
 import Skills from '../Skills'
@@ -40,11 +40,17 @@ export default function Page({ params }: { params: { id: string } }) {
               </div>
             }
           </div>
+
+          <div className="mt-0">
+            <CashCoin /> ${job.salaryMin} - ${job.salaryMax}
+          </div>
+
           <Skills skills={job.requiredSkills} primary className="mt-2" />
           <Skills skills={job.optionalSkills} className="mt-3 mb-2" />
+
           {similarJobs && similarJobs.length > 0 &&
-            <div className="mt-2">
-              <h3>Similar jobs</h3>
+            <div className="mt-3">
+              <h3 className="text-smaller">Similar jobs</h3>
               {similarJobs.map((similarJob) => (
                 <div key={similarJob.id}>
                   <Link href={`/jobs/${similarJob.id}`}>
