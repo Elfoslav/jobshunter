@@ -10,6 +10,7 @@ import { JOBS_PER_PAGE, JOBS_QUERY_NAME } from '@/lib/consts'
 import Skills from './Skills'
 import Job from '@/models/Job'
 import './JobsList.scss'
+import { getAgoString, getDaysPassed } from '@/lib/functions'
 
 interface JobsListProps {
   jobs: Job[],
@@ -39,33 +40,6 @@ const JobsList: React.FC<JobsListProps> = ({ jobs, totalCount, page }) => {
     setQueryParams({ page })
   }
 
-  const getDaysPassed = (job: Job): number => {
-    const currentDate = new Date();
-    const jobDate = job.postedAt;
-    const timeDiff = currentDate.getTime() - jobDate.getTime();
-    const daysPassed = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-    return daysPassed;
-  }
-
-  const getTime = (date: Date) => {
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    return `${hours}:${minutes}`;
-  };
-
-  const getBeforeString = (job: Job) => {
-    const daysPassed = getDaysPassed(job)
-    if (daysPassed === 0) {
-      return `Today ${getTime(job.postedAt)}`
-    }
-
-    if (daysPassed === 1) {
-      return `Before ${daysPassed} day`
-    }
-
-    return `Before ${daysPassed} days`
-  }
-
   if (!jobs.length) {
     return null
   }
@@ -75,8 +49,8 @@ const JobsList: React.FC<JobsListProps> = ({ jobs, totalCount, page }) => {
       <ListGroup>
         {jobs.map((job) => (
           <ListGroupItem key={job.id} action href={`/jobs/${job.id}`} className="job-item">
-            <div className={`date ${getDaysPassed(job) === 0 ? 'text-success' : ''}`}>
-              {getBeforeString(job)}
+            <div className={`date ${getDaysPassed(job.postedAt) === 0 ? 'text-success' : ''}`}>
+              {getAgoString(job.postedAt)}
             </div>
             <Row>
               <Col lg={3}>
@@ -95,8 +69,8 @@ const JobsList: React.FC<JobsListProps> = ({ jobs, totalCount, page }) => {
                 <Skills skills={job.optionalSkills} className="mt-2 mb-1" />
               </Col>
               <Col className="d-none d-lg-block">
-                <div className={`text-end ${getDaysPassed(job) === 0 ? 'text-success' : ''}`}>
-                  {getBeforeString(job)}
+                <div className={`text-end ${getDaysPassed(job.postedAt) === 0 ? 'text-success' : ''}`}>
+                  {getAgoString(job.postedAt)}
                 </div>
               </Col>
             </Row>
