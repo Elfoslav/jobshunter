@@ -63,7 +63,7 @@ const jobs: Job[] = [
     salaryMin: 80000,
     salaryMax: 95000,
     currency: 'CZK',
-    employmentType: 'Full-Time',
+    employmentTypes: ['Full-Time', 'Contract'],
     postedAt: new Date(),
   },
   {
@@ -77,7 +77,7 @@ const jobs: Job[] = [
     salaryMin: 90000,
     salaryMax: 110000,
     currency: 'USD',
-    employmentType: 'Full-Time',
+    employmentTypes: ['Full-Time', 'Part-Time'],
     postedAt: new Date('2023-09-21'),
   },
   {
@@ -93,7 +93,7 @@ const jobs: Job[] = [
     salaryMin: 75000,
     salaryMax: 95000,
     currency: 'USD',
-    employmentType: 'Full-Time',
+    employmentTypes: ['Full-Time'],
     postedAt: new Date('2023-09-22'),
   },
   {
@@ -107,7 +107,7 @@ const jobs: Job[] = [
     salaryMin: 85000,
     salaryMax: 105000,
     currency: 'USD',
-    employmentType: 'Full-Time',
+    employmentTypes: ['Full-Time'],
     postedAt: new Date('2023-09-23'),
   },
   {
@@ -123,7 +123,7 @@ const jobs: Job[] = [
     salaryMin: 95000,
     salaryMax: 120000,
     currency: 'USD',
-    employmentType: 'Full-Time',
+    employmentTypes: ['Full-Time'],
     postedAt: new Date('2023-09-24'),
   },
   {
@@ -137,7 +137,7 @@ const jobs: Job[] = [
     salaryMin: 90000,
     salaryMax: 115000,
     currency: 'USD',
-    employmentType: 'Full-Time',
+    employmentTypes: ['Full-Time'],
     postedAt: new Date('2023-09-25'),
   },
   {
@@ -153,7 +153,7 @@ const jobs: Job[] = [
     salaryMin: 80000,
     salaryMax: 100000,
     currency: 'USD',
-    employmentType: 'Full-Time',
+    employmentTypes: ['Full-Time'],
     postedAt: new Date('2023-09-26'),
   },
   {
@@ -167,7 +167,7 @@ const jobs: Job[] = [
     salaryMin: 85000,
     salaryMax: 105000,
     currency: 'USD',
-    employmentType: 'Full-Time',
+    employmentTypes: ['Full-Time'],
     postedAt: new Date('2023-09-29'),
   },
   {
@@ -181,7 +181,7 @@ const jobs: Job[] = [
     salaryMin: 70000,
     salaryMax: 90000,
     currency: 'USD',
-    employmentType: 'Full-Time',
+    employmentTypes: ['Full-Time'],
     postedAt: new Date('2023-09-30'),
   },
   {
@@ -195,7 +195,7 @@ const jobs: Job[] = [
     salaryMin: 80000,
     salaryMax: 100000,
     currency: 'USD',
-    employmentType: 'Full-Time',
+    employmentTypes: ['Full-Time'],
     postedAt: new Date('2023-09-28 13:00'),
   },
   {
@@ -209,7 +209,7 @@ const jobs: Job[] = [
     salaryMin: 90000,
     salaryMax: 110000,
     currency: 'USD',
-    employmentType: 'Full-Time',
+    employmentTypes: ['Full-Time'],
     postedAt: new Date('2023-09-30 14:30')
   },
   {
@@ -223,7 +223,7 @@ const jobs: Job[] = [
     salaryMin: 70000,
     salaryMax: 90000,
     currency: 'USD',
-    employmentType: 'Full-Time',
+    employmentTypes: ['Full-Time'],
     postedAt: new Date('2023-09-30 15:00')
   },
   {
@@ -237,7 +237,7 @@ const jobs: Job[] = [
     salaryMin: 90000,
     salaryMax: 120000,
     currency: 'USD',
-    employmentType: 'Full-Time',
+    employmentTypes: ['Full-Time'],
     postedAt: new Date('2023-09-30 16:30')
   },
   {
@@ -251,7 +251,7 @@ const jobs: Job[] = [
     salaryMin: 80000,
     salaryMax: 100000,
     currency: 'USD',
-    employmentType: 'Full-Time',
+    employmentTypes: ['Full-Time'],
     postedAt: new Date('2023-09-30 17:00')
   },
 ]

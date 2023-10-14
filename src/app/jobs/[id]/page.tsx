@@ -5,7 +5,7 @@ import { Breadcrumb, Row, Col, Card } from 'react-bootstrap'
 import { GeoAltFill, GlobeAmericas, CashCoin } from 'react-bootstrap-icons'
 import DOMPurify from 'dompurify'
 import { useGetJobById, useGetSimilarJobs } from '@/services/JobsService'
-import Skills from '../Skills'
+import Skills from '../components/Skills'
 import { getAgoString } from '@/lib/functions'
 
 export default function Page({ params }: { params: { id: string } }) {
@@ -22,7 +22,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
   return (
     <div>
-      <Breadcrumb>
+      <Breadcrumb className="ms-3">
         <Breadcrumb.Item href="/">Jobs</Breadcrumb.Item>
         <Breadcrumb.Item active>{job.title}</Breadcrumb.Item>
       </Breadcrumb>
@@ -44,8 +44,14 @@ export default function Page({ params }: { params: { id: string } }) {
                 }
               </div>
 
-              <div className="mt-0">
+              <div>
                 <CashCoin /> ${job.salaryMin} - ${job.salaryMax}
+              </div>
+
+              <div className="mt-1 text-bold">
+                {job.employmentTypes.map((employmentType, i) => (
+                  <span>{employmentType}{job.employmentTypes.length !== i + 1 ? ', ' : ''}</span>
+                ))}
               </div>
 
               <Skills skills={job.requiredSkills} primary className="mt-2" />

@@ -1,5 +1,4 @@
-$primary: #27c1eb; // Your desired primary color
-$bs-btn-border-color: red;
+@import "@/scss/variables.scss";
 
 // Include Bootstrap styles with your customizations
 @import "~bootstrap/scss/bootstrap";
@@ -56,6 +55,11 @@ h6 {
 
 h1, h2, h3, h4, h5, h6 {
   color: #626262;
+  font-family: 'Nunito Sans Bold', sans-serif;
+}
+
+.text-bold {
+  font-weight: bold;
   font-family: 'Nunito Sans Bold', sans-serif;
 }
 

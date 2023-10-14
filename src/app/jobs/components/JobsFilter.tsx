@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Select, { MultiValue } from 'react-select'
 import { Form, Button, InputGroup, FormControl, Col, Row } from 'react-bootstrap'
 import { Search } from 'react-bootstrap-icons'
-import useQueryParams from '../components/useQueryParams'
+import useQueryParams from '../../components/useQueryParams'
 import './JobsList.scss'
 import SelectOption from '@/models/SelectOption'
 

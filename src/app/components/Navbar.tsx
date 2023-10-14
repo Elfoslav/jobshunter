@@ -15,9 +15,6 @@ export default function Navbar() {
     <Container>
       <Nav activeKey={getActiveKey()}>
         <Nav.Item>
-          <Nav.Link href="/" className="ps-0">Home</Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
           <Nav.Link href="/jobs">Jobs</Nav.Link>
         </Nav.Item>
       </Nav>

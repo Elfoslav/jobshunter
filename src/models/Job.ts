@@ -11,7 +11,7 @@ export default interface Job {
   salaryMin: number;
   salaryMax: number;
   currency: string;
-  employmentType: "Full-Time" | "Part-Time" | "Contract" | "Temporary" | "Internship";
+  employmentTypes: ('Full-Time' | 'Part-Time' | 'Contract' | 'Temporary' | 'Internship')[];
   postedAt: Date;
   updatedAt?: Date;
 }
