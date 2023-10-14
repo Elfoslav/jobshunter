@@ -28,7 +28,7 @@ export default function Page({ params }: { params: { id: string } }) {
       </Breadcrumb>
 
       <Row>
-        <Col xs={4}>
+        <Col md={4}>
           <Card>
             <Card.Body>
               <h1>{job.title}</h1>
@@ -76,8 +76,8 @@ export default function Page({ params }: { params: { id: string } }) {
             </Card.Body>
           </Card>
         </Col>
-        <Col xs={8}>
-          <Card>
+        <Col md={8}>
+          <Card className="mt-sm-4 mt-md-0">
             <Card.Body>
               <div
                 className="mt-1"
