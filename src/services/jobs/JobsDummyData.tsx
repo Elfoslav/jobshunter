@@ -1,6 +1,9 @@
 import Job from '@/models/Job'
 import EmploymentType from '@/models/enums/EmploymentType'
 
+const currentDate = new Date()
+const daysToSubtract = 1
+
 const jobs: Job[] = [
   {
     id: '1',
@@ -65,7 +68,7 @@ const jobs: Job[] = [
     salaryMax: 95000,
     currency: 'CZK',
     employmentTypes: [EmploymentType.FullTime, EmploymentType.Contract],
-    postedAt: new Date(),
+    postedAt: currentDate,
   },
   {
     id: '2',
@@ -257,4 +260,14 @@ const jobs: Job[] = [
   },
 ]
 
-export default jobs
+const jobsWithDynamicDates = jobs.map((job, index) => {
+  const newPostedAt = new Date(currentDate);
+  newPostedAt.setDate(currentDate.getDate() - index * daysToSubtract);
+
+  return {
+    ...job,
+    postedAt: newPostedAt,
+  };
+});
+
+export default jobsWithDynamicDates
