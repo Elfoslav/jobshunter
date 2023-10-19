@@ -35,7 +35,7 @@ const JobsList: React.FC<JobsListProps> = ({ jobs, user, totalCount, page }) => 
         queryKey: [JOBS_QUERY_NAME],
       });
     }
-  }, [page])
+  }, [page, queryClient])
 
   const handlePageChange = (page: number) => {
     setpageNumber(page)

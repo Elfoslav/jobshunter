@@ -1,33 +1,35 @@
 'use client'
 
 import Link from 'next/link'
-import { Breadcrumb, Row, Col, Card } from 'react-bootstrap'
+import { Row, Col, Card, Container } from 'react-bootstrap'
 import { GeoAltFill, GlobeAmericas, CashCoin } from 'react-bootstrap-icons'
 import DOMPurify from 'dompurify'
 import { useGetJobById, useGetSimilarJobs } from '@/services/jobs/JobsService'
 import Skills from '../components/Skills'
 import { getAgoString } from '@/lib/functions'
 import { useUser } from '@/app/context/UserContext'
+import Breadcrumbs from '@/app/components/Breadcrumbs'
 
 export default function Page({ params }: { params: { id: string } }) {
   const { data: job, isLoading } = useGetJobById(params.id)
   const { data: similarJobs } = useGetSimilarJobs(job)
   const { user } = useUser()
+  const breadcrumbs = [
+    { link: '/', title: 'Jobs' },
+    { title: job?.title || '' },
+  ]
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <Container>Loading...</Container>
   }
 
   if (!job) {
-    return <div>No job found with given ID: {params.id}</div>
+    return <Container>No job found with given ID: {params.id}</Container>
   }
 
   return (
     <div>
-      <Breadcrumb className="ms-3">
-        <Breadcrumb.Item href="/">Jobs</Breadcrumb.Item>
-        <Breadcrumb.Item active>{job.title}</Breadcrumb.Item>
-      </Breadcrumb>
+      <Breadcrumbs items={breadcrumbs} />
 
       <Row>
         <Col md={4}>
@@ -52,7 +54,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
               <div className="mt-1 text-bold">
                 {job.employmentTypes.map((employmentType, i) => (
-                  <span>{employmentType}{job.employmentTypes.length !== i + 1 ? ', ' : ''}</span>
+                  <span key={i}>{employmentType}{job.employmentTypes.length !== i + 1 ? ', ' : ''}</span>
                 ))}
               </div>
 

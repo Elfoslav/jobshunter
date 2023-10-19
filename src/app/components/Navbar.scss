@@ -6,6 +6,7 @@
   .nav-link {
     padding: 5px;
     color: $primary !important;
+    font-size: $navbar-font-size;
     &:hover {
       color: darken($primary, 10%) !important;
     }
