@@ -1,3 +1,5 @@
+import EmploymentType from "./enums/EmploymentType"
+
 export default interface Job {
   id: string;
   title: string;
@@ -11,7 +13,7 @@ export default interface Job {
   salaryMin: number;
   salaryMax: number;
   currency: string;
-  employmentTypes: ('Full-Time' | 'Part-Time' | 'Contract' | 'Temporary' | 'Internship')[];
+  employmentTypes: EmploymentType[];
   postedAt: Date;
   updatedAt?: Date;
 }

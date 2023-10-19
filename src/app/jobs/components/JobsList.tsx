@@ -11,14 +11,16 @@ import Skills from './Skills'
 import Job from '@/models/Job'
 import './JobsList.scss'
 import { getAgoString, getDaysPassed } from '@/lib/functions'
+import User from '@/models/User'
 
 interface JobsListProps {
   jobs: Job[],
+  user: User | null,
   totalCount: number,
   page: number
 }
 
-const JobsList: React.FC<JobsListProps> = ({ jobs, totalCount, page }) => {
+const JobsList: React.FC<JobsListProps> = ({ jobs, user, totalCount, page }) => {
   const queryClient = useQueryClient()
   const { setQueryParams } = useQueryParams<{
     page?: number
@@ -65,8 +67,8 @@ const JobsList: React.FC<JobsListProps> = ({ jobs, totalCount, page }) => {
                 }
               </Col>
               <Col lg={7}>
-                <Skills skills={job.requiredSkills} primary className="mt-1" />
-                <Skills skills={job.optionalSkills} className="mt-2 mb-1" />
+                <Skills skills={job.requiredSkills} user={user} primary className="mt-1" />
+                <Skills skills={job.optionalSkills} user={user} className="mt-2 mb-1" />
               </Col>
               <Col className="d-none d-lg-block">
                 <div className={`text-end ${getDaysPassed(job.postedAt) === 0 ? 'text-success' : ''}`}>

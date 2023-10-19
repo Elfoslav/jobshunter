@@ -4,13 +4,15 @@ import Link from 'next/link'
 import { Breadcrumb, Row, Col, Card } from 'react-bootstrap'
 import { GeoAltFill, GlobeAmericas, CashCoin } from 'react-bootstrap-icons'
 import DOMPurify from 'dompurify'
-import { useGetJobById, useGetSimilarJobs } from '@/services/JobsService'
+import { useGetJobById, useGetSimilarJobs } from '@/services/jobs/JobsService'
 import Skills from '../components/Skills'
 import { getAgoString } from '@/lib/functions'
+import { useUser } from '@/app/context/UserContext'
 
 export default function Page({ params }: { params: { id: string } }) {
   const { data: job, isLoading } = useGetJobById(params.id)
   const { data: similarJobs } = useGetSimilarJobs(job)
+  const { user } = useUser()
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -54,8 +56,8 @@ export default function Page({ params }: { params: { id: string } }) {
                 ))}
               </div>
 
-              <Skills skills={job.requiredSkills} primary className="mt-2" />
-              <Skills skills={job.optionalSkills} className="mt-3 mb-2" />
+              <Skills skills={job.requiredSkills} user={user} primary className="mt-2" />
+              <Skills skills={job.optionalSkills} user={user} className="mt-3 mb-2" />
 
               {similarJobs && similarJobs.length > 0 &&
                 <div className="mt-3">

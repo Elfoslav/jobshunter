@@ -1,9 +1,14 @@
 @import "@/scss/variables.scss";
 
-.nav {
+.navbar {
   border-bottom: 1px solid #EEE;
   margin-bottom: 10px !important;
   .nav-link {
+    padding: 5px;
+    color: $primary !important;
+    &:hover {
+      color: darken($primary, 10%) !important;
+    }
     &.active:hover {
       color: darken($primary, 10%);
     }
