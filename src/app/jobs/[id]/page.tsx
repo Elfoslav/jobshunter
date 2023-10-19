@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Row, Col, Card, Container } from 'react-bootstrap'
+import { Row, Col, Card, Container, Button } from 'react-bootstrap'
 import { GeoAltFill, GlobeAmericas, CashCoin } from 'react-bootstrap-icons'
 import DOMPurify from 'dompurify'
 import { useGetJobById, useGetSimilarJobs } from '@/services/jobs/JobsService'
@@ -9,6 +9,7 @@ import Skills from '../components/Skills'
 import { getAgoString } from '@/lib/functions'
 import { useUser } from '@/app/context/UserContext'
 import Breadcrumbs from '@/app/components/Breadcrumbs'
+import { ReactEventHandler } from 'react'
 
 export default function Page({ params }: { params: { id: string } }) {
   const { data: job, isLoading } = useGetJobById(params.id)
@@ -18,6 +19,10 @@ export default function Page({ params }: { params: { id: string } }) {
     { link: '/', title: 'Jobs' },
     { title: job?.title || '' },
   ]
+
+  const onJobApply = () => {
+    alert('Not yet implemented')
+  }
 
   if (isLoading) {
     return <Container>Loading...</Container>
@@ -87,6 +92,14 @@ export default function Page({ params }: { params: { id: string } }) {
                 className="mt-1"
                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(job.description)}}
               />
+
+              <Row>
+                <Col sm={12} md={7} lg={5}>
+                  <div className="d-grid gap-2">
+                    <Button size="lg" onClick={onJobApply}>Apply for this job</Button>
+                  </div>
+                </Col>
+              </Row>
             </Card.Body>
           </Card>
         </Col>
