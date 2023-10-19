@@ -230,7 +230,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ user }) => {
         <Row>
           <Col md={6} lg={4}>
             <Form.Group controlId="salaryMin" className="mb-2">
-              <Form.Label>Preferred Minimum Salary</Form.Label>
+              <Form.Label>Preferred Minimum Salary ($)</Form.Label>
               <Form.Control
                 type="number"
                 name="preferences.salaryMin"
@@ -249,7 +249,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ user }) => {
           </Col>
           <Col md={6} lg={4}>
             <Form.Group controlId="salaryMax" className="mb-2">
-              <Form.Label>Preferred Maximum Salary</Form.Label>
+              <Form.Label>Preferred Maximum Salary ($)</Form.Label>
               <Form.Control
                 type="number"
                 name="preferences.salaryMax"
