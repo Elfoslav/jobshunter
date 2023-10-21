@@ -3,27 +3,25 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import UsersStore from './UsersStore'
 import User from '@/models/User'
-import { USERS_QUERY_NAME } from '@/lib/consts'
-
-const usersStore = new UsersStore()
+import { USERS_QUERIES } from '@/lib/consts'
 
 const getUsers = async (): Promise<User[]> => {
   // const response = await axios.get<User[]>(API_URL)
   // return response.data
-  const data: User[] = usersStore.read()
+  const data: User[] = UsersStore.read()
 
   return Promise.resolve(data)
 }
 
 const getUsersCount = async (): Promise<number> => {
-  const data: User[] = usersStore.read()
+  const data: User[] = UsersStore.read()
   return Promise.resolve(data.length)
 }
 
 export const getUserById = async (id: string): Promise<User | null> => {
   // const response = await axios.get<User[]>(API_URL)
   // return response.data
-  const users: User[] = usersStore.read()
+  const users: User[] = UsersStore.read()
   const user = users.find((user) => user.id === id) || null
 
   return Promise.resolve(user)
@@ -32,33 +30,33 @@ export const getUserById = async (id: string): Promise<User | null> => {
 const createUser = async (newUser: User): Promise<void> => {
   // await axios.post(API_URL, newUser)
   // data.push(newUser)
-  usersStore.create(newUser)
+  UsersStore.create(newUser)
 }
 
 const updateUser = async (updatedUser: User): Promise<void> => {
   // await axios.put(`${API_URL}/${updatedUser.id}`, updatedUser)
-  usersStore.update(updatedUser.id, updatedUser)
+  UsersStore.update(updatedUser.id, updatedUser)
 }
 
 const deleteUser = async (userId: string): Promise<void> => {
-  usersStore.delete(userId)
+  UsersStore.delete(userId)
 }
 
 export const useGetUsers = (page: number, searchQuery: string = '', skills: string[] = []) => {
-  const result = useQuery<User[], unknown>([USERS_QUERY_NAME, page, searchQuery, skills], async () => {
+  const result = useQuery<User[], unknown>([USERS_QUERIES.USERS, page, searchQuery, skills], async () => {
     return await getUsers()
   })
   return { ...result, count: result.data?.length }
 }
 
 export const useGetUsersCount = (searchQuery: string = '', skills: string[] = []) => {
-  const result = useQuery<number, unknown>(['users_count', searchQuery, skills], () => getUsersCount())
+  const result = useQuery<number, unknown>([USERS_QUERIES.USERS_COUNT, searchQuery, skills], () => getUsersCount())
   return { ...result }
 }
 
 export const useGetUserById = (userId: string) => {
-  const result = useQuery<User | null, unknown>(['user', userId], () => getUserById(userId));
-  return result;
+  const result = useQuery<User | null, unknown>([USERS_QUERIES.USER_BY_ID, userId], () => getUserById(userId))
+  return result
 }
 
 export const useCreateUser = () => {
@@ -66,7 +64,7 @@ export const useCreateUser = () => {
 
   return useMutation<void, unknown, User>(createUser, {
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [USERS_QUERY_NAME] })
+      queryClient.invalidateQueries({ queryKey: [USERS_QUERIES.USERS] })
     },
   })
 }

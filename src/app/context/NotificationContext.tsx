@@ -5,7 +5,8 @@ import React, { createContext, useContext, useState, ReactNode } from 'react'
 // Define the type for the notification context
 type NotificationContextType = {
   notification: string | null
-  showNotification: (message: string) => void
+  type?: string
+  showNotification: (message: string, type?: string) => void
   clearNotification: () => void
 }
 
@@ -18,17 +19,22 @@ type NotificationProviderProps = {
 
 export function NotificationProvider({ children }: NotificationProviderProps) {
   const [notification, setNotification] = useState<string | null>(null)
+  const [type, setType] = useState<string | undefined>()
 
-  const showNotification = (message: string) => {
+  const showNotification = (message: string, _type?: string) => {
+    console.log('show notification', message, _type)
     setNotification(message)
+    setType(_type)
   }
 
   const clearNotification = () => {
     setNotification(null)
+    setType(undefined)
   }
 
   const contextValue: NotificationContextType = {
     notification,
+    type,
     showNotification,
     clearNotification,
   }

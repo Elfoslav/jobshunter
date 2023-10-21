@@ -1,27 +1,74 @@
 'use client'
 
 import Link from 'next/link'
-import { Row, Col, Card, Container, Button } from 'react-bootstrap'
+import { useState } from 'react'
+import { Row, Col, Card, Container, Button, Spinner, Alert } from 'react-bootstrap'
 import { GeoAltFill, GlobeAmericas, CashCoin } from 'react-bootstrap-icons'
 import DOMPurify from 'dompurify'
 import { useGetJobById, useGetSimilarJobs } from '@/services/jobs/JobsService'
+import { useCreateJobApplication, useGetJobApplicationsByJobId } from '@/services/job-applications/JobApplicationsService'
 import Skills from '../components/Skills'
-import { getAgoString } from '@/lib/functions'
+import { formatDate, getAgoString, getSingularOrPlural } from '@/lib/functions'
 import { useUser } from '@/app/context/UserContext'
 import Breadcrumbs from '@/app/components/Breadcrumbs'
-import { ReactEventHandler } from 'react'
+import { useNotification } from '@/app/context/NotificationContext'
+import ApplicationStatus from '@/models/enums/JobApplicationStatus'
+import JobApplicationManager from '@/lib/JobApplicationManager'
+import { useQueryClient } from '@tanstack/react-query'
+import { JOB_APPLICATIONS_QUERIES } from '@/lib/consts'
 
 export default function Page({ params }: { params: { id: string } }) {
+  const queryClient = useQueryClient()
+  const createJobApplication = useCreateJobApplication()
+  const { showNotification } = useNotification()
   const { data: job, isLoading } = useGetJobById(params.id)
   const { data: similarJobs } = useGetSimilarJobs(job)
+  const { data: jobApplications } = useGetJobApplicationsByJobId(job?.id || '')
+  console.log('job applications: ', jobApplications)
   const { user } = useUser()
+  const jobAplicationManager = new JobApplicationManager(jobApplications, user?.id || '')
+  let canApply = jobAplicationManager.canApply()
+  const [submitting, setSubmitting] = useState(false)
   const breadcrumbs = [
     { link: '/', title: 'Jobs' },
     { title: job?.title || '' },
   ]
 
+  const getUserApplicationDate = () => {
+    const userJobApplication = jobApplications.find((item) => item.userId === user?.id)
+    if (userJobApplication) {
+      return formatDate(userJobApplication.createdAt)
+    }
+
+    return ''
+  }
+
   const onJobApply = () => {
-    alert('Not yet implemented')
+    if (job && user) {
+      setSubmitting(true)
+
+      // Simulate request - response
+      setTimeout(() => {
+        createJobApplication.mutate({
+          id: '',
+          jobId: job.id,
+          userId: user.id,
+          coverLetter: '', // empty for now
+          status: ApplicationStatus.Submitted,
+          note: '',
+          createdAt: new Date(),
+        }, {
+          onSuccess: () => {
+            queryClient.invalidateQueries([JOB_APPLICATIONS_QUERIES.JOB_APPLICATIONS_BY_JOB_ID, job.id])
+            setSubmitting(false)
+          },
+          onError: () => {
+            showNotification('An error occured, try again.', 'danger')
+            setSubmitting(false)
+          }
+        })
+      }, 600)
+    }
   }
 
   if (isLoading) {
@@ -82,11 +129,15 @@ export default function Page({ params }: { params: { id: string } }) {
               <div className="mt-2">
                 {getAgoString(job.postedAt)}
               </div>
+
+              <div className="mt-2">
+                {jobApplications.length} {getSingularOrPlural('Applicant', jobApplications.length)}
+              </div>
             </Card.Body>
           </Card>
         </Col>
         <Col md={8}>
-          <Card className="mt-sm-4 mt-md-0">
+          <Card className="mt-4 mt-md-0">
             <Card.Body>
               <div
                 className="mt-1"
@@ -96,7 +147,23 @@ export default function Page({ params }: { params: { id: string } }) {
               <Row>
                 <Col sm={12} md={7} lg={5}>
                   <div className="d-grid gap-2">
-                    <Button size="lg" onClick={onJobApply}>Apply for this job</Button>
+                    {canApply ? (
+                      <Button
+                        size="lg"
+                        onClick={onJobApply}
+                        disabled={submitting}
+                      >
+                        {submitting ? (
+                          <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+                        ) : (
+                          'Apply for this job'
+                        )}
+                      </Button>
+                    ) : (
+                      <Alert variant="primary">
+                        Your application has been sent. ({getUserApplicationDate()})
+                      </Alert>
+                    )}
                   </div>
                 </Col>
               </Row>
