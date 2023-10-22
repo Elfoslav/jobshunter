@@ -85,12 +85,17 @@ const getSimilarJobs = async (job: Job | null | undefined): Promise<Job[]> => {
 }
 
 const getJobById = async (id: string): Promise<Job | null> => {
-  // const response = await axios.get<Job[]>(API_URL)
-  // return response.data
   const jobs: Job[] = JobsStore.read()
   const job = jobs.find((job) => job.id === id) || null
 
   return Promise.resolve(job)
+}
+
+const getJobsByIds = async (ids: string[]): Promise<Job[]> => {
+  const jobs: Job[] = JobsStore.read()
+  const filteredJobs = jobs.filter((job) => ids.includes(job.id))
+
+  return Promise.resolve(filteredJobs)
 }
 
 const createJob = async (newJob: Job): Promise<void> => {
@@ -128,6 +133,16 @@ export const useGetSimilarJobs = (job: Job | null | undefined) => {
 
 export const useGetJobById = (jobId: string) => {
   const result = useQuery<Job | null, unknown>([JOBS_QUERIES.JOB_BY_ID, jobId], () => getJobById(jobId))
+  return result
+}
+
+export const useGetJobsByIds = (jobsIds: string[]) => {
+  const options = { initialData: [] }
+  const result = useQuery<Job[], unknown>(
+    [JOBS_QUERIES.JOB_BY_ID, jobsIds],
+    () => getJobsByIds(jobsIds),
+    options,
+  )
   return result
 }
 

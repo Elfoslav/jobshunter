@@ -24,7 +24,6 @@ export default function Page({ params }: { params: { id: string } }) {
   const { data: job, isLoading } = useGetJobById(params.id)
   const { data: similarJobs } = useGetSimilarJobs(job)
   const { data: jobApplications } = useGetJobApplicationsByJobId(job?.id || '')
-  console.log('job applications: ', jobApplications)
   const { user } = useUser()
   const jobAplicationManager = new JobApplicationManager(jobApplications, user?.id || '')
   let canApply = jobAplicationManager.canApply()

@@ -5,6 +5,7 @@ export const JOBS_QUERIES = {
   JOBS_COUNT: 'jobs_count',
   SIMILAR_JOBS: 'similar_jobs',
   JOB_BY_ID: 'job_by_id',
+  JOBS_BY_IDS: 'jobs_by_ids',
 }
 
 export const USERS_QUERIES = {
@@ -22,8 +23,7 @@ export const SKILLS_QUERIES = {
 export const JOB_APPLICATIONS_QUERIES = {
   JOB_APPLICATIONS: 'job_applications',
   JOB_APPLICATIONS_COUNT: 'job_applications_count',
-  JOB_APPLICATIONS_BY_JOB_ID: 'job_application_by_job_id',
   JOB_APPLICATION_BY_ID: 'job_application_by_id',
+  JOB_APPLICATIONS_BY_JOB_ID: 'job_application_by_job_id',
+  JOB_APPLICATIONS_BY_USER_ID: 'job_application_by_user_id',
 }
-
-export const JOB_APPLICATIONS_QUERY_NAME = 'job_applications'

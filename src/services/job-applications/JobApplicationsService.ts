@@ -28,10 +28,15 @@ export const getJobApplicationById = async (id: string): Promise<JobApplication 
 }
 
 export const getJobApplicationsByJobId = async (jobId: string): Promise<JobApplication[]> => {
-  // const response = await axios.get<JobApplication[]>(API_URL)
-  // return response.data
   const applications: JobApplication[] = JobApplicationsStore.read()
   const jobApplications = applications.filter((application) => application.jobId === jobId)
+
+  return Promise.resolve(jobApplications)
+}
+
+export const getJobApplicationsByUserId = async (userId: string): Promise<JobApplication[]> => {
+  const applications: JobApplication[] = JobApplicationsStore.read()
+  const jobApplications = applications.filter((application) => application.userId === userId)
 
   return Promise.resolve(jobApplications)
 }
@@ -81,6 +86,15 @@ export const useGetJobApplicationsByJobId = (jobId: string) => {
     async () => await getJobApplicationsByJobId(jobId),
     options,
   )
+  return result
+}
+
+export const useGetJobApplicationsByUserId = (userId: string) => {
+  const result = useQuery<JobApplication[], unknown>(
+    [JOB_APPLICATIONS_QUERIES.JOB_APPLICATIONS_BY_USER_ID, userId],
+    async () => await getJobApplicationsByUserId(userId),
+  )
+
   return result
 }
 
