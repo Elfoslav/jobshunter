@@ -1,16 +1,16 @@
-'use client'
+'use client';
 
-import { useGetUserById } from '@/services/users/UsersService'
-import UserProfileForm from '../components/UserProfileForm'
-import { Container } from 'react-bootstrap'
-import Breadcrumbs from '@/app/components/Breadcrumbs'
+import { Container } from 'react-bootstrap';
+import Breadcrumbs from '@/app/components/Breadcrumbs';
+import UserProfileForm from '../components/UserProfileForm';
+import { useUser } from '@/app/context/UserContext';
 
 export default function UserEdit() {
-  const { data: user, isLoading } = useGetUserById('1')
+  const { user, isLoading } = useUser();
   const breadcrumbs = [
     { link: '/profile', title: 'Profile' },
-    { title: 'Edit profile' }
-  ]
+    { title: 'Edit profile' },
+  ];
 
   return (
     <div>
@@ -19,15 +19,10 @@ export default function UserEdit() {
       <Container>
         <h2>Your profile</h2>
 
-        {isLoading ? (
-          <p>Loading...</p>
-        ) : (
-          !user && <p>User not found.</p>
-        )}
-
+        {isLoading ? <p>Loading...</p> : !user && <p>User not found.</p>}
       </Container>
 
       {user && <UserProfileForm user={user} />}
     </div>
-  )
+  );
 }
