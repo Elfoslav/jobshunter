@@ -56,9 +56,10 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ user }) => {
   }));
 
   const onSkillChange = (
-    options: MultiValue<SelectOption>,
-    _actionMeta: ActionMeta<SelectOption>
+    newValue: unknown,
+    actionMeta: ActionMeta<unknown>
   ) => {
+    const options = newValue as MultiValue<SelectOption>;
     setFormData({
       ...formData,
       skills: options.map((opt) => opt.value),
@@ -78,9 +79,10 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ user }) => {
   );
 
   const onEmploymentTypeChange = (
-    options: MultiValue<SelectOption>,
-    _actionMeta: ActionMeta<SelectOption>
+    newValue: unknown,
+    actionMeta: ActionMeta<unknown>
   ) => {
+    const options = newValue as MultiValue<SelectOption>;
     setFormData({
       ...formData,
       preferences: {

@@ -52,9 +52,10 @@ const JobsFilter: React.FC<JobsFilterParams> = ({ search, skillsOptions }) => {
   };
 
   const onSkillChange = (
-    options: MultiValue<SelectOption>,
-    _meta: ActionMeta<SelectOption>
+    newValue: unknown,
+    actionMeta: ActionMeta<unknown>
   ) => {
+    const options = newValue as MultiValue<SelectOption>;
     setQueryParams({
       skills: options.map((skillOption) => skillOption.value),
       page: 1,
