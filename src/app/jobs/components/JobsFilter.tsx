@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MultiValue } from 'react-select';
+import { ActionMeta, MultiValue } from 'react-select';
 import {
   Form,
   Button,
@@ -51,7 +51,10 @@ const JobsFilter: React.FC<JobsFilterParams> = ({ search, skillsOptions }) => {
     });
   };
 
-  const onSkillChange = (options: MultiValue<SelectOption>) => {
+  const onSkillChange = (
+    options: MultiValue<SelectOption>,
+    _meta: ActionMeta<SelectOption>
+  ) => {
     setQueryParams({
       skills: options.map((skillOption) => skillOption.value),
       page: 1,
