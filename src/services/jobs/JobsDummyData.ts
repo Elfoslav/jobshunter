@@ -10,7 +10,6 @@ const jobs: Job[] = [
     title: 'Frontend Developer',
     company: 'ABC Tech Solutions',
     location: 'San Francisco, CA',
-    isRemote: true,
     remotePercentage: 100,
     description: `
       <h2>About Us</h2>
@@ -89,7 +88,6 @@ const jobs: Job[] = [
     title: 'UI/UX Designer',
     company: 'DesignCo',
     location: 'Los Angeles, CA',
-    isRemote: true,
     remotePercentage: 80,
     description: '<p>Looking for a creative UI/UX Designer...</p>',
     requiredSkills: ['UI Design', 'UX Design', 'Adobe XD', 'Figma'],
@@ -119,7 +117,6 @@ const jobs: Job[] = [
     title: 'Product Manager',
     company: 'Tech Innovations Ltd.',
     location: 'Austin, TX',
-    isRemote: true,
     remotePercentage: 50,
     description: '<p>Join our team as a Product Manager...</p>',
     requiredSkills: ['Product Management', 'Agile', 'Scrum'],
@@ -149,7 +146,6 @@ const jobs: Job[] = [
     title: 'Marketing Manager',
     company: 'Digital Marketing Experts',
     location: 'Miami, FL',
-    isRemote: true,
     remotePercentage: 99,
     description: '<p>Join our team as a Marketing Manager...</p>',
     requiredSkills: ['Digital Marketing', 'SEO', 'Social Media'],

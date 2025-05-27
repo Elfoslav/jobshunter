@@ -4,6 +4,7 @@ enum EmploymentType {
   Contract = 'Contract',
   Temporary = 'Temporary',
   Internship = 'Internship',
+  Freelance = 'Freelance',
 }
 
 export default EmploymentType

@@ -5,7 +5,6 @@ export default interface Job {
   title: string;
   company: string;
   location: string;
-  isRemote?: boolean;
   remotePercentage?: number;
   description: string;
   requiredSkills: Array<string>;

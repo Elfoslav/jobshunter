@@ -6,7 +6,11 @@ const UsersDummyData = [
     name: "John Doe",
     email: "john@example.com",
     phone: "123-456-7890",
-    bio: "Experienced developer looking for new opportunities.",
+    bio: `I specialize in building modern web applications using React, Next.js, and Tailwind CSS, with a strong focus on performance, accessibility, and design systems. With 3+ years of experience, I've contributed to scalable projects ranging from e-commerce platforms to internal tools.
+
+I enjoy collaborating with designers, working in agile teams, and turning complex ideas into intuitive user experiences. I'm always learning and staying up-to-date with the latest in front-end development and UI/UX best practices.
+
+Currently exploring: TypeScript, React Server Components, and AI-driven UI tools.`,
     location: "New York, NY",
     skills: ["JavaScript", "React", "Node.js"],
     preferences: {

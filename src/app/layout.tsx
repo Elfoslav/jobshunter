@@ -10,8 +10,8 @@ import { NotificationProvider } from './context/NotificationContext';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Jobs hunter',
-  description: 'Revolutionary job search platform',
+  title: 'Jobs Hunter - The job board you always wanted',
+  description: 'The job board you always wanted',
 };
 
 export default async function RootLayout({

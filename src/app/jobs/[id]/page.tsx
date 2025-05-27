@@ -27,6 +27,7 @@ import ApplicationStatus from '@/models/enums/JobApplicationStatus';
 import JobApplicationManager from '@/lib/JobApplicationManager';
 import { useQueryClient } from '@tanstack/react-query';
 import { JOB_APPLICATIONS_QUERIES } from '@/lib/consts';
+import { useRouter } from 'next/navigation';
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const queryClient = useQueryClient();
@@ -37,6 +38,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const { data: similarJobs } = useGetSimilarJobs(job);
   const { data: jobApplications } = useGetJobApplicationsByJobId(job?.id || '');
   const { user } = useUser();
+  const router = useRouter();
   const jobAplicationManager = new JobApplicationManager(
     jobApplications,
     user?.id || ''
@@ -98,7 +100,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   }
 
   if (!job) {
-    return <Container>No job found with given ID: {params.id}</Container>;
+    return <Container>No job found with given ID: {id}</Container>;
   }
 
   return (
@@ -115,12 +117,14 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                 <div className="d-flex align-items-center mb-1">
                   <GeoAltFill className="me-1" /> {job.location}
                 </div>
-                {job.isRemote && (
-                  <div className="d-flex align-items-center mb-1">
-                    <GlobeAmericas className="me-1" /> Remote{' '}
-                    {job.remotePercentage}%
-                  </div>
-                )}
+                <div className="d-flex align-items-center mb-1">
+                  <GlobeAmericas className="me-1" />
+                  {job.remotePercentage ? (
+                    <span>Remote {job.remotePercentage}%</span>
+                  ) : (
+                    <span>On Site</span>
+                  )}
+                </div>
               </div>
 
               <div>
@@ -208,6 +212,16 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                       </Alert>
                     )}
                   </div>
+                </Col>
+
+                <Col sm={12} md={5} lg={7}>
+                  <Button
+                    size="lg"
+                    variant="warning"
+                    onClick={() => router.push(`/jobs/${id}/edit`)}
+                  >
+                    Edit
+                  </Button>
                 </Col>
               </Row>
             </Card.Body>

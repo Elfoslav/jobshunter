@@ -59,9 +59,9 @@ const JobsFilter: React.FC<JobsFilterParams> = ({ search, skillsOptions }) => {
   };
 
   return (
-    <Form onSubmit={handleFormSubmit} className="mb-2-sm mb-1">
+    <Form onSubmit={handleFormSubmit} className="mt-2 mb-2-sm mb-2">
       <Row>
-        <Col md={6} lg={3}>
+        <Col md={6} lg={6}>
           <InputGroup className="mb-2">
             <FormControl
               type="text"
@@ -77,7 +77,7 @@ const JobsFilter: React.FC<JobsFilterParams> = ({ search, skillsOptions }) => {
           </InputGroup>
         </Col>
 
-        <Col md={6} lg={4}>
+        <Col md={6} lg={6}>
           <Form.Group>
             <ClientSelect
               defaultValue={defaultSkills}

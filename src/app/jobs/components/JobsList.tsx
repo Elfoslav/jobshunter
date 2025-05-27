@@ -1,50 +1,53 @@
-import React, { useState, useEffect } from 'react'
-import {
-  useQueryClient,
-} from '@tanstack/react-query'
-import { ListGroup, ListGroupItem, Row, Col } from 'react-bootstrap'
-import { GeoAltFill, GlobeAmericas } from 'react-bootstrap-icons'
-import useQueryParams from '@/app/components/useQueryParams'
-import Pagination from '@/app/components/Pagination'
-import { JOBS_PER_PAGE, JOBS_QUERIES } from '@/lib/consts'
-import Skills from './Skills'
-import Job from '@/models/Job'
-import './JobsList.scss'
-import { getAgoString, getDaysPassed } from '@/lib/functions'
-import User from '@/models/User'
-import UserApplied from './UserApplied'
+import React, { useState, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { ListGroup, ListGroupItem, Row, Col } from 'react-bootstrap';
+import { GeoAltFill, GlobeAmericas } from 'react-bootstrap-icons';
+import useQueryParams from '@/app/components/useQueryParams';
+import Pagination from '@/app/components/Pagination';
+import { JOBS_PER_PAGE, JOBS_QUERIES } from '@/lib/consts';
+import Skills from './Skills';
+import Job from '@/models/Job';
+import './JobsList.scss';
+import { getAgoString, getDaysPassed } from '@/lib/functions';
+import User from '@/models/User';
+import UserApplied from './UserApplied';
 
 interface JobsListProps {
-  jobs: Job[],
-  user: User | null,
-  totalCount: number,
-  page: number
+  jobs: Job[];
+  user: User | null;
+  totalCount: number;
+  page: number;
 }
 
-const JobsList: React.FC<JobsListProps> = ({ jobs, user, totalCount, page }) => {
-  const queryClient = useQueryClient()
+const JobsList: React.FC<JobsListProps> = ({
+  jobs,
+  user,
+  totalCount,
+  page,
+}) => {
+  const queryClient = useQueryClient();
   const { setQueryParams } = useQueryParams<{
-    page?: number
-  }>()
+    page?: number;
+  }>();
 
-  const [pageNumber, setpageNumber] = useState(1)
+  const [pageNumber, setpageNumber] = useState(1);
 
   useEffect(() => {
     if (page && !isNaN(Number(page))) {
-      setpageNumber(Number(page))
+      setpageNumber(Number(page));
       queryClient.invalidateQueries({
         queryKey: [JOBS_QUERIES.JOBS],
       });
     }
-  }, [page, queryClient])
+  }, [page, queryClient]);
 
   const handlePageChange = (page: number) => {
-    setpageNumber(page)
-    setQueryParams({ page })
-  }
+    setpageNumber(page);
+    setQueryParams({ page });
+  };
 
   if (!jobs.length) {
-    return null
+    return null;
   }
 
   return (
@@ -52,8 +55,15 @@ const JobsList: React.FC<JobsListProps> = ({ jobs, user, totalCount, page }) => 
       <ListGroup>
         {jobs.map((job) => {
           return (
-            <ListGroupItem key={job.id} action href={`/jobs/${job.id}`} className="job-item">
-              <div className={`date ${getDaysPassed(job.postedAt) === 0 ? 'text-success' : ''}`}>
+            <ListGroupItem
+              key={job.id}
+              action
+              href={`/jobs/${job.id}`}
+              className="job-item"
+            >
+              <div
+                className={`date ${getDaysPassed(job.postedAt) === 0 ? 'text-success' : ''}`}
+              >
                 {getAgoString(job.postedAt)}
               </div>
               <Row>
@@ -62,17 +72,28 @@ const JobsList: React.FC<JobsListProps> = ({ jobs, user, totalCount, page }) => 
                   <div className="d-flex align-items-center mb-1">
                     <GeoAltFill className="me-1" /> {job.location}
                   </div>
-                  {job.isRemote &&
-                    <div className="d-flex align-items-center mb-1">
-                      <GlobeAmericas className="me-1" /> Remote {job.remotePercentage}%
-                    </div>}
+                  <div className="d-flex align-items-center mb-1">
+                    <GlobeAmericas className="me-1" /> Remote{' '}
+                    {job.remotePercentage}%
+                  </div>
                 </Col>
                 <Col lg={7}>
-                  <Skills skills={job.requiredSkills} user={user} primary className="mt-1" />
-                  <Skills skills={job.optionalSkills} user={user} className="mt-2 mb-1" />
+                  <Skills
+                    skills={job.requiredSkills}
+                    user={user}
+                    primary
+                    className="mt-1"
+                  />
+                  <Skills
+                    skills={job.optionalSkills}
+                    user={user}
+                    className="mt-2 mb-1"
+                  />
                 </Col>
                 <Col className="d-none d-lg-block">
-                  <div className={`text-end ${getDaysPassed(job.postedAt) === 0 ? 'text-success' : ''}`}>
+                  <div
+                    className={`text-end ${getDaysPassed(job.postedAt) === 0 ? 'text-success' : ''}`}
+                  >
                     {getAgoString(job.postedAt)}
                   </div>
                   <div className="text-end text-info">
@@ -81,7 +102,7 @@ const JobsList: React.FC<JobsListProps> = ({ jobs, user, totalCount, page }) => 
                 </Col>
               </Row>
             </ListGroupItem>
-          )
+          );
         })}
       </ListGroup>
 
@@ -97,4 +118,4 @@ const JobsList: React.FC<JobsListProps> = ({ jobs, user, totalCount, page }) => 
   );
 };
 
-export default JobsList
+export default JobsList;
