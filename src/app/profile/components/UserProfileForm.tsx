@@ -1,25 +1,25 @@
-'use client'
+'use client';
 
-import React, { useState } from 'react'
-import Select, { MultiValue } from 'react-select'
-import { Container, Form, Button, Row, Col, Spinner } from 'react-bootstrap'
-import EmploymentType from '@/models/enums/EmploymentType'
-import User from '@/models/User'
-import { useGetSkills } from '@/services/skills/SkillsService'
-import SelectOption from '@/models/SelectOption'
-import { useUpdateUser } from '@/services/users/UsersService'
-import { useNotification } from '@/app/context/NotificationContext'
+import React, { useState } from 'react';
+import Select, { MultiValue, ActionMeta } from 'react-select';
+import { Container, Form, Button, Row, Col, Spinner } from 'react-bootstrap';
+import EmploymentType from '@/models/enums/EmploymentType';
+import User from '@/models/User';
+import { useGetSkills } from '@/services/skills/SkillsService';
+import SelectOption from '@/models/SelectOption';
+import { useUpdateUser } from '@/services/users/UsersService';
+import { useNotification } from '@/app/context/NotificationContext';
 
 interface UserProfileFormProps {
   user?: User;
 }
 
 const UserProfileForm: React.FC<UserProfileFormProps> = ({ user }) => {
-  console.log(user)
-  const { showNotification } = useNotification()
-  const { data: skills } = useGetSkills()
-  const updateUserMutation = useUpdateUser()
-  const [isSaving, setIsSaving] = useState(false)
+  console.log(user);
+  const { showNotification } = useNotification();
+  const { data: skills } = useGetSkills();
+  const updateUserMutation = useUpdateUser();
+  const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState<User>({
     id: user?.id ?? '',
     name: user?.name ?? '',
@@ -29,85 +29,103 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ user }) => {
     location: user?.location ?? '',
     skills: user?.skills ? [...user.skills] : [],
     preferences: {
-      locations: user?.preferences?.locations ? [...user.preferences.locations] : [],
+      locations: user?.preferences?.locations
+        ? [...user.preferences.locations]
+        : [],
       remotePercentage: user?.preferences?.remotePercentage ?? 0,
-      employmentTypes: user?.preferences?.employmentTypes ? [...user.preferences.employmentTypes] : [],
+      employmentTypes: user?.preferences?.employmentTypes
+        ? [...user.preferences.employmentTypes]
+        : [],
       salaryMin: user?.preferences?.salaryMin ?? 0,
       salaryMax: user?.preferences?.salaryMax ?? 0,
     },
     registeredAt: user?.registeredAt || new Date(),
     updatedAt: user?.updatedAt || undefined,
-  })
+  });
 
   const skillsOptions = skills
     ? skills.map((skill) => ({
-      value: skill.name,
-      label: skill.name,
-    }))
-    : []
+        value: skill.name,
+        label: skill.name,
+      }))
+    : [];
 
   const defaultSkillsOptions = formData.skills.map((skill) => ({
     value: skill,
     label: skill,
-  }))
+  }));
 
-  const onSkillChange = (options: MultiValue<SelectOption>) => {
+  const onSkillChange = (
+    options: MultiValue<SelectOption>,
+    _actionMeta: ActionMeta<SelectOption>
+  ) => {
     setFormData({
       ...formData,
-      skills: options.map((opt) => opt.value as string),
-    })
-  }
+      skills: options.map((opt) => opt.value),
+    });
+  };
 
   const employmentTypeOptions = Object.values(EmploymentType).map((type) => ({
     value: type as string,
     label: type as string,
-  }))
+  }));
 
-  const defaultEmploymentOptions = formData.preferences.employmentTypes.map((employmentType) => ({
-    value: employmentType as string,
-    label: employmentType as string
-  }))
+  const defaultEmploymentOptions = formData.preferences.employmentTypes.map(
+    (employmentType) => ({
+      value: employmentType as string,
+      label: employmentType as string,
+    })
+  );
 
-  const onEmploymentTypeChange = (options: MultiValue<SelectOption>) => {
+  const onEmploymentTypeChange = (
+    options: MultiValue<SelectOption>,
+    _actionMeta: ActionMeta<SelectOption>
+  ) => {
     setFormData({
       ...formData,
       preferences: {
         ...formData.preferences,
         employmentTypes: options.map((opt) => opt.value as EmploymentType),
       },
-    })
-  }
+    });
+  };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
-    setFormData({ ...formData, [name]: value })
-  }
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
-  const onPreferredRemotePercentageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onPreferredRemotePercentageChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setFormData({
       ...formData,
       preferences: {
         ...formData.preferences,
         remotePercentage: parseFloat(e.target.value),
       },
-    })
-  }
+    });
+  };
 
   const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log(formData)
-    setIsSaving(true)
+    e.preventDefault();
+    console.log(formData);
+    setIsSaving(true);
     // Simulate request response
     setTimeout(() => {
       updateUserMutation.mutate(formData, {
         onSuccess() {
-          console.log('Succes update', formData)
-          setIsSaving(false)
-          showNotification('Your profile has been saved!')
-        }
-      })
-    }, 1000)
-  }
+          console.log('Succes update', formData);
+          setIsSaving(false);
+          showNotification('Your profile has been saved!');
+        },
+      });
+    }, 1000);
+  };
 
   return (
     <Container>
@@ -287,11 +305,17 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ user }) => {
           <Col md={6} lg={4}>
             <div className="d-grid gap-2">
               <Button variant="primary" type="submit" disabled={isSaving}>
-              {isSaving ? (
-                <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
-              ) : (
-                'Save'
-              )}
+                {isSaving ? (
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                  />
+                ) : (
+                  'Save'
+                )}
               </Button>
             </div>
           </Col>
@@ -302,4 +326,3 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ user }) => {
 };
 
 export default UserProfileForm;
-
