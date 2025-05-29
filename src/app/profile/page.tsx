@@ -51,8 +51,12 @@ export default function UserShow() {
             <Col md={4}>
               <h4>{user?.name}</h4>
               <p>
-                <strong>Registered:</strong> {formatDate(user?.registeredAt)}
-                <br />
+                {user?.registeredAt && (
+                  <>
+                    <strong>Registered:</strong> {formatDate(user.registeredAt)}
+                    <br />
+                  </>
+                )}
                 {user?.updatedAt && (
                   <>
                     <strong>Updated:</strong> {formatDate(user.updatedAt)}
