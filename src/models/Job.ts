@@ -1,7 +1,7 @@
-import EmploymentType from "./enums/EmploymentType"
+import EmploymentType from "./enums/EmploymentType";
 
-export default interface Job {
-  id: string;
+interface JobBase {
+  id?: string;
   title: string;
   company: string;
   location: string;
@@ -15,4 +15,12 @@ export default interface Job {
   employmentTypes: EmploymentType[];
   postedAt: Date;
   updatedAt?: Date;
+}
+
+// No id before creation
+export type NewJob = Omit<JobBase, 'id'>;
+
+// Always has id after creation or when editing
+export interface ExistingJob extends JobBase {
+  id: string;
 }

@@ -3,10 +3,10 @@
 import { use } from 'react';
 import { Container, Spinner } from 'react-bootstrap';
 import { useRouter } from 'next/navigation';
-import JobForm, { JobFormData } from '@/app/jobs/components/JobForm';
+import JobForm from '@/app/jobs/components/JobForm';
 import Breadcrumbs from '@/app/components/Breadcrumbs';
 import { useUpdateJob, useGetJobById } from '@/services/jobs/JobsService';
-import Job from '@/models/Job';
+import { ExistingJob } from '@/models/Job';
 
 export default function EditJob({
   params,
@@ -19,10 +19,9 @@ export default function EditJob({
   const breadcrumbs = [{ link: '/', title: 'Jobs' }, { title: 'Edit' }];
   const { mutate: updateJob, isLoading: isUpdating } = useUpdateJob();
 
-  const handleAdd = (job: JobFormData) => {
-    const newJob: Job = {
+  const handleEdit = (job: ExistingJob) => {
+    const newJob: ExistingJob = {
       ...job,
-      id: crypto.randomUUID(), // or use nanoid() if preferred
       postedAt: new Date(),
     };
 
@@ -49,7 +48,7 @@ export default function EditJob({
     <div>
       <Breadcrumbs items={breadcrumbs} />
       <Container>
-        <JobForm onSubmit={handleAdd} isLoading={isUpdating} isEditing />
+        <JobForm onSubmit={handleEdit} isLoading={isUpdating} isEditing />
 
         {isUpdating && (
           <div className="text-center mt-4">

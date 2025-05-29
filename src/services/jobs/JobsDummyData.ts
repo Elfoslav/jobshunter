@@ -1,10 +1,10 @@
-import Job from '@/models/Job'
+import { ExistingJob } from '@/models/Job'
 import EmploymentType from '@/models/enums/EmploymentType'
 
 const currentDate = new Date()
 const daysToSubtract = 1
 
-const jobs: Job[] = [
+const jobs: ExistingJob[] = [
   {
     id: '1',
     title: 'Frontend Developer',

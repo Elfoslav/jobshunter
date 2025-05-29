@@ -2,10 +2,10 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import JobsStore from './JobsStore'
-import Job from '@/models/Job'
+import { ExistingJob, NewJob } from '@/models/Job'
 import { JOBS_PER_PAGE, JOBS_QUERIES } from '@/lib/consts'
 
-const filterJobs = (data: Job[], searchQuery: string = '', skills: string[] = []): Job[] => {
+const filterJobs = (data: ExistingJob[], searchQuery: string = '', skills: string[] = []): ExistingJob[] => {
   let filteredJobs = data.sort((job1, job2) => job2.postedAt.getTime() - job1.postedAt.getTime())
 
   if (searchQuery) {
@@ -28,11 +28,11 @@ const filterJobs = (data: Job[], searchQuery: string = '', skills: string[] = []
   return filteredJobs
 }
 
-const getJobs = async (page: number, searchQuery: string = '', skills: string[]): Promise<Job[]> => {
+const getJobs = async (page: number, searchQuery: string = '', skills: string[]): Promise<ExistingJob[]> => {
   // const response = await axios.get<Job[]>(API_URL)
   // return response.data
   const offset = (page - 1) * JOBS_PER_PAGE
-  const data: Job[] = JobsStore.read()
+  const data: ExistingJob[] = JobsStore.read()
   let filteredJobs = filterJobs(data, searchQuery, skills)
 
   filteredJobs = filteredJobs.slice(offset, offset + JOBS_PER_PAGE)
@@ -57,17 +57,17 @@ const getJobs = async (page: number, searchQuery: string = '', skills: string[])
 }
 
 const getJobsCount = async (searchQuery: string, skills: string[]): Promise<number> => {
-  const data: Job[] = JobsStore.read()
+  const data: ExistingJob[] = JobsStore.read()
   const filteredJobs = filterJobs(data, searchQuery, skills)
   return Promise.resolve(filteredJobs.length)
 }
 
-const getSimilarJobs = async (job: Job | null | undefined): Promise<Job[]> => {
+const getSimilarJobs = async (job: ExistingJob | null | undefined): Promise<ExistingJob[]> => {
   if (!job) {
     return Promise.resolve([])
   }
 
-  const jobs: Job[] = await getJobs(1, '', [])
+  const jobs: ExistingJob[] = await getJobs(1, '', [])
 
   let filteredJobs = jobs.filter((_job) => {
     if (_job.id === job.id) {
@@ -84,27 +84,34 @@ const getSimilarJobs = async (job: Job | null | undefined): Promise<Job[]> => {
   return filteredJobs
 }
 
-const getJobById = async (id: string): Promise<Job | null> => {
-  const jobs: Job[] = JobsStore.read()
+const getJobById = async (id: string): Promise<ExistingJob | null> => {
+  const jobs: ExistingJob[] = JobsStore.read()
   const job = jobs.find((job) => job.id === id) || null
 
   return Promise.resolve(job)
 }
 
-const getJobsByIds = async (ids: string[]): Promise<Job[]> => {
-  const jobs: Job[] = JobsStore.read()
+const getJobsByIds = async (ids: string[]): Promise<ExistingJob[]> => {
+  const jobs: ExistingJob[] = JobsStore.read()
   const filteredJobs = jobs.filter((job) => ids.includes(job.id))
 
   return Promise.resolve(filteredJobs)
 }
 
-const createJob = async (newJob: Job): Promise<void> => {
+const createJob = async (newJob: NewJob): Promise<void> => {
   // await axios.post(API_URL, newJob)
   // data.push(newJob)
-  JobsStore.create(newJob)
+
+  // Store needs existingJob with ID
+  const jobWithId: ExistingJob = {
+    ...newJob,
+    id: crypto.randomUUID(), // Temporary, Id will be re-created in the store.create
+  }
+
+  JobsStore.create(jobWithId)
 }
 
-const updateJob = async (updatedJob: Job): Promise<void> => {
+const updateJob = async (updatedJob: ExistingJob): Promise<void> => {
   // await axios.put(`${API_URL}/${updatedJob.id}`, updatedJob)
   JobsStore.update(updatedJob.id, updatedJob)
 }
@@ -115,7 +122,7 @@ const deleteJob = async (jobId: string): Promise<void> => {
 }
 
 export const useGetJobs = (page: number, searchQuery: string = '', skills: string[] = []) => {
-  const result = useQuery<Job[], unknown>([JOBS_QUERIES.JOBS, page, searchQuery, skills], async () => {
+  const result = useQuery<ExistingJob[], unknown>([JOBS_QUERIES.JOBS, page, searchQuery, skills], async () => {
     return await getJobs(page, searchQuery, skills)
   })
   return { ...result, count: result.data?.length }
@@ -126,19 +133,19 @@ export const useGetJobsCount = (searchQuery: string = '', skills: string[] = [])
   return { ...result }
 }
 
-export const useGetSimilarJobs = (job: Job | null | undefined) => {
-  const result = useQuery<Job[], unknown>([JOBS_QUERIES.SIMILAR_JOBS, job], () => getSimilarJobs(job))
+export const useGetSimilarJobs = (job: ExistingJob | null | undefined) => {
+  const result = useQuery<ExistingJob[], unknown>([JOBS_QUERIES.SIMILAR_JOBS, job], () => getSimilarJobs(job))
   return { ...result, count: result.data?.length }
 }
 
 export const useGetJobById = (jobId: string) => {
-  const result = useQuery<Job | null, unknown>([JOBS_QUERIES.JOB_BY_ID, jobId], () => getJobById(jobId))
+  const result = useQuery<ExistingJob | null, unknown>([JOBS_QUERIES.JOB_BY_ID, jobId], () => getJobById(jobId))
   return result
 }
 
 export const useGetJobsByIds = (jobsIds: string[]) => {
   const options = { initialData: [] }
-  const result = useQuery<Job[], unknown>(
+  const result = useQuery<ExistingJob[], unknown>(
     [JOBS_QUERIES.JOB_BY_ID, jobsIds],
     () => getJobsByIds(jobsIds),
     options,
@@ -149,7 +156,7 @@ export const useGetJobsByIds = (jobsIds: string[]) => {
 export const useCreateJob = () => {
   const queryClient = useQueryClient()
 
-  return useMutation<void, unknown, Job>(createJob, {
+  return useMutation<void, unknown, NewJob>(createJob, {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [JOBS_QUERIES.JOBS] })
     },
@@ -159,7 +166,7 @@ export const useCreateJob = () => {
 export const useUpdateJob = () => {
   const queryClient = useQueryClient()
 
-  return useMutation<void, unknown, Job>(updateJob, {
+  return useMutation<void, unknown, ExistingJob>(updateJob, {
     onSuccess: () => {
       queryClient.invalidateQueries([])
     },

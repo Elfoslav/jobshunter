@@ -7,25 +7,11 @@ import EmploymentType from '@/models/enums/EmploymentType';
 import SkillsSelect from './SkillsSelect';
 import { MultiValue } from 'react-select';
 import { Option } from './SkillsSelect';
-
-export type JobFormData = {
-  id?: number;
-  title: string;
-  company: string;
-  location: string;
-  description: string;
-  requiredSkills: string[];
-  optionalSkills: string[];
-  salaryMin: number;
-  salaryMax: number;
-  currency: string;
-  employmentTypes: EmploymentType[];
-  postedAt: Date;
-};
+import { ExistingJob } from '@/models/Job';
 
 interface JobFormProps {
-  initialData?: JobFormData;
-  onSubmit: (job: JobFormData) => void;
+  initialData?: ExistingJob;
+  onSubmit: (job: ExistingJob) => void;
   isLoading?: boolean;
   isEditing?: boolean;
 }
@@ -36,7 +22,8 @@ export default function JobForm({
   isLoading = false,
   isEditing = false,
 }: JobFormProps) {
-  const [formData, setFormData] = useState<JobFormData>({
+  const [formData, setFormData] = useState<ExistingJob>({
+    id: '',
     title: '',
     company: '',
     location: '',
@@ -186,7 +173,7 @@ export default function JobForm({
           <Row>
             <Col md={4}>
               <Form.Group className="mb-3" controlId="salaryMin">
-                <Form.Label>Minimum Salary</Form.Label>
+                <Form.Label>Minimum monthly salary</Form.Label>
                 <Form.Control
                   name="salaryMin"
                   type="number"
@@ -197,7 +184,7 @@ export default function JobForm({
             </Col>
             <Col md={4}>
               <Form.Group className="mb-3" controlId="salaryMax">
-                <Form.Label>Maximum Salary</Form.Label>
+                <Form.Label>Maximum monthly salary</Form.Label>
                 <Form.Control
                   name="salaryMax"
                   type="number"
@@ -239,7 +226,12 @@ export default function JobForm({
       </Card>
 
       <div className="d-flex justify-content-center">
-        <Button type="submit" variant="primary" size="lg" className="w-50">
+        <Button
+          type="submit"
+          variant="primary"
+          size="lg"
+          className="w-100 w-md-50"
+        >
           Publish
         </Button>
       </div>

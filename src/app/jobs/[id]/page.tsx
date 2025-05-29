@@ -28,6 +28,7 @@ import JobApplicationManager from '@/lib/JobApplicationManager';
 import { useQueryClient } from '@tanstack/react-query';
 import { JOB_APPLICATIONS_QUERIES } from '@/lib/consts';
 import { useRouter } from 'next/navigation';
+import EmploymentType from '@/models/enums/EmploymentType';
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const queryClient = useQueryClient();
@@ -63,6 +64,13 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
   const onJobApply = () => {
     if (job && user) {
+      const jobId = job.id;
+
+      if (!jobId) {
+        console.error('Job ID is missing. Cannot create application.');
+        return;
+      }
+
       setSubmitting(true);
 
       // Simulate request - response
@@ -70,7 +78,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         createJobApplication.mutate(
           {
             id: '',
-            jobId: job.id,
+            jobId,
             userId: user.id,
             coverLetter: '', // empty for now
             status: ApplicationStatus.Submitted,
@@ -132,12 +140,14 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
               </div>
 
               <div className="mt-1 text-bold">
-                {job.employmentTypes.map((employmentType, i) => (
-                  <span key={i}>
-                    {employmentType}
-                    {job.employmentTypes.length !== i + 1 ? ', ' : ''}
-                  </span>
-                ))}
+                {job.employmentTypes.map(
+                  (employmentType: EmploymentType, i: number) => (
+                    <span key={i}>
+                      {employmentType}
+                      {job.employmentTypes.length !== i + 1 ? ', ' : ''}
+                    </span>
+                  )
+                )}
               </div>
 
               <Skills

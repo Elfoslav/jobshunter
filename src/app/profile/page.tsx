@@ -15,7 +15,7 @@ import {
 import { useGetJobApplicationsByUserId } from '@/services/job-applications/JobApplicationsService';
 import { formatDate } from '@/lib/functions';
 import { useGetJobsByIds } from '@/services/jobs/JobsService';
-import Job from '@/models/Job';
+import { ExistingJob } from '@/models/Job';
 
 export default function UserShow() {
   const { user, isLoading: isUserLoading } = useUser();
@@ -25,7 +25,7 @@ export default function UserShow() {
     jobApplications?.map((item) => item.jobId) || []
   );
 
-  const getJobById = (jobId: string): Job | undefined => {
+  const getJobById = (jobId: string): ExistingJob | undefined => {
     return jobs.find((job) => job.id === jobId);
   };
 

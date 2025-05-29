@@ -2,24 +2,18 @@
 
 import { Container, Spinner } from 'react-bootstrap';
 import { useRouter } from 'next/navigation';
-import JobForm, { JobFormData } from '../components/JobForm';
+import JobForm from '../components/JobForm';
 import Breadcrumbs from '@/app/components/Breadcrumbs';
 import { useCreateJob } from '@/services/jobs/JobsService';
-import Job from '@/models/Job';
+import { ExistingJob, NewJob } from '@/models/Job';
 
 export default function AddJob() {
   const router = useRouter();
   const breadcrumbs = [{ link: '/', title: 'Jobs' }, { title: 'New job' }];
   const { mutate: createJob, isLoading } = useCreateJob();
 
-  const handleAdd = (job: JobFormData) => {
-    const newJob: Job = {
-      ...job,
-      id: crypto.randomUUID(), // or use nanoid() if preferred
-      postedAt: new Date(),
-    };
-
-    createJob(newJob, {
+  const handleAdd = (job: NewJob) => {
+    createJob(job, {
       onSuccess: () => {
         router.push('/jobs');
       },

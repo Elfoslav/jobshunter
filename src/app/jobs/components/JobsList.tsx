@@ -6,14 +6,14 @@ import useQueryParams from '@/app/components/useQueryParams';
 import Pagination from '@/app/components/Pagination';
 import { JOBS_PER_PAGE, JOBS_QUERIES } from '@/lib/consts';
 import Skills from './Skills';
-import Job from '@/models/Job';
+import { ExistingJob } from '@/models/Job';
 import './JobsList.scss';
 import { getAgoString, getDaysPassed } from '@/lib/functions';
 import User from '@/models/User';
 import UserApplied from './UserApplied';
 
 interface JobsListProps {
-  jobs: Job[];
+  jobs: ExistingJob[];
   user: User | null;
   totalCount: number;
   page: number;
