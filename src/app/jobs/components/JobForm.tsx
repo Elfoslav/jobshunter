@@ -230,7 +230,7 @@ export default function JobForm({
           type="submit"
           variant="primary"
           size="lg"
-          className="w-100 w-md-50"
+          className="w-100 w-lg-50"
         >
           Publish
         </Button>

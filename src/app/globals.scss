@@ -1,8 +1,9 @@
 @import "@/scss/variables.scss";
-@import "@/scss/bootstrap-extension.scss";
 
 // Include Bootstrap styles with your customizations
 @import "~bootstrap/scss/bootstrap";
+
+@import "@/scss/bootstrap-extension.scss";
 
 @font-face {
   font-family: 'Nunito Sans';

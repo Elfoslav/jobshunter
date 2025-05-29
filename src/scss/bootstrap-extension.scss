@@ -1,5 +1,19 @@
-@media (min-width: 768px) {
+// bootstrap-extension.scss
+
+// Import only what you need first
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+// Now you can use Bootstrap variables
+@media (min-width: map-get($grid-breakpoints, md)) {
   .w-md-50 {
+    width: 50% !important;
+  }
+}
+
+@media (min-width: map-get($grid-breakpoints, lg)) {
+  .w-lg-50 {
     width: 50% !important;
   }
 }
