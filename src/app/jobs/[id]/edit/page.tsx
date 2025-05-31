@@ -22,12 +22,12 @@ export default function EditJob({
   const handleEdit = (job: ExistingJob) => {
     const newJob: ExistingJob = {
       ...job,
-      postedAt: new Date(),
+      updatedAt: new Date(),
     };
 
     updateJob(newJob, {
       onSuccess: () => {
-        router.push('/jobs');
+        router.push(`/jobs/${job.id}`);
       },
       onError: (error) => {
         console.error('Failed to create job:', error);
@@ -48,7 +48,12 @@ export default function EditJob({
     <div>
       <Breadcrumbs items={breadcrumbs} />
       <Container>
-        <JobForm onSubmit={handleEdit} isLoading={isUpdating} isEditing />
+        <JobForm
+          onSubmit={handleEdit}
+          initialData={job}
+          isLoading={isUpdating}
+          isEditing
+        />
 
         {isUpdating && (
           <div className="text-center mt-4">

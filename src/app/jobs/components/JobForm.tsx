@@ -8,6 +8,8 @@ import SkillsSelect from './SkillsSelect';
 import { MultiValue } from 'react-select';
 import { Option } from './SkillsSelect';
 import { ExistingJob } from '@/models/Job';
+import './JobForm.scss';
+import RemotePercentageInput from './RemotePercentageInput';
 
 interface JobFormProps {
   initialData?: ExistingJob;
@@ -34,7 +36,9 @@ export default function JobForm({
     salaryMax: 0,
     currency: 'USD',
     employmentTypes: [],
+    remotePercentage: 0,
     postedAt: new Date(),
+    ...initialData,
   });
 
   const router = useRouter();
@@ -44,6 +48,13 @@ export default function JobForm({
   ) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const onRemotePercentageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      remotePercentage: parseFloat(e.target.value),
+    });
   };
 
   const getSelectedSkills = (skills: string[]) =>
@@ -81,13 +92,13 @@ export default function JobForm({
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit} className="mt-4">
       <Card className="mb-4">
         <Card.Header>Job Details</Card.Header>
         <Card.Body>
-          <Row>
+          <Row className="g-3">
             <Col md={6}>
-              <Form.Group className="mb-3" controlId="title">
+              <Form.Group controlId="title">
                 <Form.Label>Job Title</Form.Label>
                 <Form.Control
                   name="title"
@@ -99,9 +110,8 @@ export default function JobForm({
                 />
               </Form.Group>
             </Col>
-
             <Col md={6}>
-              <Form.Group className="mb-3" controlId="company">
+              <Form.Group controlId="company">
                 <Form.Label>Company</Form.Label>
                 <Form.Control
                   name="company"
@@ -113,39 +123,41 @@ export default function JobForm({
                 />
               </Form.Group>
             </Col>
+            <Col md={6}>
+              <Form.Group controlId="location">
+                <Form.Label>Location</Form.Label>
+                <Form.Control
+                  name="location"
+                  type="text"
+                  placeholder="e.g. New York, NY"
+                  value={formData.location}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
+            <Col md={12}>
+              <Form.Group controlId="description">
+                <Form.Label>Job Description</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={4}
+                  name="description"
+                  placeholder="Describe the responsibilities, qualifications, and expectations..."
+                  value={formData.description}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Col>
           </Row>
-
-          <Form.Group className="mb-3" controlId="location">
-            <Form.Label>Location</Form.Label>
-            <Form.Control
-              name="location"
-              type="text"
-              placeholder="e.g. New York, NY"
-              value={formData.location}
-              onChange={handleChange}
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3" controlId="description">
-            <Form.Label>Job Description</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={5}
-              name="description"
-              placeholder="Describe the responsibilities, qualifications, and expectations..."
-              value={formData.description}
-              onChange={handleChange}
-            />
-          </Form.Group>
         </Card.Body>
       </Card>
 
       <Card className="mb-4">
         <Card.Header>Skills</Card.Header>
         <Card.Body>
-          <Row>
+          <Row className="g-3">
             <Col md={6}>
-              <Form.Group className="mb-3" controlId="requiredSkills">
+              <Form.Group controlId="requiredSkills">
                 <Form.Label>Required Skills</Form.Label>
                 <SkillsSelect
                   selected={getSelectedSkills(formData.requiredSkills)}
@@ -153,10 +165,9 @@ export default function JobForm({
                 />
               </Form.Group>
             </Col>
-
             <Col md={6}>
-              <Form.Group className="mb-3" controlId="optionalSkills">
-                <Form.Label>Nice to have skills</Form.Label>
+              <Form.Group controlId="optionalSkills">
+                <Form.Label>Nice to Have Skills</Form.Label>
                 <SkillsSelect
                   selected={getSelectedSkills(formData.optionalSkills)}
                   onChange={handleSkillsChange('optionalSkills')}
@@ -170,10 +181,10 @@ export default function JobForm({
       <Card className="mb-4">
         <Card.Header>Salary & Employment</Card.Header>
         <Card.Body>
-          <Row>
+          <Row className="g-3">
             <Col md={4}>
-              <Form.Group className="mb-3" controlId="salaryMin">
-                <Form.Label>Minimum monthly salary</Form.Label>
+              <Form.Group controlId="salaryMin">
+                <Form.Label>Minimum Monthly Salary</Form.Label>
                 <Form.Control
                   name="salaryMin"
                   type="number"
@@ -183,8 +194,8 @@ export default function JobForm({
               </Form.Group>
             </Col>
             <Col md={4}>
-              <Form.Group className="mb-3" controlId="salaryMax">
-                <Form.Label>Maximum monthly salary</Form.Label>
+              <Form.Group controlId="salaryMax">
+                <Form.Label>Maximum Monthly Salary</Form.Label>
                 <Form.Control
                   name="salaryMax"
                   type="number"
@@ -194,7 +205,7 @@ export default function JobForm({
               </Form.Group>
             </Col>
             <Col md={4}>
-              <Form.Group className="mb-3" controlId="currency">
+              <Form.Group controlId="currency">
                 <Form.Label>Currency</Form.Label>
                 <Form.Control
                   name="currency"
@@ -205,34 +216,42 @@ export default function JobForm({
                 />
               </Form.Group>
             </Col>
+            <Col xs={8}>
+              <Form.Group>
+                <Form.Label>Employment Types</Form.Label>
+                <div className="d-flex flex-wrap gap-3">
+                  {Object.values(EmploymentType).map((type) => (
+                    <Form.Check
+                      key={type}
+                      type="checkbox"
+                      label={type}
+                      id={`employment-${type}`}
+                      checked={formData.employmentTypes.includes(type)}
+                      onChange={() => handleEmploymentTypeChange(type)}
+                    />
+                  ))}
+                </div>
+              </Form.Group>
+            </Col>
+            <Col xs={4}>
+              <RemotePercentageInput
+                value={formData.remotePercentage}
+                onChange={onRemotePercentageChange}
+              />
+            </Col>
           </Row>
-
-          <Form.Group className="mb-3">
-            <Form.Label>Employment Types</Form.Label>
-            <Stack direction="horizontal" gap={3} className="flex-wrap">
-              {Object.values(EmploymentType).map((type) => (
-                <Form.Check
-                  key={type}
-                  type="checkbox"
-                  label={type}
-                  id={`employment-${type}`}
-                  checked={formData.employmentTypes.includes(type)}
-                  onChange={() => handleEmploymentTypeChange(type)}
-                />
-              ))}
-            </Stack>
-          </Form.Group>
         </Card.Body>
       </Card>
 
-      <div className="d-flex justify-content-center">
+      <div className="text-center">
         <Button
           type="submit"
           variant="primary"
           size="lg"
           className="w-100 w-lg-50"
+          disabled={isLoading}
         >
-          Publish
+          {isEditing ? 'Update Job' : 'Publish Job'}
         </Button>
       </div>
     </Form>

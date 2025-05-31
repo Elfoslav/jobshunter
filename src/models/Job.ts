@@ -4,7 +4,7 @@ interface JobBase {
   title: string;
   company: string;
   location: string;
-  remotePercentage?: number;
+  remotePercentage: number;
   description: string;
   requiredSkills: Array<string>;
   optionalSkills: Array<string>;

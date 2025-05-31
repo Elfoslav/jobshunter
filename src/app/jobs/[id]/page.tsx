@@ -11,7 +11,7 @@ import {
   Spinner,
   Alert,
 } from 'react-bootstrap';
-import { GeoAltFill, GlobeAmericas, CashCoin } from 'react-bootstrap-icons';
+import { GeoAltFill, CashCoin } from 'react-bootstrap-icons';
 import DOMPurify from 'dompurify';
 import { useGetJobById, useGetSimilarJobs } from '@/services/jobs/JobsService';
 import {
@@ -29,6 +29,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { JOB_APPLICATIONS_QUERIES } from '@/lib/consts';
 import { useRouter } from 'next/navigation';
 import EmploymentType from '@/models/enums/EmploymentType';
+import RemotePercentage from '../components/RemotePercentage';
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const queryClient = useQueryClient();
@@ -126,12 +127,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                   <GeoAltFill className="me-1" /> {job.location}
                 </div>
                 <div className="d-flex align-items-center mb-1">
-                  <GlobeAmericas className="me-1" />
-                  {job.remotePercentage ? (
-                    <span>Remote {job.remotePercentage}%</span>
-                  ) : (
-                    <span>On Site</span>
-                  )}
+                  <RemotePercentage remotePercentage={job.remotePercentage} />
                 </div>
               </div>
 
@@ -188,7 +184,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
           <Card className="mt-4 mt-md-0">
             <Card.Body>
               <div
-                className="mt-1"
+                className="mt-1 mb-4"
                 dangerouslySetInnerHTML={{
                   __html: DOMPurify.sanitize(job.description),
                 }}

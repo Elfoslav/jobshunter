@@ -9,6 +9,7 @@ import { useGetSkills } from '@/services/skills/SkillsService';
 import SelectOption from '@/models/SelectOption';
 import { useUpdateUser } from '@/services/users/UsersService';
 import { useNotification } from '@/app/context/NotificationContext';
+import RemotePercentageInput from '@/app/jobs/components/RemotePercentageInput';
 
 interface UserProfileFormProps {
   user?: User;
@@ -204,19 +205,10 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ user }) => {
             </Form.Group>
           </Col>
           <Col md={6} lg={4}>
-            <Form.Group controlId="remotePercentage" className="mb-2">
-              <Form.Label>Preferred Remote Percentage</Form.Label>
-              <Form.Control
-                type="number"
-                name="preferences.remotePercentage"
-                value={formData.preferences.remotePercentage}
-                onChange={onPreferredRemotePercentageChange}
-              />
-              <Form.Range
-                value={formData.preferences.remotePercentage}
-                onChange={onPreferredRemotePercentageChange}
-              />
-            </Form.Group>
+            <RemotePercentageInput
+              value={formData.preferences.remotePercentage}
+              onChange={onPreferredRemotePercentageChange}
+            />
           </Col>
         </Row>
 

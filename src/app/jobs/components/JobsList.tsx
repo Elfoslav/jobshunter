@@ -11,6 +11,7 @@ import './JobsList.scss';
 import { getAgoString, getDaysPassed } from '@/lib/functions';
 import User from '@/models/User';
 import UserApplied from './UserApplied';
+import RemotePercentage from './RemotePercentage';
 
 interface JobsListProps {
   jobs: ExistingJob[];
@@ -73,8 +74,7 @@ const JobsList: React.FC<JobsListProps> = ({
                     <GeoAltFill className="me-1" /> {job.location}
                   </div>
                   <div className="d-flex align-items-center mb-1">
-                    <GlobeAmericas className="me-1" /> Remote{' '}
-                    {job.remotePercentage}%
+                    <RemotePercentage remotePercentage={job.remotePercentage} />
                   </div>
                 </Col>
                 <Col lg={7}>
