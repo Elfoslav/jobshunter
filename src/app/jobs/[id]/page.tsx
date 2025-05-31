@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { use, useState } from 'react';
 import {
   Row,
@@ -28,8 +27,8 @@ import JobApplicationManager from '@/lib/JobApplicationManager';
 import { useQueryClient } from '@tanstack/react-query';
 import { JOB_APPLICATIONS_QUERIES } from '@/lib/consts';
 import { useRouter } from 'next/navigation';
-import EmploymentType from '@/models/enums/EmploymentType';
 import RemotePercentage from '../components/RemotePercentage';
+import SimilarJobs from '../components/SimilarJobs';
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const queryClient = useQueryClient();
@@ -120,65 +119,64 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         <Col md={4}>
           <Card>
             <Card.Body>
-              <h1>{job.title}</h1>
-              <div>{job.company}</div>
-              <div className="d-flex gap-3">
-                <div className="d-flex align-items-center mb-1">
-                  <GeoAltFill className="me-1" /> {job.location}
+              {/* Header: Company, Title, PostedAt */}
+              <div className="d-flex justify-content-between align-items-center flex-wrap mb-2">
+                <div>
+                  <h3 className="mb-0">{job.company}</h3>
                 </div>
-                <div className="d-flex align-items-center mb-1">
+                <small className="text-muted">
+                  {getAgoString(job.postedAt)}
+                </small>
+              </div>
+
+              {/* Location + Remote */}
+              <div className="d-flex flex-wrap gap-3 mb-2 text-muted">
+                <div className="d-flex align-items-center">
+                  <GeoAltFill className="me-1" />
+                  {job.location}
+                </div>
+                <div className="d-flex align-items-center">
                   <RemotePercentage remotePercentage={job.remotePercentage} />
                 </div>
               </div>
 
-              <div>
-                <CashCoin /> ${job.salaryMin} - ${job.salaryMax}
+              {/* Salary */}
+              <div className="mb-2">
+                <CashCoin className="me-1 text-success" />
+                <strong>
+                  {job.salaryMin} - {job.salaryMax} {job.currency}
+                </strong>{' '}
+                / month
               </div>
 
-              <div className="mt-1 text-bold">
-                {job.employmentTypes.map(
-                  (employmentType: EmploymentType, i: number) => (
-                    <span key={i}>
-                      {employmentType}
-                      {job.employmentTypes.length !== i + 1 ? ', ' : ''}
-                    </span>
-                  )
-                )}
+              {/* Employment Types */}
+              <div className="mb-2">
+                <strong>Type: </strong>
+                <span className="text-muted">
+                  {job.employmentTypes.join(', ')}
+                </span>
               </div>
 
-              <Skills
-                skills={job.requiredSkills}
-                user={user}
-                primary
-                className="mt-2"
-              />
-              <Skills
-                skills={job.optionalSkills}
-                user={user}
-                className="mt-3 mb-2"
-              />
+              <h3 className="fs-5">Required skills:</h3>
+              <Skills skills={job.requiredSkills} user={user} primary />
 
-              {similarJobs && similarJobs.length > 0 && (
-                <div className="mt-3">
-                  <h3 className="text-smaller">Similar jobs</h3>
-                  {similarJobs.map((similarJob) => (
-                    <div key={similarJob.id}>
-                      <Link href={`/jobs/${similarJob.id}`}>
-                        {similarJob.title}
-                      </Link>
-                    </div>
-                  ))}
-                </div>
-              )}
+              <h3 className="fs-5 mt-2">Nice to have skills:</h3>
+              <Skills skills={job.optionalSkills} user={user} />
 
-              <div className="mt-2">{getAgoString(job.postedAt)}</div>
-
-              <div className="mt-2">
-                {jobApplications.length}{' '}
+              {/* Applications Count */}
+              <div className="text-muted mt-2">
+                <strong>{jobApplications.length}</strong>{' '}
                 {getSingularOrPlural('Applicant', jobApplications.length)}
               </div>
             </Card.Body>
           </Card>
+
+          {similarJobs && similarJobs.length > 0 && (
+            <SimilarJobs
+              className="mt-4 d-none d-md-block"
+              similarJobs={similarJobs}
+            />
+          )}
         </Col>
         <Col md={8}>
           <Card className="mt-4 mt-md-0">
@@ -232,6 +230,13 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
               </Row>
             </Card.Body>
           </Card>
+
+          {similarJobs && similarJobs.length > 0 && (
+            <SimilarJobs
+              className="mt-4 d-md-none d-block"
+              similarJobs={similarJobs}
+            />
+          )}
         </Col>
       </Row>
     </div>

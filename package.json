@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"next dev\" \"tsc --noEmit --watch\"",
+    "dev": "concurrently --raw \"next dev\" \"tsc --noEmit --watch\"",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

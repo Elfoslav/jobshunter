@@ -216,7 +216,7 @@ export default function JobForm({
                 />
               </Form.Group>
             </Col>
-            <Col xs={8}>
+            <Col md={8}>
               <Form.Group>
                 <Form.Label>Employment Types</Form.Label>
                 <div className="d-flex flex-wrap gap-3">
@@ -233,7 +233,7 @@ export default function JobForm({
                 </div>
               </Form.Group>
             </Col>
-            <Col xs={4}>
+            <Col md={4}>
               <RemotePercentageInput
                 value={formData.remotePercentage}
                 onChange={onRemotePercentageChange}
