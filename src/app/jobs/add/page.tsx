@@ -28,7 +28,7 @@ export default function AddJob() {
     <div>
       <Breadcrumbs items={breadcrumbs} />
       <Container>
-        <JobForm onSubmit={handleAdd} isLoading />
+        <JobForm onSubmit={handleAdd} />
 
         {isLoading && (
           <div className="text-center mt-4">

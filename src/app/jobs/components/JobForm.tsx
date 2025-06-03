@@ -92,7 +92,7 @@ export default function JobForm({
   };
 
   return (
-    <Form onSubmit={handleSubmit} className="mt-4">
+    <Form onSubmit={handleSubmit} className="mt-4 mb-4">
       <Card className="mb-4">
         <Card.Header>Job Details</Card.Header>
         <Card.Body>
