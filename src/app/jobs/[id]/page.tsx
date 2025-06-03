@@ -188,7 +188,9 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                 <div
                   className="mt-1 mb-4"
                   dangerouslySetInnerHTML={{
-                    __html: DOMPurify.sanitize(job.description),
+                    __html: DOMPurify.sanitize(
+                      job.description.replace(/\n/g, '<br />')
+                    ),
                   }}
                 />
 
