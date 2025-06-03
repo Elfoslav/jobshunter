@@ -29,6 +29,7 @@ import { JOB_APPLICATIONS_QUERIES } from '@/lib/consts';
 import { useRouter } from 'next/navigation';
 import RemotePercentage from '../components/RemotePercentage';
 import SimilarJobs from '../components/SimilarJobs';
+import BackToJobsBtn from '../components/BackToJobsBtn';
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const queryClient = useQueryClient();
@@ -115,130 +116,138 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     <div>
       <Breadcrumbs items={breadcrumbs} />
 
-      <Row>
-        <Col md={4}>
-          <Card>
-            <Card.Body>
-              {/* Header: Company, Title, PostedAt */}
-              <div className="d-flex justify-content-between align-items-center flex-wrap mb-2">
-                <div>
-                  <h3 className="mb-0">{job.company}</h3>
+      <Container className="mb-4">
+        <Row>
+          <Col md={4}>
+            <Card>
+              <Card.Body>
+                {/* Header: Company, Title, PostedAt */}
+                <div className="d-flex justify-content-between align-items-center flex-wrap mb-2">
+                  <div>
+                    <h3 className="mb-0">{job.company}</h3>
+                  </div>
+                  <small className="text-muted">
+                    {getAgoString(job.postedAt)}
+                  </small>
                 </div>
-                <small className="text-muted">
-                  {getAgoString(job.postedAt)}
-                </small>
-              </div>
 
-              {/* Location + Remote */}
-              <div className="d-flex flex-wrap gap-3 mb-2 text-muted">
-                <div className="d-flex align-items-center">
-                  <GeoAltFill className="me-1" />
-                  {job.location}
+                {/* Location + Remote */}
+                <div className="d-flex flex-wrap gap-3 mb-2 text-muted">
+                  <div className="d-flex align-items-center">
+                    <GeoAltFill className="me-1" />
+                    {job.location}
+                  </div>
+                  <div className="d-flex align-items-center">
+                    <RemotePercentage remotePercentage={job.remotePercentage} />
+                  </div>
                 </div>
-                <div className="d-flex align-items-center">
-                  <RemotePercentage remotePercentage={job.remotePercentage} />
+
+                {/* Salary */}
+                <div className="mb-2">
+                  <CashCoin className="me-1 text-success" />
+                  <strong>
+                    {job.salaryMin} - {job.salaryMax} {job.currency}
+                  </strong>{' '}
+                  / month
                 </div>
-              </div>
 
-              {/* Salary */}
-              <div className="mb-2">
-                <CashCoin className="me-1 text-success" />
-                <strong>
-                  {job.salaryMin} - {job.salaryMax} {job.currency}
-                </strong>{' '}
-                / month
-              </div>
+                {/* Employment Types */}
+                <div className="mb-2">
+                  <strong>Type: </strong>
+                  <span className="text-muted">
+                    {job.employmentTypes.join(', ')}
+                  </span>
+                </div>
 
-              {/* Employment Types */}
-              <div className="mb-2">
-                <strong>Type: </strong>
-                <span className="text-muted">
-                  {job.employmentTypes.join(', ')}
-                </span>
-              </div>
+                <h3 className="fs-5">Required skills:</h3>
+                <Skills skills={job.requiredSkills} user={user} primary />
 
-              <h3 className="fs-5">Required skills:</h3>
-              <Skills skills={job.requiredSkills} user={user} primary />
+                <h3 className="fs-5 mt-2">Nice to have skills:</h3>
+                <Skills skills={job.optionalSkills} user={user} />
 
-              <h3 className="fs-5 mt-2">Nice to have skills:</h3>
-              <Skills skills={job.optionalSkills} user={user} />
+                {/* Applications Count */}
+                <div className="text-muted mt-2">
+                  <strong>{jobApplications.length}</strong>{' '}
+                  {getSingularOrPlural('Applicant', jobApplications.length)}
+                </div>
+              </Card.Body>
+            </Card>
 
-              {/* Applications Count */}
-              <div className="text-muted mt-2">
-                <strong>{jobApplications.length}</strong>{' '}
-                {getSingularOrPlural('Applicant', jobApplications.length)}
-              </div>
-            </Card.Body>
-          </Card>
-
-          {similarJobs && similarJobs.length > 0 && (
-            <SimilarJobs
-              className="mt-4 d-none d-md-block"
-              similarJobs={similarJobs}
-            />
-          )}
-        </Col>
-        <Col md={8}>
-          <Card className="mt-4 mt-md-0">
-            <Card.Body>
-              <div
-                className="mt-1 mb-4"
-                dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(job.description),
-                }}
+            {similarJobs && similarJobs.length > 0 && (
+              <SimilarJobs
+                className="mt-4 d-none d-md-block"
+                similarJobs={similarJobs}
               />
+            )}
 
-              <Row>
-                <Col sm={12} md={7} lg={5}>
-                  <div className="d-grid gap-2">
-                    {canApply ? (
+            <BackToJobsBtn className="mt-3 d-none d-md-block" />
+          </Col>
+          <Col md={8}>
+            <Card className="mt-4 mt-md-0">
+              <Card.Body>
+                <div
+                  className="mt-1 mb-4"
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(job.description),
+                  }}
+                />
+
+                <Row>
+                  <Col sm={12} md={7} lg={5}>
+                    <div className="d-grid gap-2">
+                      {canApply ? (
+                        <Button
+                          size="lg"
+                          onClick={onJobApply}
+                          disabled={submitting}
+                        >
+                          {submitting ? (
+                            <Spinner
+                              as="span"
+                              animation="border"
+                              size="sm"
+                              role="status"
+                              aria-hidden="true"
+                            />
+                          ) : (
+                            'Apply for this job'
+                          )}
+                        </Button>
+                      ) : (
+                        <Alert variant="primary">
+                          Your application has been sent. (
+                          {getUserApplicationDate()})
+                        </Alert>
+                      )}
+                    </div>
+                  </Col>
+
+                  <Col sm={12} md={5} lg={7}>
+                    <div className="d-grid d-md-inline-block mt-3 mt-md-0">
                       <Button
                         size="lg"
-                        onClick={onJobApply}
-                        disabled={submitting}
+                        variant="warning"
+                        onClick={() => router.push(`/jobs/${id}/edit`)}
                       >
-                        {submitting ? (
-                          <Spinner
-                            as="span"
-                            animation="border"
-                            size="sm"
-                            role="status"
-                            aria-hidden="true"
-                          />
-                        ) : (
-                          'Apply for this job'
-                        )}
+                        Edit
                       </Button>
-                    ) : (
-                      <Alert variant="primary">
-                        Your application has been sent. (
-                        {getUserApplicationDate()})
-                      </Alert>
-                    )}
-                  </div>
-                </Col>
+                    </div>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
 
-                <Col sm={12} md={5} lg={7}>
-                  <Button
-                    size="lg"
-                    variant="warning"
-                    onClick={() => router.push(`/jobs/${id}/edit`)}
-                  >
-                    Edit
-                  </Button>
-                </Col>
-              </Row>
-            </Card.Body>
-          </Card>
+            {similarJobs && similarJobs.length > 0 && (
+              <SimilarJobs
+                className="mt-4 d-md-none d-block"
+                similarJobs={similarJobs}
+              />
+            )}
 
-          {similarJobs && similarJobs.length > 0 && (
-            <SimilarJobs
-              className="mt-4 d-md-none d-block"
-              similarJobs={similarJobs}
-            />
-          )}
-        </Col>
-      </Row>
+            <BackToJobsBtn className="mt-3 d-md-none d-block" />
+          </Col>
+        </Row>
+      </Container>
     </div>
   );
 }
