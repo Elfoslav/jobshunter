@@ -13,7 +13,7 @@ export default function UserEdit() {
   ];
 
   return (
-    <div>
+    <div className="mb-4">
       <Breadcrumbs items={breadcrumbs} />
 
       <Container>

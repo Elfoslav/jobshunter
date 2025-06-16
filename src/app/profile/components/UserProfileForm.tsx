@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Select, { MultiValue, ActionMeta } from 'react-select';
 import { Container, Form, Button, Row, Col, Spinner } from 'react-bootstrap';
 import EmploymentType from '@/models/enums/EmploymentType';
@@ -16,7 +17,7 @@ interface UserProfileFormProps {
 }
 
 const UserProfileForm: React.FC<UserProfileFormProps> = ({ user }) => {
-  console.log(user);
+  const router = useRouter();
   const { showNotification } = useNotification();
   const { data: skills } = useGetSkills();
   const updateUserMutation = useUpdateUser();
@@ -116,15 +117,14 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ user }) => {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(formData);
     setIsSaving(true);
     // Simulate request response
     setTimeout(() => {
       updateUserMutation.mutate(formData, {
         onSuccess() {
-          console.log('Succes update', formData);
           setIsSaving(false);
-          showNotification('Your profile has been saved!');
+          showNotification('Your profile has been updated!');
+          router.push('/profile');
         },
       });
     }, 1000);
@@ -297,7 +297,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ user }) => {
 
         <Row>
           <Col md={6} lg={4}>
-            <div className="d-grid gap-2">
+            <div className="d-grid gap-2 mt-2">
               <Button variant="primary" type="submit" disabled={isSaving}>
                 {isSaving ? (
                   <Spinner

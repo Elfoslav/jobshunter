@@ -41,7 +41,7 @@ export default function UserShow() {
   }
 
   return (
-    <Container>
+    <Container className="mb-4">
       <h2>Your profile</h2>
 
       {/* User Info Card */}
@@ -108,7 +108,9 @@ export default function UserShow() {
             <Col></Col>
           </Row>
           <div className="mt-3">
-            <Button href="/profile/edit">Edit your profile</Button>
+            <Button variant="warning" href="/profile/edit">
+              Edit your profile
+            </Button>
           </div>
         </Card.Body>
       </Card>
