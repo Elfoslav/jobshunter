@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Form, Button, Col, Row, Card, Stack } from 'react-bootstrap';
+import { Form, Button, Col, Row, Card } from 'react-bootstrap';
 import EmploymentType from '@/models/enums/EmploymentType';
 import SkillsSelect from './SkillsSelect';
 import { MultiValue } from 'react-select';
@@ -10,6 +10,7 @@ import { Option } from './SkillsSelect';
 import { ExistingJob } from '@/models/Job';
 import './JobForm.scss';
 import RemotePercentageInput from './RemotePercentageInput';
+import TextEditor from '@/app/components/TextEditor';
 
 interface JobFormProps {
   initialData?: ExistingJob;
@@ -138,13 +139,19 @@ export default function JobForm({
             <Col md={12}>
               <Form.Group controlId="description">
                 <Form.Label>Job Description</Form.Label>
-                <Form.Control
+                {/* <Form.Control
                   as="textarea"
                   rows={4}
                   name="description"
                   placeholder="Describe the responsibilities, qualifications, and expectations..."
                   value={formData.description}
                   onChange={handleChange}
+                /> */}
+                <TextEditor
+                  text={formData.description}
+                  onChange={(val) =>
+                    setFormData({ ...formData, description: val })
+                  }
                 />
               </Form.Group>
             </Col>
