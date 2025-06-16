@@ -40,7 +40,7 @@ export default function JobsContent() {
           <JobsFilter search={searchParam} skillsOptions={skillsOptions} />
         </Col>
         <Col md={3} lg={5} className="d-flex justify-content-end">
-          <Button className="mt-2 mb-3" href="/jobs/add">
+          <Button className="mt-2 mb-3 d-none d-lg-block" href="/jobs/add">
             Post a job
           </Button>
         </Col>

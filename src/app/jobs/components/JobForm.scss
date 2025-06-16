@@ -1,9 +1,5 @@
-@use '@/scss/variables' as *;
-@use 'sass:color';
-
 .card-header {
   font-size: 1.2rem;
-  color: white;
-  background-color: color.scale($primary, $lightness: 13%) !important;
+  background-color: #a7e8f9 !important;
   border-bottom: 1px solid #dee2e6;
 }
