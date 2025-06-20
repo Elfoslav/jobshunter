@@ -13,8 +13,8 @@ export default function AppNavbar() {
   };
 
   return (
-    <Container>
-      <Navbar expand="lg">
+    <Navbar expand="lg" className="bg-light">
+      <Container>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <div className="d-flex d-lg-none justify-content-end">
           <Button className="mt-2 mb-3" href="/jobs/add">
@@ -40,7 +40,7 @@ export default function AppNavbar() {
             </Nav.Item>
           </Nav>
         </Navbar.Collapse>
-      </Navbar>
-    </Container>
+      </Container>
+    </Navbar>
   );
 }
