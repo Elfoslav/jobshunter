@@ -1,5 +1,9 @@
+'use client';
+
 import React, { useRef } from 'react';
-import JoditEditor from 'jodit-react';
+import dynamic from 'next/dynamic';
+
+const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
 
 type TextEditorProps = {
   text: string;
@@ -8,6 +12,7 @@ type TextEditorProps = {
 };
 
 const config = {
+  // language: 'cs_cz',
   readonly: false,
   toolbar: true,
   toolbarSticky: false,
