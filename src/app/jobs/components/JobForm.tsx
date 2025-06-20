@@ -149,7 +149,7 @@ export default function JobForm({
                 /> */}
                 <TextEditor
                   text={formData.description}
-                  onChange={(val) =>
+                  onBlur={(val) =>
                     setFormData({ ...formData, description: val })
                   }
                 />

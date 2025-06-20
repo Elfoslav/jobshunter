@@ -1,53 +1,60 @@
 import React, { useRef } from 'react';
-import { Editor as TinyMCEEditor } from 'tinymce';
-import { Editor } from '@tinymce/tinymce-react';
+import JoditEditor from 'jodit-react';
 
 type TextEditorProps = {
   text: string;
-  onChange: (value: string) => void;
+  onBlur?: (value: string) => void;
+  onChange?: (value: string) => void;
 };
 
-export default function TextEditor({ text, onChange }: TextEditorProps) {
-  const editorRef = useRef<TinyMCEEditor | null>(null);
-  const apiKey = process.env.NEXT_PUBLIC_TINYMCE_API_KEY;
+const config = {
+  readonly: false,
+  toolbar: true,
+  toolbarSticky: false,
+  toolbarAdaptive: false,
+  buttons: [
+    'bold',
+    'italic',
+    'underline',
+    '|',
+    'ul',
+    'ol',
+    '|',
+    'outdent',
+    'indent',
+    '|',
+    'paragraph',
+    'font',
+    'fontsize',
+    'brush', // text color
+    '|',
+    'image',
+    'link',
+    '|',
+    'align',
+    'undo',
+    'redo',
+    'hr',
+    'eraser',
+    'fullsize',
+    'source',
+  ],
+};
+
+export default function TextEditor({
+  text,
+  onBlur,
+  onChange,
+}: TextEditorProps) {
+  const editor = useRef(null);
 
   return (
-    <Editor
-      apiKey={apiKey}
+    <JoditEditor
+      ref={editor}
+      config={config}
       value={text}
-      onEditorChange={(newValue) => onChange(newValue)}
-      onInit={(_evt, editor) => (editorRef.current = editor)}
-      init={{
-        height: 400,
-        menubar: false,
-        plugins: [
-          'advlist',
-          'autolink',
-          'lists',
-          'link',
-          'image',
-          'charmap',
-          'preview',
-          'anchor',
-          'searchreplace',
-          'visualblocks',
-          'code',
-          'fullscreen',
-          'insertdatetime',
-          'media',
-          'table',
-          'code',
-          'help',
-          'wordcount',
-        ],
-        toolbar:
-          'undo redo | blocks | ' +
-          'bold italic forecolor | alignleft aligncenter ' +
-          'alignright alignjustify | bullist numlist outdent indent | ' +
-          'removeformat | help',
-        content_style:
-          'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-      }}
+      onBlur={onBlur}
+      onChange={onChange}
     />
   );
 }
