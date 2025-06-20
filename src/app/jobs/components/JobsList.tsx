@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { ListGroup, ListGroupItem, Row, Col } from 'react-bootstrap';
-import { GeoAltFill, GlobeAmericas } from 'react-bootstrap-icons';
+import { GeoAltFill, SuitcaseLgFill } from 'react-bootstrap-icons';
 import useQueryParams from '@/app/components/useQueryParams';
 import Pagination from '@/app/components/Pagination';
 import { JOBS_PER_PAGE, JOBS_QUERIES } from '@/lib/consts';
@@ -76,6 +76,15 @@ const JobsList: React.FC<JobsListProps> = ({
                   <div className="d-flex align-items-center mb-1">
                     <RemotePercentage remotePercentage={job.remotePercentage} />
                   </div>
+                  {job.employmentTypes.length > 0 && (
+                    <div className="d-flex mb-1">
+                      <SuitcaseLgFill
+                        className="mt-1 me-1"
+                        style={{ flexShrink: 0 }}
+                      />
+                      <span>{job.employmentTypes.join(', ')}</span>
+                    </div>
+                  )}
                 </Col>
                 <Col lg={7}>
                   <Skills
