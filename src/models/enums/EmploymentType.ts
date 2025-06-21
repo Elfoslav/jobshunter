@@ -7,4 +7,4 @@ enum EmploymentType {
   Freelance = 'Freelance',
 }
 
-export default EmploymentType
+export default EmploymentType;

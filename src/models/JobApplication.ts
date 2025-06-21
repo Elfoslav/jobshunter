@@ -1,4 +1,4 @@
-import JobApplicationStatus from "./enums/JobApplicationStatus"
+import JobApplicationStatus from './enums/JobApplicationStatus';
 
 export default interface JobApplication {
   id: string;

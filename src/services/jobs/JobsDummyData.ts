@@ -1,8 +1,8 @@
-import { ExistingJob } from '@/models/Job'
-import EmploymentType from '@/models/enums/EmploymentType'
+import { ExistingJob } from '@/models/Job';
+import EmploymentType from '@/models/enums/EmploymentType';
 
-const currentDate = new Date()
-const daysToSubtract = 1
+const currentDate = new Date();
+const daysToSubtract = 1;
 
 const jobs: ExistingJob[] = [
   {
@@ -55,13 +55,37 @@ const jobs: ExistingJob[] = [
       <p>If you're excited to be part of a forward-thinking team and make a meaningful impact with your front-end development skills, we want to meet you! Join us in creating the next generation of web applications that will amaze our users.</p>
     `,
     requiredSkills: [
-      'JavaScript', 'React', 'HTML', 'CSS', 'Git', 'Next.js', 'TypeScript',
-      'SASS', 'Webpack', 'RESTful API', 'Responsive Web Design', 'UI/UX Design',
-      'Front-end Testing', 'Performance Optimization', 'Code Review',
+      'JavaScript',
+      'React',
+      'HTML',
+      'CSS',
+      'Git',
+      'Next.js',
+      'TypeScript',
+      'SASS',
+      'Webpack',
+      'RESTful API',
+      'Responsive Web Design',
+      'UI/UX Design',
+      'Front-end Testing',
+      'Performance Optimization',
+      'Code Review',
     ],
     optionalSkills: [
-      '.NET', 'Java', 'Docker', 'Angular', 'Vue.js', 'Nuxt', 'Python', 'Ruby',
-      'AWS', 'Node.js', 'GraphQL', 'Redux', 'Material-UI', 'Adobe Creative Suite',
+      '.NET',
+      'Java',
+      'Docker',
+      'Angular',
+      'Vue.js',
+      'Nuxt',
+      'Python',
+      'Ruby',
+      'AWS',
+      'Node.js',
+      'GraphQL',
+      'Redux',
+      'Material-UI',
+      'Adobe Creative Suite',
     ],
     salaryMin: 80000,
     salaryMax: 95000,
@@ -135,7 +159,8 @@ const jobs: ExistingJob[] = [
     company: 'Cloud Solutions Inc.',
     location: 'Seattle, WA',
     remotePercentage: 0,
-    description: '<p>We are seeking a DevOps Engineer to optimize our infrastructure...</p>',
+    description:
+      '<p>We are seeking a DevOps Engineer to optimize our infrastructure...</p>',
     requiredSkills: ['AWS', 'Docker', 'Kubernetes', 'CI/CD'],
     optionalSkills: ['Terraform', 'Jenkins', 'GitOps'],
     salaryMin: 90000,
@@ -165,7 +190,8 @@ const jobs: ExistingJob[] = [
     company: 'App Creations LLC',
     location: 'San Jose, CA',
     remotePercentage: 0,
-    description: '<p>We are hiring an iOS Developer to work on our mobile apps...</p>',
+    description:
+      '<p>We are hiring an iOS Developer to work on our mobile apps...</p>',
     requiredSkills: ['Swift', 'iOS Development', 'UIKit'],
     optionalSkills: ['Objective-C', 'Xcode', 'React Native'],
     salaryMin: 85000,
@@ -195,7 +221,8 @@ const jobs: ExistingJob[] = [
     company: 'Quality Assurance Inc.',
     location: 'Boston, MA',
     remotePercentage: 0,
-    description: '<p>We are looking for a QA Engineer to ensure the quality of our software...</p>',
+    description:
+      '<p>We are looking for a QA Engineer to ensure the quality of our software...</p>',
     requiredSkills: ['Quality Assurance', 'Testing', 'Test Automation'],
     optionalSkills: ['Selenium', 'JIRA', 'Continuous Testing'],
     salaryMin: 80000,
@@ -210,14 +237,15 @@ const jobs: ExistingJob[] = [
     company: 'Tech Solutions Ltd.',
     location: 'Seattle, WA',
     remotePercentage: 0,
-    description: '<p>Tech Solutions Ltd. is looking for a talented Software Engineer to join our innovative development team. As a Software Engineer, you will have the opportunity to work on cutting-edge projects and contribute to the development of software solutions. If you are passionate about coding and problem-solving, we would love to have you on board.</p>',
+    description:
+      '<p>Tech Solutions Ltd. is looking for a talented Software Engineer to join our innovative development team. As a Software Engineer, you will have the opportunity to work on cutting-edge projects and contribute to the development of software solutions. If you are passionate about coding and problem-solving, we would love to have you on board.</p>',
     requiredSkills: ['JavaScript', 'React', 'Node.js', 'RESTful APIs'],
     optionalSkills: ['TypeScript', 'GraphQL', 'Docker'],
     salaryMin: 90000,
     salaryMax: 110000,
     currency: 'USD',
     employmentTypes: [EmploymentType.FullTime],
-    postedAt: new Date('2023-09-30 14:30')
+    postedAt: new Date('2023-09-30 14:30'),
   },
   {
     id: '12',
@@ -225,14 +253,15 @@ const jobs: ExistingJob[] = [
     company: 'WebTech Solutions',
     location: 'San Francisco, CA',
     remotePercentage: 0,
-    description: '<p>WebTech Solutions is seeking a skilled and creative Web Developer to join our dynamic team. As a Web Developer, you will play a pivotal role in designing and developing interactive and user-friendly websites. If you have a passion for web development and enjoy collaborating with cross-functional teams, we\'d love to hear from you.</p>',
+    description:
+      "<p>WebTech Solutions is seeking a skilled and creative Web Developer to join our dynamic team. As a Web Developer, you will play a pivotal role in designing and developing interactive and user-friendly websites. If you have a passion for web development and enjoy collaborating with cross-functional teams, we'd love to hear from you.</p>",
     requiredSkills: ['HTML', 'CSS', 'JavaScript', 'React', 'Node.js'],
     optionalSkills: ['Angular', 'Vue.js', 'SASS', 'Webpack'],
     salaryMin: 70000,
     salaryMax: 90000,
     currency: 'USD',
     employmentTypes: [EmploymentType.FullTime],
-    postedAt: new Date('2023-09-30 15:00')
+    postedAt: new Date('2023-09-30 15:00'),
   },
   {
     id: '13',
@@ -240,14 +269,19 @@ const jobs: ExistingJob[] = [
     company: 'Data Insights Co.',
     location: 'New York, NY',
     remotePercentage: 0,
-    description: '<p>Data Insights Co. is on the lookout for a highly skilled Data Scientist who can turn data into actionable insights. Join our team to work on challenging data analysis projects and create data-driven solutions. If you have a strong background in statistics and machine learning, we\'d like to talk to you.</p>',
+    description:
+      "<p>Data Insights Co. is on the lookout for a highly skilled Data Scientist who can turn data into actionable insights. Join our team to work on challenging data analysis projects and create data-driven solutions. If you have a strong background in statistics and machine learning, we'd like to talk to you.</p>",
     requiredSkills: ['Python', 'R', 'Machine Learning', 'Data Analysis'],
-    optionalSkills: ['Deep Learning', 'Natural Language Processing', 'Big Data'],
+    optionalSkills: [
+      'Deep Learning',
+      'Natural Language Processing',
+      'Big Data',
+    ],
     salaryMin: 90000,
     salaryMax: 120000,
     currency: 'USD',
     employmentTypes: [EmploymentType.FullTime],
-    postedAt: new Date('2023-09-30 16:30')
+    postedAt: new Date('2023-09-30 16:30'),
   },
   {
     id: '14',
@@ -255,16 +289,21 @@ const jobs: ExistingJob[] = [
     company: 'Creative Visionaries',
     location: 'Los Angeles, CA',
     remotePercentage: 0,
-    description: '<p>Creative Visionaries is in search of a talented UX/UI Designer to craft outstanding user experiences. As a Designer, you will collaborate with our team to create visually stunning and intuitive designs. If you have a keen eye for aesthetics and a passion for user-centric design, we want to hear from you.</p>',
-    requiredSkills: ['Adobe Creative Suite', 'User-Centered Design', 'Wireframing'],
+    description:
+      '<p>Creative Visionaries is in search of a talented UX/UI Designer to craft outstanding user experiences. As a Designer, you will collaborate with our team to create visually stunning and intuitive designs. If you have a keen eye for aesthetics and a passion for user-centric design, we want to hear from you.</p>',
+    requiredSkills: [
+      'Adobe Creative Suite',
+      'User-Centered Design',
+      'Wireframing',
+    ],
     optionalSkills: ['Sketch', 'InVision', 'Interaction Design'],
     salaryMin: 80000,
     salaryMax: 100000,
     currency: 'USD',
     employmentTypes: [EmploymentType.FullTime],
-    postedAt: new Date('2023-09-30 17:00')
+    postedAt: new Date('2023-09-30 17:00'),
   },
-]
+];
 
 const jobsWithDynamicDates = jobs.map((job, index) => {
   const newPostedAt = new Date(currentDate);
@@ -276,4 +315,4 @@ const jobsWithDynamicDates = jobs.map((job, index) => {
   };
 });
 
-export default jobsWithDynamicDates
+export default jobsWithDynamicDates;

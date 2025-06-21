@@ -1,20 +1,42 @@
-import EmploymentType from "./enums/EmploymentType"
+import EmploymentType from './enums/EmploymentType';
 
-export default interface User {
+export enum UserType {
+  Company = 'Company',
+  Applicant = 'Applicant',
+}
+
+interface BaseUser {
   id: string;
   name: string;
   email: string;
   phone: string;
-  bio: string;
   location: string;
-  skills: Array<string>;
-  preferences: {
-    locations: string[]; // Locations where the user prefers to work
-    remotePercentage: number; // Preferred remote work percentage
-    employmentTypes: EmploymentType[]; // Preferred employment types
-    salaryMin: number; // Minimum preferred salary
-    salaryMax: number; // Maximum preferred salary
-  };
   registeredAt: Date;
   updatedAt?: Date;
+  type: UserType;
 }
+
+export interface ApplicantUser extends BaseUser {
+  type: UserType.Applicant;
+  bio: string;
+  skills: string[];
+  preferences: {
+    locations: string[];
+    remotePercentage: number;
+    employmentTypes: EmploymentType[];
+    salaryMin: number;
+    salaryMax: number;
+  };
+}
+
+export interface CompanyUser extends BaseUser {
+  type: UserType.Company;
+  companyName: string;
+  website?: string;
+  description?: string;
+  logoUrl?: string;
+  industry?: string;
+  size?: number; // e.g. number of employees
+}
+
+export type User = ApplicantUser | CompanyUser;

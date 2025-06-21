@@ -1,10 +1,10 @@
-'use client'
+'use client';
 
-import { Toast, ToastContainer } from "react-bootstrap"
-import { useNotification } from '../context/NotificationContext'
+import { Toast, ToastContainer } from 'react-bootstrap';
+import { useNotification } from '../context/NotificationContext';
 
 export default function Notification() {
-  const { notification, type, clearNotification } = useNotification()
+  const { notification, type, clearNotification } = useNotification();
   return (
     <ToastContainer
       className="p-3"
@@ -13,7 +13,7 @@ export default function Notification() {
       style={{ zIndex: 1 }}
     >
       <Toast
-        onClose={() => clearNotification() }
+        onClose={() => clearNotification()}
         show={notification !== null}
         delay={5000}
         autohide
@@ -22,8 +22,8 @@ export default function Notification() {
         <Toast.Header>
           <strong className="me-auto">Notification</strong>
         </Toast.Header>
-        <Toast.Body>{ notification }</Toast.Body>
+        <Toast.Body>{notification}</Toast.Body>
       </Toast>
     </ToastContainer>
-  )
+  );
 }

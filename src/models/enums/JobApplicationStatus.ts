@@ -10,4 +10,4 @@ enum JobApplicationStatus {
   Other = 'Other',
 }
 
-export default JobApplicationStatus
+export default JobApplicationStatus;

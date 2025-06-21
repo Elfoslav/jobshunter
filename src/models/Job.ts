@@ -1,4 +1,4 @@
-import EmploymentType from "./enums/EmploymentType";
+import EmploymentType from './enums/EmploymentType';
 
 interface JobBase {
   title: string;

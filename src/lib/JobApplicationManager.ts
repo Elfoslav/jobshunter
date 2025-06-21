@@ -1,4 +1,4 @@
-import JobApplication from "@/models/JobApplication";
+import JobApplication from '@/models/JobApplication';
 
 class JobApplicationManager {
   private jobApplications: JobApplication[];
@@ -10,7 +10,9 @@ class JobApplicationManager {
   }
 
   canApply(): boolean {
-    return !this.jobApplications.some((application) => application.userId === this.userId);
+    return !this.jobApplications.some(
+      (application) => application.userId === this.userId
+    );
   }
 }
 

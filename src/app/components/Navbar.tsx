@@ -1,7 +1,7 @@
 'use client';
 
 import { Container, Navbar, Nav, Button } from 'react-bootstrap';
-import { PersonFill } from 'react-bootstrap-icons';
+import { PersonFill, BuildingsFill } from 'react-bootstrap-icons';
 import { usePathname } from 'next/navigation';
 import './Navbar.scss';
 
@@ -28,14 +28,19 @@ export default function AppNavbar() {
             </Nav.Item>
           </Nav>
           <Nav className="ms-auto">
-            {' '}
             {/* Use ml-auto class to align items to the right */}
-            <Nav.Item>
+            <Nav.Item className="d-flex">
+              <Nav.Link
+                href="/company-profile"
+                className="d-flex align-items-center gap-1"
+              >
+                <BuildingsFill size={20} /> Company Profile
+              </Nav.Link>
               <Nav.Link
                 href="/profile"
                 className="d-flex align-items-center gap-1"
               >
-                <PersonFill size={20} /> Profile
+                <PersonFill size={20} /> Applicant Profile
               </Nav.Link>
             </Nav.Item>
           </Nav>

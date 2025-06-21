@@ -1,9 +1,9 @@
 // bootstrap-extension.scss
 
 // Import only what you need first
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/variables";
-@import "~bootstrap/scss/mixins";
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
 
 // Now you can use Bootstrap variables
 @media (min-width: map-get($grid-breakpoints, md)) {

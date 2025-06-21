@@ -1,15 +1,20 @@
-import React from 'react'
-import BootstrapPagination from 'react-bootstrap/Pagination'
+import React from 'react';
+import BootstrapPagination from 'react-bootstrap/Pagination';
 
 interface PaginationParams {
-  itemsPerPage: number
-  totalItems: number
-  currentPage: number
-  onPageChange: (page: number) => void
+  itemsPerPage: number;
+  totalItems: number;
+  currentPage: number;
+  onPageChange: (page: number) => void;
 }
 
-function Pagination({ itemsPerPage, totalItems, currentPage, onPageChange } : PaginationParams) {
-  const totalPages = Math.ceil(totalItems / itemsPerPage)
+function Pagination({
+  itemsPerPage,
+  totalItems,
+  currentPage,
+  onPageChange,
+}: PaginationParams) {
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   const getPaginationItems = () => {
     const items = [];
@@ -40,7 +45,7 @@ function Pagination({ itemsPerPage, totalItems, currentPage, onPageChange } : Pa
         >
           {page}
         </BootstrapPagination.Item>
-      )
+      );
     }
 
     // Show the "Next" and "Last" buttons
@@ -50,7 +55,7 @@ function Pagination({ itemsPerPage, totalItems, currentPage, onPageChange } : Pa
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
       />
-    )
+    );
 
     items.push(
       <BootstrapPagination.Last
@@ -60,12 +65,10 @@ function Pagination({ itemsPerPage, totalItems, currentPage, onPageChange } : Pa
       />
     );
 
-    return items
+    return items;
   };
 
-  return (
-    <BootstrapPagination>{getPaginationItems()}</BootstrapPagination>
-  )
+  return <BootstrapPagination>{getPaginationItems()}</BootstrapPagination>;
 }
 
-export default Pagination
+export default Pagination;
