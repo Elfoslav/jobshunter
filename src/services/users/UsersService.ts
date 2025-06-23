@@ -5,7 +5,7 @@ import UsersStore from './UsersStore';
 import { User, ApplicantUser, CompanyUser, UserType } from '@/models/User';
 import { USERS_QUERIES } from '@/lib/consts';
 
-const getUsers = async (): Promise<User[]> => {
+export const getUsers = async (): Promise<User[]> => {
   // const response = await axios.get<User[]>(API_URL)
   // return response.data
   const data: User[] = UsersStore.read();

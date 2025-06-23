@@ -19,7 +19,7 @@ import {
 } from '@/services/job-applications/JobApplicationsService';
 import Skills from '../components/Skills';
 import { formatDate, getAgoString, getSingularOrPlural } from '@/lib/functions';
-import { useUser } from '@/app/context/UserContext';
+import { useApplicantUser } from '@/app/context/UserContext';
 import Breadcrumbs from '@/app/components/Breadcrumbs';
 import { useNotification } from '@/app/context/NotificationContext';
 import ApplicationStatus from '@/models/enums/JobApplicationStatus';
@@ -39,7 +39,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const { data: job, isLoading } = useGetJobById(id);
   const { data: similarJobs } = useGetSimilarJobs(job);
   const { data: jobApplications } = useGetJobApplicationsByJobId(job?.id || '');
-  const { user } = useUser();
+  const { user } = useApplicantUser();
   const router = useRouter();
   const jobAplicationManager = new JobApplicationManager(
     jobApplications,

@@ -1,9 +1,9 @@
-import User from '@/models/User';
+import { ApplicantUser } from '@/models/User';
 import { Badge } from 'react-bootstrap';
 
 interface JobsListProps {
   skills: string[];
-  user: User | null;
+  user: ApplicantUser | null;
   primary?: boolean;
   className?: string;
 }

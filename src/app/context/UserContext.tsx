@@ -7,7 +7,7 @@ import React, {
   ReactNode,
   useEffect,
 } from 'react';
-import User from '@/models/User';
+import { ApplicantUser, CompanyUser, User, UserType } from '@/models/User';
 import { getUserById } from '@/services/users/UsersService';
 
 // Define the type for the user context
@@ -49,10 +49,34 @@ export function UserProvider({ children }: UserProviderProps) {
   );
 }
 
-export function useUser() {
+export function isApplicantUser(user: User): user is ApplicantUser {
+  return user.type === UserType.Applicant;
+}
+
+export function isCompanyUser(user: User): user is CompanyUser {
+  return user.type === UserType.Company;
+}
+
+export function useUser(): UserContextType {
   const context = useContext(UserContext);
   if (!context) {
     throw new Error('useUser must be used within a UserProvider');
   }
   return context;
+}
+
+export function useApplicantUser(): Omit<UserContextType, 'user'> & {
+  user: ApplicantUser | null;
+} {
+  const { user, setUser, isLoading } = useUser();
+  const applicantUser = user && isApplicantUser(user) ? user : null;
+  return { user: applicantUser, setUser, isLoading };
+}
+
+export function useCompanyUser(): Omit<UserContextType, 'user'> & {
+  user: CompanyUser | null;
+} {
+  const { user, setUser, isLoading } = useUser();
+  const companyUser = user && isCompanyUser(user) ? user : null;
+  return { user: companyUser, setUser, isLoading };
 }

@@ -20,6 +20,12 @@ export const SKILLS_QUERIES = {
   SKILL_BY_ID: 'skill_by_id',
 };
 
+export const MIGRATIONS_QUERIES = {
+  MIGRATIONS: 'migrations',
+  MIGRATIONS_COUNT: 'migrations_count',
+  MIGRATION_BY_ID: 'migration_by_id',
+};
+
 export const JOB_APPLICATIONS_QUERIES = {
   JOB_APPLICATIONS: 'job_applications',
   JOB_APPLICATIONS_COUNT: 'job_applications_count',

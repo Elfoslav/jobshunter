@@ -29,13 +29,15 @@ export default function AppNavbar() {
           </Nav>
           <Nav className="ms-auto">
             {/* Use ml-auto class to align items to the right */}
-            <Nav.Item className="d-flex">
+            <Nav.Item>
               <Nav.Link
                 href="/company-profile"
                 className="d-flex align-items-center gap-1"
               >
                 <BuildingsFill size={20} /> Company Profile
               </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
               <Nav.Link
                 href="/profile"
                 className="d-flex align-items-center gap-1"

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useUser } from '../context/UserContext';
+import { useApplicantUser } from '../context/UserContext';
 import {
   Card,
   Row,
@@ -18,7 +18,7 @@ import { useGetJobsByIds } from '@/services/jobs/JobsService';
 import { ExistingJob } from '@/models/Job';
 
 export default function UserShow() {
-  const { user, isLoading: isUserLoading } = useUser();
+  const { user, isLoading: isUserLoading } = useApplicantUser();
   const { data: jobApplications, isLoading: isJobsLoading } =
     useGetJobApplicationsByUserId(user?.id || '');
   const { data: jobs } = useGetJobsByIds(

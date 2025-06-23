@@ -2,11 +2,11 @@
 
 import { Container } from 'react-bootstrap';
 import Breadcrumbs from '@/app/components/Breadcrumbs';
-import UserProfileForm from '../components/UserProfileForm';
-import { useUser } from '@/app/context/UserContext';
+import ApplicantProfileForm from '../components/ApplicantProfileForm';
+import { useApplicantUser } from '@/app/context/UserContext';
 
 export default function UserEdit() {
-  const { user, isLoading } = useUser();
+  const { user, isLoading } = useApplicantUser();
   const breadcrumbs = [
     { link: '/profile', title: 'Profile' },
     { title: 'Edit profile' },
@@ -22,7 +22,7 @@ export default function UserEdit() {
         {isLoading ? <p>Loading...</p> : !user && <p>User not found.</p>}
       </Container>
 
-      {user && <UserProfileForm user={user} />}
+      {user && <ApplicantProfileForm user={user} />}
     </div>
   );
 }

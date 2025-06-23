@@ -5,24 +5,26 @@ import { useRouter } from 'next/navigation';
 import Select, { MultiValue, ActionMeta } from 'react-select';
 import { Container, Form, Button, Row, Col, Spinner } from 'react-bootstrap';
 import EmploymentType from '@/models/enums/EmploymentType';
-import User from '@/models/User';
+import { ApplicantUser, User, UserType } from '@/models/User';
 import { useGetSkills } from '@/services/skills/SkillsService';
 import SelectOption from '@/models/SelectOption';
 import { useUpdateUser } from '@/services/users/UsersService';
 import { useNotification } from '@/app/context/NotificationContext';
 import RemotePercentageInput from '@/app/jobs/components/RemotePercentageInput';
 
-interface UserProfileFormProps {
-  user?: User;
+interface ApplicantProfileFormProps {
+  user?: ApplicantUser;
 }
 
-const UserProfileForm: React.FC<UserProfileFormProps> = ({ user }) => {
+const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
+  user,
+}) => {
   const router = useRouter();
   const { showNotification } = useNotification();
   const { data: skills } = useGetSkills();
   const updateUserMutation = useUpdateUser();
   const [isSaving, setIsSaving] = useState(false);
-  const [formData, setFormData] = useState<User>({
+  const [formData, setFormData] = useState<ApplicantUser>({
     id: user?.id ?? '',
     name: user?.name ?? '',
     email: user?.email ?? '',
@@ -30,6 +32,7 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ user }) => {
     bio: user?.bio ?? '',
     location: user?.location ?? '',
     skills: user?.skills ? [...user.skills] : [],
+    type: user?.type ?? UserType.Applicant,
     preferences: {
       locations: user?.preferences?.locations
         ? [...user.preferences.locations]
@@ -319,4 +322,4 @@ const UserProfileForm: React.FC<UserProfileFormProps> = ({ user }) => {
   );
 };
 
-export default UserProfileForm;
+export default ApplicantProfileForm;

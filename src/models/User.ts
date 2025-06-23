@@ -17,7 +17,6 @@ interface BaseUser {
 }
 
 export interface ApplicantUser extends BaseUser {
-  type: UserType.Applicant;
   bio: string;
   skills: string[];
   preferences: {
@@ -30,13 +29,22 @@ export interface ApplicantUser extends BaseUser {
 }
 
 export interface CompanyUser extends BaseUser {
-  type: UserType.Company;
   companyName: string;
   website?: string;
   description?: string;
   logoUrl?: string;
   industry?: string;
-  size?: number; // e.g. number of employees
+  size?: number; // number of employees
+  foundedYear?: number;
+  headquarters?: string;
+  socialLinks?: {
+    linkedIn?: string;
+    twitter?: string;
+    facebook?: string;
+  };
+  jobsPosted?: number;
+  companyCulture?: string;
+  techStack?: string[];
 }
 
 export type User = ApplicantUser | CompanyUser;

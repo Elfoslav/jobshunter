@@ -2,7 +2,7 @@ import React from 'react';
 import { useGetJobApplicationsByJobId } from '@/services/job-applications/JobApplicationsService';
 import JobApplicationManager from '@/lib/JobApplicationManager';
 import { ExistingJob } from '@/models/Job';
-import User from '@/models/User';
+import { User } from '@/models/User';
 
 interface UserAppliedProps {
   job: ExistingJob;

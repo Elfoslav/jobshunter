@@ -7,6 +7,7 @@ import Notification from './components/Notification';
 import { UserProvider } from './context/UserContext';
 import { NotificationProvider } from './context/NotificationContext';
 import { Container } from 'react-bootstrap';
+import { ClientMigrations } from './CilentMigrations';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -27,6 +28,7 @@ export default async function RootLayout({
           <NotificationProvider>
             <Navbar />
             <TanstackProvider>
+              <ClientMigrations />
               <Container>{children}</Container>
             </TanstackProvider>
 

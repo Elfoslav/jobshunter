@@ -1,6 +1,7 @@
 import EmploymentType from '@/models/enums/EmploymentType';
+import { ApplicantUser, UserType } from '@/models/User';
 
-const UsersDummyData = [
+const ApplicantsDummyData: ApplicantUser[] = [
   {
     id: '1',
     name: 'John Doe',
@@ -20,6 +21,7 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
       salaryMin: 60000,
       salaryMax: 90000,
     },
+    type: UserType.Applicant,
     registeredAt: new Date('2022-01-15'),
     updatedAt: new Date('2022-09-20'),
   },
@@ -38,6 +40,7 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
       salaryMin: 70000,
       salaryMax: 100000,
     },
+    type: UserType.Applicant,
     registeredAt: new Date('2021-11-05'),
     updatedAt: new Date('2022-08-10'),
   },
@@ -56,6 +59,7 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
       salaryMin: 80000,
       salaryMax: 110000,
     },
+    type: UserType.Applicant,
     registeredAt: new Date('2022-03-12'),
     updatedAt: new Date('2022-10-25'),
   },
@@ -74,6 +78,7 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
       salaryMin: 90000,
       salaryMax: 120000,
     },
+    type: UserType.Applicant,
     registeredAt: new Date('2022-02-28'),
     updatedAt: new Date('2022-09-15'),
   },
@@ -92,6 +97,7 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
       salaryMin: 75000,
       salaryMax: 100000,
     },
+    type: UserType.Applicant,
     registeredAt: new Date('2022-06-10'),
     updatedAt: new Date('2022-12-12'),
   },
@@ -110,6 +116,7 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
       salaryMin: 85000,
       salaryMax: 110000,
     },
+    type: UserType.Applicant,
     registeredAt: new Date('2021-12-04'),
     updatedAt: new Date('2022-08-21'),
   },
@@ -128,6 +135,7 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
       salaryMin: 80000,
       salaryMax: 110000,
     },
+    type: UserType.Applicant,
     registeredAt: new Date('2022-01-25'),
     updatedAt: new Date('2022-10-11'),
   },
@@ -146,6 +154,7 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
       salaryMin: 85000,
       salaryMax: 105000,
     },
+    type: UserType.Applicant,
     registeredAt: new Date('2022-02-19'),
     updatedAt: new Date('2022-09-30'),
   },
@@ -164,6 +173,7 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
       salaryMin: 70000,
       salaryMax: 90000,
     },
+    type: UserType.Applicant,
     registeredAt: new Date('2022-03-29'),
     updatedAt: new Date('2022-11-14'),
   },
@@ -182,6 +192,7 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
       salaryMin: 80000,
       salaryMax: 100000,
     },
+    type: UserType.Applicant,
     registeredAt: new Date('2022-04-15'),
     updatedAt: new Date('2022-10-30'),
   },
@@ -200,9 +211,10 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
       salaryMin: 90000,
       salaryMax: 110000,
     },
+    type: UserType.Applicant,
     registeredAt: new Date('2022-05-20'),
     updatedAt: new Date('2022-12-15'),
   },
 ];
 
-export default UsersDummyData;
+export default ApplicantsDummyData;
