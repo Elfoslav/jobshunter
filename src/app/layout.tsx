@@ -24,17 +24,16 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <UserProvider>
-          <NotificationProvider>
-            <Navbar />
-            <TanstackProvider>
+        <TanstackProvider>
+          <UserProvider>
+            <NotificationProvider>
+              <Navbar />
               <ClientMigrations />
               <Container>{children}</Container>
-            </TanstackProvider>
-
-            <Notification />
-          </NotificationProvider>
-        </UserProvider>
+              <Notification />
+            </NotificationProvider>
+          </UserProvider>
+        </TanstackProvider>
       </body>
     </html>
   );

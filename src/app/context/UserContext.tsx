@@ -3,21 +3,21 @@
 import React, {
   createContext,
   useContext,
-  useState,
   ReactNode,
-  useEffect,
+  useCallback,
+  useState,
 } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { ApplicantUser, CompanyUser, User, UserType } from '@/models/User';
 import { getUserById } from '@/services/users/UsersService';
+import { USERS_QUERIES } from '@/lib/consts';
 
-// Define the type for the user context
 type UserContextType = {
   user: User | null;
   setUser: (user: User) => void;
   isLoading: boolean;
 };
 
-// Create the UserContext
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 type UserProviderProps = {
@@ -25,18 +25,23 @@ type UserProviderProps = {
 };
 
 export function UserProvider({ children }: UserProviderProps) {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const queryClient = useQueryClient();
+  const [overrideUser, setOverrideUser] = useState<User | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const userData = await getUserById('1');
-      setUser(userData || null);
-      setIsLoading(false);
-    };
+  const { data: fetchedUser, isLoading } = useQuery<User | null>(
+    [USERS_QUERIES.USER_BY_ID, '1'],
+    () => getUserById('1')
+  );
 
-    fetchData();
-  }, []);
+  const user = overrideUser ?? fetchedUser ?? null;
+
+  const setUser = useCallback(
+    (newUser: User) => {
+      setOverrideUser(newUser);
+      queryClient.setQueryData([USERS_QUERIES.USER_BY_ID, newUser.id], newUser);
+    },
+    [queryClient]
+  );
 
   const contextValue: UserContextType = {
     user,
@@ -49,6 +54,7 @@ export function UserProvider({ children }: UserProviderProps) {
   );
 }
 
+// Type guards
 export function isApplicantUser(user: User): user is ApplicantUser {
   return user.type === UserType.Applicant;
 }
@@ -57,6 +63,7 @@ export function isCompanyUser(user: User): user is CompanyUser {
   return user.type === UserType.Company;
 }
 
+// Hook accessors
 export function useUser(): UserContextType {
   const context = useContext(UserContext);
   if (!context) {

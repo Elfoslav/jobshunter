@@ -11,6 +11,7 @@ import SelectOption from '@/models/SelectOption';
 import { useUpdateUser } from '@/services/users/UsersService';
 import { useNotification } from '@/app/context/NotificationContext';
 import RemotePercentageInput from '@/app/jobs/components/RemotePercentageInput';
+import { useApplicantUser } from '@/app/context/UserContext';
 
 interface ApplicantProfileFormProps {
   user?: ApplicantUser;
@@ -20,9 +21,10 @@ const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
   user,
 }) => {
   const router = useRouter();
+  const { setUser } = useApplicantUser();
   const { showNotification } = useNotification();
   const { data: skills } = useGetSkills();
-  const updateUserMutation = useUpdateUser();
+  const updateUserMutation = useUpdateUser(user);
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState<ApplicantUser>({
     id: user?.id ?? '',

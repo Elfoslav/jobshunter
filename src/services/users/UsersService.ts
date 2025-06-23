@@ -109,12 +109,13 @@ export const useCreateUser = () => {
   });
 };
 
-export const useUpdateUser = () => {
+export const useUpdateUser = (user?: User) => {
   const queryClient = useQueryClient();
 
   return useMutation<void, unknown, User>(updateUser, {
     onSuccess: () => {
-      queryClient.invalidateQueries([]);
+      queryClient.invalidateQueries([USERS_QUERIES.USER_BY_ID, user?.id]);
+      queryClient.invalidateQueries([USERS_QUERIES.USERS]);
     },
   });
 };
