@@ -29,6 +29,7 @@ export default function JobForm({
     id: '',
     title: '',
     company: '',
+    companyId: '1',
     location: '',
     description: '',
     requiredSkills: [],
@@ -39,6 +40,7 @@ export default function JobForm({
     employmentTypes: [],
     remotePercentage: 0,
     postedAt: new Date(),
+    isActive: true,
     ...initialData,
   });
 

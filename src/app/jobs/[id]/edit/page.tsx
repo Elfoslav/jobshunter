@@ -17,7 +17,7 @@ export default function EditJob({
   const { id } = use(params);
   const { data: job, isLoading } = useGetJobById(id);
   const breadcrumbs = [{ link: '/', title: 'Jobs' }, { title: 'Edit' }];
-  const { mutate: updateJob, isLoading: isUpdating } = useUpdateJob();
+  const { mutate: updateJob, isPending } = useUpdateJob();
 
   const handleEdit = (job: ExistingJob) => {
     const newJob: ExistingJob = {
@@ -51,11 +51,11 @@ export default function EditJob({
         <JobForm
           onSubmit={handleEdit}
           initialData={job}
-          isLoading={isUpdating}
+          isLoading={isPending}
           isEditing
         />
 
-        {isUpdating && (
+        {isPending && (
           <div className="text-center mt-4">
             <Spinner animation="border" role="status" />
             <div className="mt-2">Updating…</div>

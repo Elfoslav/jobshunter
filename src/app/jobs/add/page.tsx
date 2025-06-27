@@ -10,7 +10,7 @@ import { ExistingJob, NewJob } from '@/models/Job';
 export default function AddJob() {
   const router = useRouter();
   const breadcrumbs = [{ link: '/', title: 'Jobs' }, { title: 'New job' }];
-  const { mutate: createJob, isLoading } = useCreateJob();
+  const { mutate: createJob, isPending } = useCreateJob();
 
   const handleAdd = (job: NewJob) => {
     createJob(job, {
@@ -30,7 +30,7 @@ export default function AddJob() {
       <Container>
         <JobForm onSubmit={handleAdd} />
 
-        {isLoading && (
+        {isPending && (
           <div className="text-center mt-4">
             <Spinner animation="border" role="status" />
             <div className="mt-2">Creating job…</div>

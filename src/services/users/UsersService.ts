@@ -6,10 +6,7 @@ import { User, ApplicantUser, CompanyUser, UserType } from '@/models/User';
 import { USERS_QUERIES } from '@/lib/consts';
 
 export const getUsers = async (): Promise<User[]> => {
-  // const response = await axios.get<User[]>(API_URL)
-  // return response.data
   const data: User[] = UsersStore.read();
-
   return Promise.resolve(data);
 };
 
@@ -19,11 +16,8 @@ const getUsersCount = async (): Promise<number> => {
 };
 
 export const getUserById = async (id: string): Promise<User | null> => {
-  // const response = await axios.get<User[]>(API_URL)
-  // return response.data
   const users: User[] = UsersStore.read();
   const user = users.find((user) => user.id === id) || null;
-
   return Promise.resolve(user);
 };
 
@@ -38,14 +32,12 @@ export const getCompanies = async (): Promise<CompanyUser[]> => {
 };
 
 const createUser = async (newUser: User): Promise<void> => {
-  // await axios.post(API_URL, newUser)
-  // data.push(newUser)
   UsersStore.create(newUser);
 };
 
-const updateUser = async (updatedUser: User): Promise<void> => {
-  // await axios.put(`${API_URL}/${updatedUser.id}`, updatedUser)
+const updateUser = async (updatedUser: User): Promise<User> => {
   UsersStore.update(updatedUser.id, updatedUser);
+  return Promise.resolve(updatedUser);
 };
 
 const deleteUser = async (userId: string): Promise<void> => {
@@ -57,12 +49,10 @@ export const useGetUsers = (
   searchQuery: string = '',
   skills: string[] = []
 ) => {
-  const result = useQuery<User[], unknown>(
-    [USERS_QUERIES.USERS, page, searchQuery, skills],
-    async () => {
-      return await getUsers();
-    }
-  );
+  const result = useQuery<User[], unknown>({
+    queryKey: [USERS_QUERIES.USERS, page, searchQuery, skills],
+    queryFn: getUsers,
+  });
   return { ...result, count: result.data?.length };
 };
 
@@ -70,52 +60,55 @@ export const useGetUsersCount = (
   searchQuery: string = '',
   skills: string[] = []
 ) => {
-  const result = useQuery<number, unknown>(
-    [USERS_QUERIES.USERS_COUNT, searchQuery, skills],
-    () => getUsersCount()
-  );
+  const result = useQuery<number, unknown>({
+    queryKey: [USERS_QUERIES.USERS_COUNT, searchQuery, skills],
+    queryFn: getUsersCount,
+  });
   return { ...result };
 };
 
 export const useGetUserById = (userId: string) => {
-  const result = useQuery<User | null, unknown>(
-    [USERS_QUERIES.USER_BY_ID, userId],
-    () => getUserById(userId)
-  );
-  return result;
+  return useQuery<User | null, unknown>({
+    queryKey: [USERS_QUERIES.USER_BY_ID, userId],
+    queryFn: () => getUserById(userId),
+  });
 };
 
 export const useGetApplicants = () => {
-  return useQuery<ApplicantUser[] | null, unknown>(
-    [USERS_QUERIES.USERS, UserType.Applicant],
-    getApplicants
-  );
+  return useQuery<ApplicantUser[], unknown>({
+    queryKey: [USERS_QUERIES.USERS, UserType.Applicant],
+    queryFn: getApplicants,
+  });
 };
 
 export const useGetCompanies = () => {
-  return useQuery<CompanyUser[], null, unknown>(
-    [USERS_QUERIES.USERS, UserType.Company],
-    getCompanies
-  );
+  return useQuery<CompanyUser[], unknown>({
+    queryKey: [USERS_QUERIES.USERS, UserType.Company],
+    queryFn: getCompanies,
+  });
 };
 
 export const useCreateUser = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<void, unknown, User>(createUser, {
+  return useMutation<void, unknown, User>({
+    mutationFn: createUser,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [USERS_QUERIES.USERS] });
     },
   });
 };
 
-export const useUpdateUser = (user?: User) => {
+export const useUpdateUser = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<void, unknown, User>(updateUser, {
-    onSuccess: () => {
-      queryClient.invalidateQueries([USERS_QUERIES.USER_BY_ID, user?.id]);
-      queryClient.invalidateQueries([USERS_QUERIES.USERS]);
+  return useMutation<User, unknown, User>({
+    mutationFn: updateUser,
+    onSuccess: (updatedUser) => {
+      if (updatedUser?.id) {
+        queryClient.invalidateQueries({ queryKey: [USERS_QUERIES.USER_BY_ID, updatedUser.id] });
+      }
+      queryClient.invalidateQueries({ queryKey: [USERS_QUERIES.USERS] });
     },
   });
 };
@@ -123,9 +116,10 @@ export const useUpdateUser = (user?: User) => {
 export const useDeleteUser = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<void, unknown, string>(deleteUser, {
+  return useMutation<void, unknown, string>({
+    mutationFn: deleteUser,
     onSuccess: () => {
-      queryClient.invalidateQueries([]);
+      queryClient.invalidateQueries({ queryKey: [USERS_QUERIES.USERS] });
     },
   });
 };

@@ -1,9 +1,7 @@
 import { User } from '@/models/User';
-import applicants from './ApplicantsDummyData';
-import companies from './CompaniesDummyData';
+import users from './UsersDummyData';
 import GeneralStore from '../GeneralStore';
 
-const allUsers: User[] = [...applicants, ...companies];
-const Store = new GeneralStore<User>('users', allUsers);
+const Store = new GeneralStore<User>('users', users);
 
 export default Store;

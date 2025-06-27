@@ -9,6 +9,7 @@ import JobsFilter from './JobsFilter';
 import SelectOption from '@/models/SelectOption';
 import Skill from '@/models/Skill';
 import { useApplicantUser } from '@/app/context/UserContext';
+import Loading from '@/app/components/Loading';
 
 export default function JobsContent() {
   const { user } = useApplicantUser();
@@ -34,7 +35,7 @@ export default function JobsContent() {
   }
 
   return (
-    <div>
+    <>
       <Row>
         <Col md={9} lg={7}>
           <JobsFilter search={searchParam} skillsOptions={skillsOptions} />
@@ -47,11 +48,7 @@ export default function JobsContent() {
       </Row>
 
       <Container>
-        {isLoading ? (
-          <div>Loading...</div>
-        ) : (
-          jobs?.length === 0 && <div>No jobs.</div>
-        )}
+        {isLoading ? <Loading /> : jobs?.length === 0 && <div>No jobs.</div>}
       </Container>
 
       <JobsList
@@ -60,6 +57,6 @@ export default function JobsContent() {
         totalCount={jobsCount || 0}
         page={page}
       />
-    </div>
+    </>
   );
 }

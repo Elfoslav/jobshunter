@@ -24,7 +24,7 @@ const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
   const { setUser } = useApplicantUser();
   const { showNotification } = useNotification();
   const { data: skills } = useGetSkills();
-  const updateUserMutation = useUpdateUser(user);
+  const updateUserMutation = useUpdateUser();
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState<ApplicantUser>({
     id: user?.id ?? '',

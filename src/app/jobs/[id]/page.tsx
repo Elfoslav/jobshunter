@@ -30,6 +30,7 @@ import { useRouter } from 'next/navigation';
 import RemotePercentage from '../components/RemotePercentage';
 import SimilarJobs from '../components/SimilarJobs';
 import BackToJobsBtn from '../components/BackToJobsBtn';
+import Link from 'next/link';
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const queryClient = useQueryClient();
@@ -88,10 +89,12 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
           },
           {
             onSuccess: () => {
-              queryClient.invalidateQueries([
-                JOB_APPLICATIONS_QUERIES.JOB_APPLICATIONS_BY_JOB_ID,
-                job.id,
-              ]);
+              queryClient.invalidateQueries({
+                queryKey: [
+                  JOB_APPLICATIONS_QUERIES.JOB_APPLICATIONS_BY_JOB_ID,
+                  job.id,
+                ],
+              });
               setSubmitting(false);
             },
             onError: () => {
@@ -124,7 +127,11 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                 {/* Header: Company, Title, PostedAt */}
                 <div className="d-flex justify-content-between align-items-center flex-wrap mb-2">
                   <div>
-                    <h3 className="mb-0">{job.company}</h3>
+                    <h3 className="fs-4 mb-0">
+                      <Link href={`/companies/${job.companyId}`}>
+                        {job.company}
+                      </Link>
+                    </h3>
                   </div>
                   <small className="text-muted">
                     {getAgoString(job.postedAt)}

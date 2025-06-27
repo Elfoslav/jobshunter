@@ -6,6 +6,16 @@ export const JOBS_QUERIES = {
   SIMILAR_JOBS: 'similar_jobs',
   JOB_BY_ID: 'job_by_id',
   JOBS_BY_IDS: 'jobs_by_ids',
+  JOBS_BY_COMPANY_ID: 'jobs_by_company_id',
+};
+
+export const COMPANIES_PER_PAGE = 5;
+
+export const COMPANIES_QUERIES = {
+  COMPANIES: 'companies',
+  COMPANIES_COUNT: 'companies_count',
+  COMPANY_BY_ID: 'company_by_id',
+  COMPANIES_BY_IDS: 'companies_by_ids',
 };
 
 export const USERS_QUERIES = {

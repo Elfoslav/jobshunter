@@ -21,7 +21,7 @@ export default function UserShow() {
   const { user, isLoading: isUserLoading } = useApplicantUser();
   const { data: jobApplications, isLoading: isJobsLoading } =
     useGetJobApplicationsByUserId(user?.id || '');
-  const { data: jobs } = useGetJobsByIds(
+  const { data: jobs = [] } = useGetJobsByIds(
     jobApplications?.map((item) => item.jobId) || []
   );
 

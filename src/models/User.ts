@@ -1,3 +1,4 @@
+import { Company } from './Company';
 import EmploymentType from './enums/EmploymentType';
 
 export enum UserType {
@@ -10,7 +11,6 @@ interface BaseUser {
   name: string;
   email: string;
   phone: string;
-  location: string;
   registeredAt: Date;
   updatedAt?: Date;
   type: UserType;
@@ -19,6 +19,7 @@ interface BaseUser {
 export interface ApplicantUser extends BaseUser {
   bio: string;
   skills: string[];
+  location?: string;
   preferences: {
     locations: string[];
     remotePercentage: number;
@@ -29,22 +30,7 @@ export interface ApplicantUser extends BaseUser {
 }
 
 export interface CompanyUser extends BaseUser {
-  companyName: string;
-  website?: string;
-  description?: string;
-  logoUrl?: string;
-  industry?: string;
-  size?: number; // number of employees
-  foundedYear?: number;
-  headquarters?: string;
-  socialLinks?: {
-    linkedIn?: string;
-    twitter?: string;
-    facebook?: string;
-  };
-  jobsPosted?: number;
-  companyCulture?: string;
-  techStack?: string[];
+  companyData: Company;
 }
 
 export type User = ApplicantUser | CompanyUser;

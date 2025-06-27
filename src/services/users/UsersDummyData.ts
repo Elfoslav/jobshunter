@@ -1,7 +1,7 @@
 import EmploymentType from '@/models/enums/EmploymentType';
-import { ApplicantUser, UserType } from '@/models/User';
+import { User, UserType } from '@/models/User';
 
-const ApplicantsDummyData: ApplicantUser[] = [
+const ApplicantsDummyData: User[] = [
   {
     id: '1',
     name: 'John Doe',
@@ -214,6 +214,40 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
     type: UserType.Applicant,
     registeredAt: new Date('2022-05-20'),
     updatedAt: new Date('2022-12-15'),
+  },
+  {
+    id: '12',
+    name: 'Aria',
+    email: 'aria@example.com',
+    phone: '123-123-1234',
+    type: UserType.Company,
+    registeredAt: new Date('2022-05-20'),
+    updatedAt: new Date('2022-12-15'),
+    companyData: {
+      id: '1',
+      name: 'SoftVision',
+      email: 'info@softvision.cz',
+      isVerified: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+  },
+  {
+    id: '13',
+    name: 'Apple',
+    email: 'apple@example.com',
+    phone: '123-123-1234',
+    type: UserType.Company,
+    registeredAt: new Date('2022-05-20'),
+    updatedAt: new Date('2022-12-15'),
+    companyData: {
+      id: '2',
+      name: 'CodeRealm GmbH',
+      email: 'contact@coderealm.de',
+      isVerified: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
   },
 ];
 

@@ -1,10 +1,7 @@
-import { Suspense } from 'react';
+'use client';
+
 import JobsContent from './components/JobsContent';
 
-export default function Jobs() {
-  return (
-    <Suspense fallback={<div>Loading jobs...</div>}>
-      <JobsContent />
-    </Suspense>
-  );
+export default function JobsPage() {
+  return <JobsContent />;
 }

@@ -28,10 +28,10 @@ export function UserProvider({ children }: UserProviderProps) {
   const queryClient = useQueryClient();
   const [overrideUser, setOverrideUser] = useState<User | null>(null);
 
-  const { data: fetchedUser, isLoading } = useQuery<User | null>(
-    [USERS_QUERIES.USER_BY_ID, '1'],
-    () => getUserById('1')
-  );
+  const { data: fetchedUser, isLoading } = useQuery<User | null>({
+    queryKey: [USERS_QUERIES.USER_BY_ID, '1'],
+    queryFn: () => getUserById('1'),
+  });
 
   const user = overrideUser ?? fetchedUser ?? null;
 

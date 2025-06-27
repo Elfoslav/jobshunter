@@ -1,132 +1,102 @@
 'use client';
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  useSuspenseQuery,
+} from '@tanstack/react-query';
 import JobApplicationsStore from './JobApplicationsStore';
 import JobApplication from '@/models/JobApplication';
 import { JOB_APPLICATIONS_QUERIES } from '@/lib/consts';
 
+// ======= Core Fetchers =======
 const getJobApplications = async (): Promise<JobApplication[]> => {
-  // const response = await axios.get<JobApplication[]>(API_URL)
-  // return response.data
-  const data: JobApplication[] = JobApplicationsStore.read();
-
-  return Promise.resolve(data);
+  return JobApplicationsStore.read();
 };
 
 const getJobApplicationsCount = async (): Promise<number> => {
-  const data: JobApplication[] = JobApplicationsStore.read();
-  return Promise.resolve(data.length);
+  return JobApplicationsStore.read().length;
 };
 
 export const getJobApplicationById = async (
   id: string
 ): Promise<JobApplication | null> => {
-  // const response = await axios.get<JobApplication[]>(API_URL)
-  // return response.data
-  const applications: JobApplication[] = JobApplicationsStore.read();
-  const application =
-    applications.find((application) => application.id === id) || null;
-
-  return Promise.resolve(application);
+  const apps = JobApplicationsStore.read();
+  return apps.find((app) => app.id === id) || null;
 };
 
 export const getJobApplicationsByJobId = async (
   jobId: string
 ): Promise<JobApplication[]> => {
-  const applications: JobApplication[] = JobApplicationsStore.read();
-  const jobApplications = applications.filter(
-    (application) => application.jobId === jobId
-  );
-
-  return Promise.resolve(jobApplications);
+  return JobApplicationsStore.read().filter((app) => app.jobId === jobId);
 };
 
 export const getJobApplicationsByUserId = async (
   userId: string
 ): Promise<JobApplication[]> => {
-  const applications: JobApplication[] = JobApplicationsStore.read();
-  const jobApplications = applications.filter(
-    (application) => application.userId === userId
-  );
-
-  return Promise.resolve(jobApplications);
+  return JobApplicationsStore.read().filter((app) => app.userId === userId);
 };
 
-const createJobApplication = async (
-  newJobApplication: JobApplication
-): Promise<void> => {
-  // await axios.post(API_URL, newJobApplication)
-  // data.push(newJobApplication)
-  JobApplicationsStore.create(newJobApplication);
+const createJobApplication = async (newApp: JobApplication): Promise<void> => {
+  JobApplicationsStore.create(newApp);
 };
 
-const updateJobApplication = async (
-  updatedJobApplication: JobApplication
-): Promise<void> => {
-  // await axios.put(`${API_URL}/${updatedJobApplication.id}`, updatedJobApplication)
-  JobApplicationsStore.update(updatedJobApplication.id, updatedJobApplication);
+const updateJobApplication = async (app: JobApplication): Promise<void> => {
+  JobApplicationsStore.update(app.id, app);
 };
 
-const deleteJobApplication = async (applicationId: string): Promise<void> => {
-  JobApplicationsStore.delete(applicationId);
+const deleteJobApplication = async (id: string): Promise<void> => {
+  JobApplicationsStore.delete(id);
 };
 
-export const useGetJobApplications = (
-  page: number,
-  searchQuery: string = '',
-  skills: string[] = []
-) => {
-  const result = useQuery<JobApplication[], unknown>(
-    [JOB_APPLICATIONS_QUERIES.JOB_APPLICATIONS, page, searchQuery, skills],
-    async () => {
-      return await getJobApplications();
-    }
-  );
-  return { ...result, count: result.data?.length };
+// ======= Queries =======
+export const useGetJobApplications = () => {
+  const result = useSuspenseQuery({
+    queryKey: [JOB_APPLICATIONS_QUERIES.JOB_APPLICATIONS],
+    queryFn: getJobApplications,
+  });
+
+  return {
+    ...result,
+    count: result.data.length,
+  };
 };
 
-export const useGetJobApplicationsCount = (
-  searchQuery: string = '',
-  skills: string[] = []
-) => {
-  const result = useQuery<number, unknown>(
-    [JOB_APPLICATIONS_QUERIES.JOB_APPLICATIONS_COUNT, searchQuery, skills],
-    () => getJobApplicationsCount()
-  );
-  return { ...result };
+export const useGetJobApplicationsCount = () => {
+  return useQuery({
+    queryKey: [JOB_APPLICATIONS_QUERIES.JOB_APPLICATIONS_COUNT],
+    queryFn: getJobApplicationsCount,
+  });
 };
 
 export const useGetJobApplicationById = (applicationId: string) => {
-  const result = useQuery<JobApplication | null, unknown>(
-    [JOB_APPLICATIONS_QUERIES.JOB_APPLICATION_BY_ID, applicationId],
-    () => getJobApplicationById(applicationId)
-  );
-  return result;
+  return useSuspenseQuery({
+    queryKey: [JOB_APPLICATIONS_QUERIES.JOB_APPLICATION_BY_ID, applicationId],
+    queryFn: () => getJobApplicationById(applicationId),
+  });
 };
 
 export const useGetJobApplicationsByJobId = (jobId: string) => {
-  const options = { initialData: [] };
-  const result = useQuery<JobApplication[], unknown>(
-    [JOB_APPLICATIONS_QUERIES.JOB_APPLICATIONS_BY_JOB_ID, jobId],
-    async () => await getJobApplicationsByJobId(jobId),
-    options
-  );
-  return result;
+  return useSuspenseQuery({
+    queryKey: [JOB_APPLICATIONS_QUERIES.JOB_APPLICATIONS_BY_JOB_ID, jobId],
+    queryFn: () => getJobApplicationsByJobId(jobId),
+  });
 };
 
 export const useGetJobApplicationsByUserId = (userId: string) => {
-  const result = useQuery<JobApplication[], unknown>(
-    [JOB_APPLICATIONS_QUERIES.JOB_APPLICATIONS_BY_USER_ID, userId],
-    async () => await getJobApplicationsByUserId(userId)
-  );
-
-  return result;
+  return useQuery({
+    queryKey: [JOB_APPLICATIONS_QUERIES.JOB_APPLICATIONS_BY_USER_ID, userId],
+    queryFn: () => getJobApplicationsByUserId(userId),
+  });
 };
 
+// ======= Mutations =======
 export const useCreateJobApplication = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<void, unknown, JobApplication>(createJobApplication, {
+  return useMutation({
+    mutationFn: createJobApplication,
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [JOB_APPLICATIONS_QUERIES.JOB_APPLICATIONS],
@@ -138,9 +108,12 @@ export const useCreateJobApplication = () => {
 export const useUpdateJobApplication = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<void, unknown, JobApplication>(updateJobApplication, {
+  return useMutation({
+    mutationFn: updateJobApplication,
     onSuccess: () => {
-      queryClient.invalidateQueries([]);
+      queryClient.invalidateQueries({
+        queryKey: [JOB_APPLICATIONS_QUERIES.JOB_APPLICATIONS],
+      });
     },
   });
 };
@@ -148,9 +121,12 @@ export const useUpdateJobApplication = () => {
 export const useDeleteJobApplication = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<void, unknown, string>(deleteJobApplication, {
+  return useMutation({
+    mutationFn: deleteJobApplication,
     onSuccess: () => {
-      queryClient.invalidateQueries([]);
+      queryClient.invalidateQueries({
+        queryKey: [JOB_APPLICATIONS_QUERIES.JOB_APPLICATIONS],
+      });
     },
   });
 };

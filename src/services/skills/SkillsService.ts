@@ -6,35 +6,25 @@ import Skill from '@/models/Skill';
 import { SKILLS_QUERIES } from '@/lib/consts';
 
 const getSkills = async (): Promise<Skill[]> => {
-  // const response = await axios.get<Skill[]>(API_URL)
-  // return response.data
   const data: Skill[] = SkillsStore.read();
-
-  return Promise.resolve(data);
+  return data;
 };
 
 const getSkillsCount = async (): Promise<number> => {
   const data: Skill[] = SkillsStore.read();
-  return Promise.resolve(data.length);
+  return data.length;
 };
 
 const getSkillById = async (id: string): Promise<Skill | null> => {
-  // const response = await axios.get<Skill[]>(API_URL)
-  // return response.data
   const skills: Skill[] = SkillsStore.read();
-  const skill = skills.find((skill) => skill.id === id) || null;
-
-  return Promise.resolve(skill);
+  return skills.find((skill) => skill.id === id) || null;
 };
 
 const createSkill = async (newSkill: Skill): Promise<void> => {
-  // await axios.post(API_URL, newSkill)
-  // data.push(newSkill)
   SkillsStore.create(newSkill);
 };
 
 const updateSkill = async (updatedSkill: Skill): Promise<void> => {
-  // await axios.put(`${API_URL}/${updatedSkill.id}`, updatedSkill)
   SkillsStore.update(updatedSkill.id, updatedSkill);
 };
 
@@ -43,38 +33,37 @@ const deleteSkill = async (skillId: string): Promise<void> => {
 };
 
 export const useGetSkills = () => {
-  const result = useQuery<Skill[], unknown>(
-    [SKILLS_QUERIES.SKILLS],
-    async () => {
-      return await getSkills();
-    }
-  );
-  return { ...result, count: result.data?.length };
+  const result = useQuery({
+    queryKey: [SKILLS_QUERIES.SKILLS],
+    queryFn: getSkills,
+  });
+
+  return {
+    ...result,
+    count: result.data?.length ?? 0,
+  };
 };
 
-export const useGetSkillsCount = (
-  searchQuery: string = '',
-  skills: string[] = []
-) => {
-  const result = useQuery<number, unknown>(
-    [SKILLS_QUERIES.SKILLS_COUNT, searchQuery, skills],
-    () => getSkillsCount()
-  );
-  return { ...result };
+export const useGetSkillsCount = () => {
+  return useQuery({
+    queryKey: [SKILLS_QUERIES.SKILLS_COUNT],
+    queryFn: getSkillsCount,
+  });
 };
 
 export const useGetSkillById = (skillId: string) => {
-  const result = useQuery<Skill | null, unknown>(
-    [SKILLS_QUERIES.SKILL_BY_ID],
-    () => getSkillById(skillId)
-  );
-  return result;
+  return useQuery({
+    queryKey: [SKILLS_QUERIES.SKILL_BY_ID, skillId],
+    queryFn: () => getSkillById(skillId),
+    enabled: !!skillId, // skip if undefined/null
+  });
 };
 
 export const useCreateSkill = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<void, unknown, Skill>(createSkill, {
+  return useMutation({
+    mutationFn: createSkill,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [SKILLS_QUERIES.SKILLS] });
     },
@@ -84,9 +73,10 @@ export const useCreateSkill = () => {
 export const useUpdateSkill = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<void, unknown, Skill>(updateSkill, {
+  return useMutation({
+    mutationFn: updateSkill,
     onSuccess: () => {
-      queryClient.invalidateQueries([]);
+      queryClient.invalidateQueries({ queryKey: [SKILLS_QUERIES.SKILLS] });
     },
   });
 };
@@ -94,9 +84,10 @@ export const useUpdateSkill = () => {
 export const useDeleteSkill = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<void, unknown, string>(deleteSkill, {
+  return useMutation({
+    mutationFn: deleteSkill,
     onSuccess: () => {
-      queryClient.invalidateQueries([]);
+      queryClient.invalidateQueries({ queryKey: [SKILLS_QUERIES.SKILLS] });
     },
   });
 };
