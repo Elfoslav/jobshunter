@@ -49,9 +49,11 @@ export default function LoginForm({
         />
       </Form.Group>
 
-      <Button variant="primary" type="submit" disabled={isLoading}>
-        {isLoading ? <Spinner animation="border" size="sm" /> : 'Login'}
-      </Button>
+      <div className="d-grid">
+        <Button variant="primary" type="submit" disabled={isLoading}>
+          {isLoading ? <Spinner animation="border" size="sm" /> : 'Login'}
+        </Button>
+      </div>
     </Form>
   );
 }
