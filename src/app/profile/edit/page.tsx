@@ -17,8 +17,6 @@ export default function UserEdit() {
       <Breadcrumbs items={breadcrumbs} />
 
       <Container>
-        <h2>Your profile</h2>
-
         {isLoading ? <p>Loading...</p> : !user && <p>User not found.</p>}
       </Container>
 

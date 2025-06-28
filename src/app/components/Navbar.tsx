@@ -13,7 +13,7 @@ export default function AppNavbar() {
   };
 
   return (
-    <Navbar expand="lg" className="bg-light">
+    <Navbar expand="lg" className="bg-light mb-3">
       <Container>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <div className="d-flex d-lg-none justify-content-end">

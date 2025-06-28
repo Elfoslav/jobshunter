@@ -9,15 +9,16 @@ import {
   Badge,
   Container,
   ListGroup,
-  Spinner,
   Button,
 } from 'react-bootstrap';
 import { useGetJobApplicationsByUserId } from '@/services/job-applications/JobApplicationsService';
 import { formatDate } from '@/lib/functions';
 import { useGetJobsByIds } from '@/services/jobs/JobsService';
 import { ExistingJob } from '@/models/Job';
+import Loading from '../components/Loading';
+import DOMPurify from 'dompurify';
 
-export default function UserShow() {
+export default function UserProfile() {
   const { user, isLoading: isUserLoading } = useApplicantUser();
   const { data: jobApplications, isLoading: isJobsLoading } =
     useGetJobApplicationsByUserId(user?.id || '');
@@ -30,22 +31,20 @@ export default function UserShow() {
   };
 
   if (isUserLoading) {
-    return (
-      <Container className="mt-2">
-        <div style={{ marginLeft: '40px' }}>
-          <Spinner animation="border" />
-        </div>
-        <p>Loading profile...</p>
-      </Container>
-    );
+    return <Loading />;
+  }
+
+  if (!user) {
+    return <Container>No user found.</Container>;
   }
 
   return (
     <Container className="mb-4">
-      <h2>Your profile</h2>
-
       {/* User Info Card */}
       <Card className="mb-4 shadow">
+        <Card.Header>
+          <h2 className="fs-4 mt-1 mb-1">Your profile</h2>
+        </Card.Header>
         <Card.Body>
           <Row>
             <Col md={4}>
@@ -83,10 +82,13 @@ export default function UserShow() {
               {user?.preferences.salaryMax}
             </Col>
             <Col md={8}>
-              <p style={{ whiteSpace: 'pre-line' }}>
-                <strong>Bio:</strong> <br />
-                {user?.bio}
-              </p>
+              <strong>Bio:</strong> <br />
+              <div
+                className="mt-1 mb-4"
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(user.bio.replace(/\n/g, '<br />')),
+                }}
+              />
             </Col>
           </Row>
           <hr />
@@ -119,9 +121,11 @@ export default function UserShow() {
         <div>Loading job applications...</div>
       ) : (
         <div className="mt-3">
-          <h3>Your Job Applications</h3>
           {jobApplications?.length ? (
             <Card>
+              <Card.Header>
+                <h3 className="fs-4 mt-1 mb-1">Your Job Applications</h3>
+              </Card.Header>
               <ListGroup variant="flush">
                 {jobApplications?.map((jobApplication) => {
                   const job = getJobById(jobApplication.jobId);

@@ -3,15 +3,24 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Select, { MultiValue, ActionMeta } from 'react-select';
-import { Container, Form, Button, Row, Col, Spinner } from 'react-bootstrap';
+import {
+  Container,
+  Form,
+  Button,
+  Row,
+  Col,
+  Spinner,
+  Card,
+} from 'react-bootstrap';
 import EmploymentType from '@/models/enums/EmploymentType';
-import { ApplicantUser, User, UserType } from '@/models/User';
+import { ApplicantUser, UserType } from '@/models/User';
 import { useGetSkills } from '@/services/skills/SkillsService';
 import SelectOption from '@/models/SelectOption';
 import { useUpdateUser } from '@/services/users/UsersService';
 import { useNotification } from '@/app/context/NotificationContext';
 import RemotePercentageInput from '@/app/jobs/components/RemotePercentageInput';
 import { useApplicantUser } from '@/app/context/UserContext';
+import TextEditor from '@/app/components/TextEditor';
 
 interface ApplicantProfileFormProps {
   user?: ApplicantUser;
@@ -26,6 +35,7 @@ const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
   const { data: skills } = useGetSkills();
   const updateUserMutation = useUpdateUser();
   const [isSaving, setIsSaving] = useState(false);
+
   const [formData, setFormData] = useState<ApplicantUser>({
     id: user?.id ?? '',
     name: user?.name ?? '',
@@ -50,80 +60,53 @@ const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
     updatedAt: user?.updatedAt || undefined,
   });
 
-  const skillsOptions = skills
-    ? skills.map((skill) => ({
-        value: skill.name,
-        label: skill.name,
-      }))
-    : [];
-
+  const skillsOptions =
+    skills?.map((skill) => ({ value: skill.name, label: skill.name })) || [];
   const defaultSkillsOptions = formData.skills.map((skill) => ({
     value: skill,
     label: skill,
   }));
-
-  const onSkillChange = (
-    newValue: unknown,
-    actionMeta: ActionMeta<unknown>
-  ) => {
-    const options = newValue as MultiValue<SelectOption>;
-    setFormData({
-      ...formData,
-      skills: options.map((opt) => opt.value),
-    });
-  };
-
   const employmentTypeOptions = Object.values(EmploymentType).map((type) => ({
-    value: type as string,
-    label: type as string,
+    value: type,
+    label: type,
   }));
-
   const defaultEmploymentOptions = formData.preferences.employmentTypes.map(
-    (employmentType) => ({
-      value: employmentType as string,
-      label: employmentType as string,
-    })
+    (type) => ({ value: type, label: type })
   );
 
-  const onEmploymentTypeChange = (
-    newValue: unknown,
-    actionMeta: ActionMeta<unknown>
-  ) => {
-    const options = newValue as MultiValue<SelectOption>;
-    setFormData({
-      ...formData,
-      preferences: {
-        ...formData.preferences,
-        employmentTypes: options.map((opt) => opt.value as EmploymentType),
-      },
-    });
-  };
-
   const handleInputChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const onPreferredRemotePercentageChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handlePreferencesChange = (key: string, value: any) => {
     setFormData({
       ...formData,
       preferences: {
         ...formData.preferences,
-        remotePercentage: parseFloat(e.target.value),
+        [key]: value,
       },
     });
+  };
+
+  const onSkillChange = (newValue: unknown) => {
+    const options = newValue as MultiValue<SelectOption>;
+    setFormData({ ...formData, skills: options.map((opt) => opt.value) });
+  };
+
+  const onEmploymentTypeChange = (newValue: unknown) => {
+    const options = newValue as MultiValue<SelectOption>;
+    handlePreferencesChange(
+      'employmentTypes',
+      options.map((opt) => opt.value as EmploymentType)
+    );
   };
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
-    // Simulate request response
     setTimeout(() => {
       updateUserMutation.mutate(formData, {
         onSuccess() {
@@ -137,189 +120,187 @@ const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
 
   return (
     <Container>
-      <Form onSubmit={onSubmit}>
-        <Row>
-          <Col md={6} lg={4}>
-            <Form.Group controlId="name" className="mb-2">
-              <Form.Label>Name</Form.Label>
-              <Form.Control
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-              />
-            </Form.Group>
-          </Col>
-
-          <Col md={6} lg={4}>
-            <Form.Group controlId="email" className="mb-2">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-
-        <Row>
-          <Col md={6} lg={4}>
-            <Form.Group controlId="phone" className="mb-2">
-              <Form.Label>Phone</Form.Label>
-              <Form.Control
-                type="tel"
-                name="phone"
-                value={formData.phone}
-                onChange={handleInputChange}
-              />
-            </Form.Group>
-          </Col>
-          <Col md={6} lg={4}>
-            <Form.Group controlId="location" className="mb-2">
-              <Form.Label>Location</Form.Label>
-              <Form.Control
-                type="text"
-                name="location"
-                value={formData.location}
-                onChange={handleInputChange}
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-
-        <Row>
-          <Col md={6} lg={4}>
-            <Form.Group controlId="locations" className="mb-2">
-              <Form.Label>Preferred Locations</Form.Label>
-              <Form.Control
-                type="text"
-                name="preferences.locations"
-                value={formData.preferences.locations.join(', ')}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    preferences: {
-                      ...formData.preferences,
-                      locations: e.target.value.split(', ') as string[],
-                    },
-                  })
-                }
-              />
-            </Form.Group>
-          </Col>
-          <Col md={6} lg={4}>
-            <RemotePercentageInput
-              value={formData.preferences.remotePercentage}
-              onChange={onPreferredRemotePercentageChange}
-            />
-          </Col>
-        </Row>
-
-        <Row>
-          <Col md={6} lg={4}>
-            <Form.Group controlId="skills" className="mb-2">
-              <Form.Label>Skills</Form.Label>
-              <Select
-                defaultValue={defaultSkillsOptions}
-                options={skillsOptions}
-                closeMenuOnSelect={true}
-                isMulti
-                onChange={onSkillChange}
-              />
-            </Form.Group>
-          </Col>
-          <Col md={6} lg={4}>
-            <Form.Group controlId="employmentTypes" className="mb-2">
-              <Form.Label>Preferred Employment Types</Form.Label>
-              <Select
-                defaultValue={defaultEmploymentOptions}
-                options={employmentTypeOptions}
-                closeMenuOnSelect={true}
-                isMulti
-                onChange={onEmploymentTypeChange}
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-
-        <Row>
-          <Col md={6} lg={4}>
-            <Form.Group controlId="salaryMin" className="mb-2">
-              <Form.Label>Preferred Minimum Salary ($)</Form.Label>
-              <Form.Control
-                type="number"
-                name="preferences.salaryMin"
-                value={formData.preferences.salaryMin}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    preferences: {
-                      ...formData.preferences,
-                      salaryMin: parseFloat(e.target.value),
-                    },
-                  })
-                }
-              />
-            </Form.Group>
-          </Col>
-          <Col md={6} lg={4}>
-            <Form.Group controlId="salaryMax" className="mb-2">
-              <Form.Label>Preferred Maximum Salary ($)</Form.Label>
-              <Form.Control
-                type="number"
-                name="preferences.salaryMax"
-                value={formData.preferences.salaryMax}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    preferences: {
-                      ...formData.preferences,
-                      salaryMax: parseFloat(e.target.value),
-                    },
-                  })
-                }
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-
-        <Row>
-          <Col md={12} lg={8}>
-            <Form.Group controlId="bio" className="mb-2">
-              <Form.Label>Bio</Form.Label>
-              <Form.Control
-                as="textarea"
-                name="bio"
-                rows={4}
-                value={formData.bio}
-                onChange={handleInputChange}
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-
-        <Row>
-          <Col md={6} lg={4}>
-            <div className="d-grid gap-2 mt-2">
-              <Button variant="primary" type="submit" disabled={isSaving}>
-                {isSaving ? (
-                  <Spinner
-                    as="span"
-                    animation="border"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
+      <Card className="shadow-sm">
+        <Card.Header className="mb-4">
+          <h2 className="fs-4 mt-1 mb-1">Edit Profile</h2>
+        </Card.Header>
+        <Card.Body>
+          <Form onSubmit={onSubmit}>
+            <Row className="g-3">
+              <Col md={6} lg={4}>
+                <Form.Group controlId="name">
+                  <Form.Label>Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
                   />
-                ) : (
-                  'Save'
-                )}
-              </Button>
-            </div>
-          </Col>
-        </Row>
-      </Form>
+                </Form.Group>
+              </Col>
+              <Col md={6} lg={4}>
+                <Form.Group controlId="email">
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6} lg={4}>
+                <Form.Group controlId="phone">
+                  <Form.Label>Phone</Form.Label>
+                  <Form.Control
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6} lg={4}>
+                <Form.Group controlId="location">
+                  <Form.Label>Location</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="location"
+                    value={formData.location}
+                    onChange={handleInputChange}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6} lg={4}>
+                <Form.Group controlId="preferredLocations">
+                  <Form.Label>Preferred Locations</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="preferredLocations"
+                    value={formData.preferences.locations.join(', ')}
+                    onChange={(e) =>
+                      handlePreferencesChange(
+                        'locations',
+                        e.target.value.split(',').map((s) => s.trim())
+                      )
+                    }
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6} lg={4}>
+                <RemotePercentageInput
+                  value={formData.preferences.remotePercentage}
+                  onChange={(e) =>
+                    handlePreferencesChange(
+                      'remotePercentage',
+                      parseFloat(e.target.value)
+                    )
+                  }
+                />
+              </Col>
+              <Col md={6} lg={4}>
+                <Form.Group controlId="skills">
+                  <Form.Label>Skills</Form.Label>
+                  <Select
+                    defaultValue={defaultSkillsOptions}
+                    options={skillsOptions}
+                    isMulti
+                    onChange={onSkillChange}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6} lg={4}>
+                <Form.Group controlId="employmentTypes">
+                  <Form.Label>Preferred Employment Types</Form.Label>
+                  <Select
+                    defaultValue={defaultEmploymentOptions}
+                    options={employmentTypeOptions}
+                    isMulti
+                    onChange={onEmploymentTypeChange}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6} lg={4}>
+                <Form.Group controlId="salaryMin">
+                  <Form.Label>Min Salary ($)</Form.Label>
+                  <Form.Control
+                    type="number"
+                    value={formData.preferences.salaryMin}
+                    onChange={(e) =>
+                      handlePreferencesChange(
+                        'salaryMin',
+                        parseFloat(e.target.value)
+                      )
+                    }
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6} lg={4}>
+                <Form.Group controlId="salaryMax">
+                  <Form.Label>Max Salary ($)</Form.Label>
+                  <Form.Control
+                    type="number"
+                    value={formData.preferences.salaryMax}
+                    onChange={(e) =>
+                      handlePreferencesChange(
+                        'salaryMax',
+                        parseFloat(e.target.value)
+                      )
+                    }
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={12}>
+                <Form.Group controlId="bio">
+                  <Form.Label>Bio</Form.Label>
+                  <TextEditor
+                    text={formData.bio}
+                    onBlur={(val) => setFormData({ ...formData, bio: val })}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={12} className="d-flex gap-3">
+                <Button
+                  type="submit"
+                  variant="primary"
+                  disabled={isSaving}
+                  className="mt-3 px-4"
+                >
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      width: '120px',
+                      textAlign: 'center',
+                    }}
+                  >
+                    {isSaving ? (
+                      <Spinner
+                        as="span"
+                        animation="border"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      'Save Changes'
+                    )}
+                  </span>
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="secondary"
+                  disabled={isSaving}
+                  className="mt-3 px-4"
+                  onClick={() => router.push('/profile')}
+                >
+                  Cancel
+                </Button>
+              </Col>
+            </Row>
+          </Form>
+        </Card.Body>
+      </Card>
     </Container>
   );
 };
