@@ -9,6 +9,7 @@ import {
 import CompanyForm from '@/app/companies/components/CompanyForm';
 import { Container, Spinner, Alert } from 'react-bootstrap';
 import { ExistingCompany } from '@/models/Company';
+import Loading from '@/app/components/Loading';
 
 export default function EditCompanyPage({
   params,
@@ -17,7 +18,7 @@ export default function EditCompanyPage({
 }) {
   const { id } = use(params);
   const router = useRouter();
-  const { data: company } = useGetCompanyById(id);
+  const { data: company, isLoading } = useGetCompanyById(id);
   const {
     mutateAsync: updateCompany,
     isPending: isUpdating,
@@ -34,17 +35,18 @@ export default function EditCompanyPage({
     }
   };
 
+  if (isLoading) return <Loading />;
+
   if (!company) {
     return (
-      <Container className="py-5">
+      <Container className="py-4">
         <Alert variant="danger">Unable to load company data.</Alert>
       </Container>
     );
   }
 
   return (
-    <Container className="py-5">
-      <h1 className="mb-4">Edit Company</h1>
+    <Container className="py-4">
       <CompanyForm initialValues={company} onSubmit={handleSubmit} />
     </Container>
   );
