@@ -3,9 +3,7 @@
 import {
   useMutation,
   useQuery,
-  useSuspenseQuery,
   useQueryClient,
-  UseSuspenseQueryResult,
   UseQueryResult,
 } from '@tanstack/react-query';
 import JobsStore from './JobsStore';

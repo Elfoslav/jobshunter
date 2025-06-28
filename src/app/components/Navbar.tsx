@@ -48,6 +48,14 @@ export default function AppNavbar() {
                 <PersonFill size={20} /> Applicant Profile
               </Nav.Link>
             </Nav.Item>
+            <Nav.Item>
+              <Nav.Link
+                href="/login"
+                className="d-flex align-items-center gap-1"
+              >
+                Login
+              </Nav.Link>
+            </Nav.Item>
           </Nav>
         </Navbar.Collapse>
       </Container>

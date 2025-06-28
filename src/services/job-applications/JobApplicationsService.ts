@@ -4,7 +4,6 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
-  useSuspenseQuery,
 } from '@tanstack/react-query';
 import JobApplicationsStore from './JobApplicationsStore';
 import JobApplication from '@/models/JobApplication';
@@ -52,14 +51,14 @@ const deleteJobApplication = async (id: string): Promise<void> => {
 
 // ======= Queries =======
 export const useGetJobApplications = () => {
-  const result = useSuspenseQuery({
+  const result = useQuery({
     queryKey: [JOB_APPLICATIONS_QUERIES.JOB_APPLICATIONS],
     queryFn: getJobApplications,
   });
 
   return {
     ...result,
-    count: result.data.length,
+    count: result.data?.length || 0,
   };
 };
 
@@ -71,14 +70,14 @@ export const useGetJobApplicationsCount = () => {
 };
 
 export const useGetJobApplicationById = (applicationId: string) => {
-  return useSuspenseQuery({
+  return useQuery({
     queryKey: [JOB_APPLICATIONS_QUERIES.JOB_APPLICATION_BY_ID, applicationId],
     queryFn: () => getJobApplicationById(applicationId),
   });
 };
 
 export const useGetJobApplicationsByJobId = (jobId: string) => {
-  return useSuspenseQuery({
+  return useQuery({
     queryKey: [JOB_APPLICATIONS_QUERIES.JOB_APPLICATIONS_BY_JOB_ID, jobId],
     queryFn: () => getJobApplicationsByJobId(jobId),
   });

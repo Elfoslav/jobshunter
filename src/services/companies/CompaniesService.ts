@@ -3,10 +3,8 @@
 import {
   useMutation,
   useQuery,
-  useSuspenseQuery,
   useQueryClient,
   UseQueryResult,
-  UseSuspenseQueryResult,
 } from '@tanstack/react-query';
 
 import CompaniesStore from './CompaniesStore';

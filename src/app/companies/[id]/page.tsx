@@ -14,6 +14,7 @@ import {
   Button,
   Badge,
 } from 'react-bootstrap';
+import Loading from '@/app/components/Loading';
 
 export default function CompanyPage({
   params,
@@ -21,8 +22,10 @@ export default function CompanyPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
-  const { data: company } = useGetCompanyById(id);
+  const { data: company, isLoading } = useGetCompanyById(id);
   const { data: jobs = [] } = useGetJobsByCompanyId(company ? company.id : '');
+
+  if (isLoading) return <Loading />;
 
   if (!company)
     return (

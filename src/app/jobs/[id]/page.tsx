@@ -32,14 +32,21 @@ import SimilarJobs from '../components/SimilarJobs';
 import BackToJobsBtn from '../components/BackToJobsBtn';
 import Link from 'next/link';
 
-export default function Page({ params }: { params: Promise<{ id: string }> }) {
+export default function JobsPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const queryClient = useQueryClient();
   const createJobApplication = useCreateJobApplication();
   const { showNotification } = useNotification();
   const { id } = use(params);
   const { data: job, isLoading } = useGetJobById(id);
+  console.log('job: ', job, isLoading);
   const { data: similarJobs } = useGetSimilarJobs(job);
-  const { data: jobApplications } = useGetJobApplicationsByJobId(job?.id || '');
+  const { data: jobApplications = [] } = useGetJobApplicationsByJobId(
+    job?.id || ''
+  );
   const { user } = useApplicantUser();
   const router = useRouter();
   const jobAplicationManager = new JobApplicationManager(
