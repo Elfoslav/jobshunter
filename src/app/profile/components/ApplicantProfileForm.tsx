@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Select, { MultiValue, ActionMeta } from 'react-select';
+import Select, { MultiValue } from 'react-select';
 import {
   Container,
   Form,
@@ -19,7 +19,6 @@ import SelectOption from '@/models/SelectOption';
 import { useUpdateUser } from '@/services/users/UsersService';
 import { useNotification } from '@/app/context/NotificationContext';
 import RemotePercentageInput from '@/app/jobs/components/RemotePercentageInput';
-import { useApplicantUser } from '@/app/context/UserContext';
 import TextEditor from '@/app/components/TextEditor';
 
 interface ApplicantProfileFormProps {
@@ -30,7 +29,6 @@ const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
   user,
 }) => {
   const router = useRouter();
-  const { setUser } = useApplicantUser();
   const { showNotification } = useNotification();
   const { data: skills } = useGetSkills();
   const updateUserMutation = useUpdateUser();
@@ -62,7 +60,7 @@ const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
 
   const skillsOptions =
     skills?.map((skill) => ({ value: skill.name, label: skill.name })) || [];
-  const defaultSkillsOptions = formData.skills.map((skill) => ({
+  const defaultSkillsOptions = formData?.skills?.map((skill) => ({
     value: skill,
     label: skill,
   }));
@@ -70,7 +68,7 @@ const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
     value: type,
     label: type,
   }));
-  const defaultEmploymentOptions = formData.preferences.employmentTypes.map(
+  const defaultEmploymentOptions = formData?.preferences?.employmentTypes.map(
     (type) => ({ value: type, label: type })
   );
 

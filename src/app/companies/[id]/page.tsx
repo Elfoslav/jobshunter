@@ -42,7 +42,7 @@ export default function CompanyPage({
     );
 
   return (
-    <Container className="py-4">
+    <Container className="py-4 px-0">
       <Row>
         <Col md={12} lg={8}>
           <Card className="shadow-sm">

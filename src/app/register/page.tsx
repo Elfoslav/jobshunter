@@ -15,7 +15,7 @@ export default function RegisterPage() {
   const handleRegister = async (
     email: string,
     password: string,
-    role: UserType.Applicant | UserType.Company
+    role: UserType
   ) => {
     setLoading(true);
     setError(null);

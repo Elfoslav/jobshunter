@@ -15,7 +15,7 @@ const Skills: React.FC<JobsListProps> = ({
   className,
 }) => {
   const getBadgeBg = (skill: string) => {
-    if (user?.skills.includes(skill)) {
+    if (user?.skills?.includes(skill)) {
       return 'success';
     }
 

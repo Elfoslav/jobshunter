@@ -21,7 +21,7 @@ export interface ApplicantUser extends BaseUser {
   bio: string;
   skills?: string[];
   location?: string;
-  preferences?: {
+  preferences: {
     locations: string[];
     remotePercentage: number;
     employmentTypes: EmploymentType[];

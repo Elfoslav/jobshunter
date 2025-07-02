@@ -5,11 +5,7 @@ import { useState } from 'react';
 import { UserType } from '@/models/User';
 
 interface RegisterFormProps {
-  onSubmit: (
-    email: string,
-    password: string,
-    role: UserType.Applicant | UserType.Company
-  ) => void;
+  onSubmit: (email: string, password: string, role: UserType) => void;
   isLoading?: boolean;
   error?: string | null;
 }

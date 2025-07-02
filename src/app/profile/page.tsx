@@ -39,7 +39,7 @@ export default function UserProfile() {
   }
 
   return (
-    <Container className="mb-4">
+    <Container className="mb-4 mx-0">
       {/* User Info Card */}
       <Card className="mb-4 shadow">
         <Card.Header>
@@ -86,7 +86,9 @@ export default function UserProfile() {
               <div
                 className="mt-1 mb-4"
                 dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(user.bio.replace(/\n/g, '<br />')),
+                  __html: DOMPurify.sanitize(
+                    user?.bio?.replace(/\n/g, '<br />') || ''
+                  ),
                 }}
               />
             </Col>
