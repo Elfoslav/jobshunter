@@ -15,6 +15,10 @@ import {
   Badge,
 } from 'react-bootstrap';
 import Loading from '@/app/components/Loading';
+import { useUser } from '@/app/context/UserContext';
+import { hasRole, isCompanyUser } from '@/lib/utils/user';
+import { UserType } from '@/models/User';
+import CanAccess from '@/app/components/CanAccess';
 
 export default function CompanyPage({
   params,
@@ -22,6 +26,7 @@ export default function CompanyPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
+  const { user = null, isLoading: isUserLoading } = useUser();
   const { data: company, isLoading } = useGetCompanyById(id);
   const { data: jobs = [] } = useGetJobsByCompanyId(company ? company.id : '');
 
@@ -88,9 +93,14 @@ export default function CompanyPage({
                       </Card.Subtitle>
                     </div>
 
-                    <Button variant="warning" href={`/companies/${id}/edit`}>
-                      Edit Company
-                    </Button>
+                    <CanAccess
+                      user={user}
+                      allowed={[UserType.Admin, UserType.Company]}
+                    >
+                      <Button variant="warning" href={`/companies/${id}/edit`}>
+                        Edit Company
+                      </Button>
+                    </CanAccess>
                   </div>
                 </Col>
               </Row>
@@ -259,16 +269,18 @@ export default function CompanyPage({
             </Card.Body>
           </Card>
 
-          <div className="d-grid gap-2">
-            <Button
-              variant="primary"
-              size="lg"
-              href={`/jobs/add`}
-              className="mt-3 btn-block"
-            >
-              Open new position
-            </Button>
-          </div>
+          <CanAccess user={user} allowed={[UserType.Admin, UserType.Company]}>
+            <div className="d-grid gap-2">
+              <Button
+                variant="primary"
+                size="lg"
+                href={`/jobs/add`}
+                className="mt-3 btn-block"
+              >
+                Open new position
+              </Button>
+            </div>
+          </CanAccess>
         </Col>
       </Row>
     </Container>

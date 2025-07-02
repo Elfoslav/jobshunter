@@ -22,6 +22,7 @@ export const USERS_QUERIES = {
   USERS: 'users',
   USERS_COUNT: 'users_count',
   USER_BY_ID: 'user_by_id',
+  USER_BY_EMAIL: 'user_by_email',
 };
 
 export const SKILLS_QUERIES = {

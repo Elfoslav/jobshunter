@@ -2,6 +2,7 @@ import { Company } from './Company';
 import EmploymentType from './enums/EmploymentType';
 
 export enum UserType {
+  Admin = 'Admin',
   Company = 'Company',
   Applicant = 'Applicant',
 }
@@ -18,9 +19,9 @@ interface BaseUser {
 
 export interface ApplicantUser extends BaseUser {
   bio: string;
-  skills: string[];
+  skills?: string[];
   location?: string;
-  preferences: {
+  preferences?: {
     locations: string[];
     remotePercentage: number;
     employmentTypes: EmploymentType[];

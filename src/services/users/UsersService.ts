@@ -21,6 +21,12 @@ export const getUserById = async (id: string): Promise<User | null> => {
   return Promise.resolve(user);
 };
 
+export const getUserByEmail = async (email: string): Promise<User | null> => {
+  const users: User[] = UsersStore.read();
+  const user = users.find((user) => user.email === email) || null;
+  return Promise.resolve(user);
+};
+
 export const getApplicants = async (): Promise<ApplicantUser[]> => {
   const users = await getUsers();
   return users.filter((u): u is ApplicantUser => u.type === UserType.Applicant);
@@ -71,6 +77,13 @@ export const useGetUserById = (userId: string) => {
   return useQuery<User | null, unknown>({
     queryKey: [USERS_QUERIES.USER_BY_ID, userId],
     queryFn: () => getUserById(userId),
+  });
+};
+
+export const useGetUserByEmail = (email: string) => {
+  return useQuery<User | null, unknown>({
+    queryKey: [USERS_QUERIES.USER_BY_EMAIL, email],
+    queryFn: () => getUserByEmail(email),
   });
 };
 

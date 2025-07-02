@@ -1,23 +1,27 @@
 'use client';
 
-import { Container, Row, Col, Card } from 'react-bootstrap';
+import { Container, Row, Col, Card, Alert } from 'react-bootstrap';
 import LoginForm from './components/LoginForm';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useUser } from '../context/UserContext';
+import { getUserByEmail } from '@/services/users/UsersService';
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const { login } = useUser();
 
   const handleLogin = async (email: string, password: string) => {
     setLoading(true);
     setError(null);
 
     try {
-      // 🔐 Replace this with real login logic
-      if (email === 'demo@example.com' && password === 'password') {
+      const user = await getUserByEmail(email);
+      if (user) {
+        login(user.id);
         router.push('/jobs');
       } else {
         throw new Error('Invalid credentials');
@@ -43,6 +47,13 @@ export default function LoginPage() {
 
       <Row className="justify-content-center">
         <Col xs={12} sm={10} md={6} lg={4}>
+          <Alert variant="info">
+            To login as a company, use email: aria@example.com and any password.
+          </Alert>
+          <Alert variant="info">
+            To login as an applicant, use email: john@example.com and any
+            password.
+          </Alert>
           <Card>
             <Card.Body>
               <h2 className="mb-4 text-center">Login</h2>
@@ -59,7 +70,7 @@ export default function LoginPage() {
       <Row className="justify-content-center mt-3">
         <Col xs="auto">
           <small className="text-muted">
-            Don’t have an account?{' '}
+            Don`t have an account?{' '}
             <Link href="/register" className="text-primary">
               Sign up here
             </Link>

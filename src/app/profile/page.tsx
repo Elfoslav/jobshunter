@@ -30,11 +30,11 @@ export default function UserProfile() {
     return jobs.find((job) => job.id === jobId);
   };
 
-  if (isUserLoading) {
+  if (isUserLoading && !user) {
     return <Loading />;
   }
 
-  if (!user) {
+  if (!user && !isUserLoading) {
     return <Container>No user found.</Container>;
   }
 
@@ -72,14 +72,14 @@ export default function UserProfile() {
               </p>
               <strong>Preferences:</strong>
               <br />
-              Locations: {user?.preferences.locations.join(', ') || 'N/A'}
+              Locations: {user?.preferences?.locations.join(', ') || 'N/A'}
               <br />
-              Remote: {user?.preferences.remotePercentage}% <br />
+              Remote: {user?.preferences?.remotePercentage}% <br />
               Employment Types:{' '}
-              {user?.preferences.employmentTypes.join(', ') || 'N/A'}
+              {user?.preferences?.employmentTypes.join(', ') || 'N/A'}
               <br />
-              Salary: ${user?.preferences.salaryMin} – $
-              {user?.preferences.salaryMax}
+              Salary: ${user?.preferences?.salaryMin} – $
+              {user?.preferences?.salaryMax}
             </Col>
             <Col md={8}>
               <strong>Bio:</strong> <br />

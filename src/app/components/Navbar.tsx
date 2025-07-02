@@ -1,12 +1,22 @@
 'use client';
 
-import { Container, Navbar, Nav, Button } from 'react-bootstrap';
+import { Container, Navbar, Nav, Button, NavDropdown } from 'react-bootstrap';
 import { PersonFill, BuildingsFill } from 'react-bootstrap-icons';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import './Navbar.scss';
+import { useUser } from '../context/UserContext';
+import { isCompanyUser } from '@/lib/utils/user';
+import { ExistingCompany } from '@/models/Company';
 
 export default function AppNavbar() {
   const pathname = usePathname();
+  const { user, isLoading, logout } = useUser();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    logout();
+    router.push('/');
+  };
 
   const getActiveKey = () => {
     return pathname.includes('job') ? '/jobs' : '/';
@@ -23,7 +33,7 @@ export default function AppNavbar() {
         </div>
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav activeKey={getActiveKey()} className="me-auto">
-            <Nav.Item className="ms-2">
+            <Nav.Item>
               <Nav.Link href="/jobs">Jobs</Nav.Link>
             </Nav.Item>
           </Nav>
@@ -32,30 +42,57 @@ export default function AppNavbar() {
             <Nav.Item>
               <Nav.Link href="/companies">Companies</Nav.Link>
             </Nav.Item>
-            <Nav.Item>
-              <Nav.Link
-                href="/companies/1"
-                className="d-flex align-items-center gap-1"
+
+            {isLoading ? (
+              <Nav.Item>
+                <Nav.Link
+                  className="d-flex align-items-center gap-1"
+                  style={{ opacity: 0.5, pointerEvents: 'none' }}
+                >
+                  <PersonFill size={20} />
+                  Loading...
+                </Nav.Link>
+              </Nav.Item>
+            ) : user ? (
+              <NavDropdown
+                title={
+                  <span className="d-inline-flex align-items-center gap-1">
+                    <PersonFill size={20} />
+                    {user.name || 'Account'}
+                  </span>
+                }
+                id="user-nav-dropdown"
+                align="end"
               >
-                <BuildingsFill size={20} /> Company Profile
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link
-                href="/profile"
-                className="d-flex align-items-center gap-1"
-              >
-                <PersonFill size={20} /> Applicant Profile
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link
-                href="/login"
-                className="d-flex align-items-center gap-1"
-              >
-                Login
-              </Nav.Link>
-            </Nav.Item>
+                {isCompanyUser(user) ? (
+                  <NavDropdown.Item
+                    href={`/companies/${(user.companyData as ExistingCompany).id}`}
+                  >
+                    <BuildingsFill size={16} className="me-2" />
+                    Company Profile
+                  </NavDropdown.Item>
+                ) : (
+                  <NavDropdown.Item href="/profile">
+                    <PersonFill size={16} className="me-2" />
+                    Profile
+                  </NavDropdown.Item>
+                )}
+
+                <NavDropdown.Divider />
+                <NavDropdown.Item onClick={handleLogout}>
+                  Logout
+                </NavDropdown.Item>
+              </NavDropdown>
+            ) : (
+              <Nav.Item>
+                <Nav.Link
+                  href="/login"
+                  className="d-flex align-items-center gap-1"
+                >
+                  Login
+                </Nav.Link>
+              </Nav.Item>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Container>
