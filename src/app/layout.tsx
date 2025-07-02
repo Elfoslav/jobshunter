@@ -1,6 +1,7 @@
 import './globals.scss';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/next';
 import TanstackProvider from '../tanstack/TanstackProvider';
 import Navbar from './components/Navbar';
 import Notification from './components/Notification';
@@ -29,7 +30,10 @@ export default async function RootLayout({
             <NotificationProvider>
               <Navbar />
               <ClientMigrations />
-              <Container>{children}</Container>
+              <Container>
+                {children}
+                <Analytics />
+              </Container>
               <Notification />
             </NotificationProvider>
           </UserProvider>
