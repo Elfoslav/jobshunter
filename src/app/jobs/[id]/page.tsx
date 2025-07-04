@@ -19,7 +19,7 @@ import {
 } from '@/services/job-applications/JobApplicationsService';
 import Skills from '../components/Skills';
 import { formatDate, getAgoString, getSingularOrPlural } from '@/lib/functions';
-import { useApplicantUser } from '@/app/context/UserContext';
+import { useUser } from '@/app/context/UserContext';
 import Breadcrumbs from '@/app/components/Breadcrumbs';
 import { useNotification } from '@/app/context/NotificationContext';
 import ApplicationStatus from '@/models/enums/JobApplicationStatus';
@@ -31,6 +31,11 @@ import RemotePercentage from '../components/RemotePercentage';
 import SimilarJobs from '../components/SimilarJobs';
 import BackToJobsBtn from '../components/BackToJobsBtn';
 import Link from 'next/link';
+import Loading from '@/app/components/Loading';
+import { isApplicantUser } from '@/lib/utils/user';
+import CanAccess from '@/app/components/CanAccess';
+import { UserType } from '@/models/User';
+import ResourceType from '@/models/enums/ResourceType';
 
 export default function JobsPage({
   params,
@@ -42,12 +47,11 @@ export default function JobsPage({
   const { showNotification } = useNotification();
   const { id } = use(params);
   const { data: job, isLoading } = useGetJobById(id);
-  console.log('job: ', job, isLoading);
   const { data: similarJobs } = useGetSimilarJobs(job);
   const { data: jobApplications = [] } = useGetJobApplicationsByJobId(
     job?.id || ''
   );
-  const { user } = useApplicantUser();
+  const { user } = useUser();
   const router = useRouter();
   const jobAplicationManager = new JobApplicationManager(
     jobApplications,
@@ -115,7 +119,7 @@ export default function JobsPage({
   };
 
   if (isLoading) {
-    return <Container>Loading...</Container>;
+    return <Loading />;
   }
 
   if (!job) {
@@ -209,46 +213,55 @@ export default function JobsPage({
                 />
 
                 <Row>
-                  <Col sm={12} md={7} lg={5}>
-                    <div className="d-grid gap-2">
-                      {canApply ? (
+                  {isApplicantUser(user) && (
+                    <Col sm={12} md={7} lg={5}>
+                      <div className="d-grid gap-2">
+                        {canApply ? (
+                          <Button
+                            size="lg"
+                            onClick={onJobApply}
+                            disabled={submitting}
+                          >
+                            {submitting ? (
+                              <Spinner
+                                as="span"
+                                animation="border"
+                                size="sm"
+                                role="status"
+                                aria-hidden="true"
+                              />
+                            ) : (
+                              'Apply for this job'
+                            )}
+                          </Button>
+                        ) : (
+                          <Alert variant="primary">
+                            Your application has been sent. (
+                            {getUserApplicationDate()})
+                          </Alert>
+                        )}
+                      </div>
+                    </Col>
+                  )}
+
+                  <CanAccess
+                    user={user}
+                    requiredRole={[UserType.Admin, UserType.Company]}
+                    resourceType={ResourceType.Company}
+                    resourceId={job.companyId}
+                  >
+                    <Col sm={12} md={5} lg={7}>
+                      <div className="d-grid d-md-inline-block mt-3 mt-md-0">
                         <Button
                           size="lg"
-                          onClick={onJobApply}
-                          disabled={submitting}
+                          variant="warning"
+                          onClick={() => router.push(`/jobs/${id}/edit`)}
                         >
-                          {submitting ? (
-                            <Spinner
-                              as="span"
-                              animation="border"
-                              size="sm"
-                              role="status"
-                              aria-hidden="true"
-                            />
-                          ) : (
-                            'Apply for this job'
-                          )}
+                          Edit
                         </Button>
-                      ) : (
-                        <Alert variant="primary">
-                          Your application has been sent. (
-                          {getUserApplicationDate()})
-                        </Alert>
-                      )}
-                    </div>
-                  </Col>
-
-                  <Col sm={12} md={5} lg={7}>
-                    <div className="d-grid d-md-inline-block mt-3 mt-md-0">
-                      <Button
-                        size="lg"
-                        variant="warning"
-                        onClick={() => router.push(`/jobs/${id}/edit`)}
-                      >
-                        Edit
-                      </Button>
-                    </div>
-                  </Col>
+                      </div>
+                    </Col>
+                  </CanAccess>
                 </Row>
               </Card.Body>
             </Card>

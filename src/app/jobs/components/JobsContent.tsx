@@ -8,13 +8,13 @@ import { useGetSkills } from '@/services/skills/SkillsService';
 import JobsFilter from './JobsFilter';
 import SelectOption from '@/models/SelectOption';
 import Skill from '@/models/Skill';
-import { useApplicantUser } from '@/app/context/UserContext';
+import { useUser } from '@/app/context/UserContext';
 import Loading from '@/app/components/Loading';
 import CanAccess from '@/app/components/CanAccess';
 import { UserType } from '@/models/User';
 
 export default function JobsContent() {
-  const { user } = useApplicantUser();
+  const { user } = useUser();
   const searchParams = useSearchParams();
   const pageParam = searchParams.get('page') || '1';
   const searchParam = searchParams.get('search') || '';

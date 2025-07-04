@@ -1,9 +1,10 @@
-import { ApplicantUser } from '@/models/User';
+import { isApplicantUser } from '@/lib/utils/user';
+import { User } from '@/models/User';
 import { Badge } from 'react-bootstrap';
 
 interface JobsListProps {
   skills: string[];
-  user: ApplicantUser | null;
+  user: User | null;
   primary?: boolean;
   className?: string;
 }
@@ -15,7 +16,7 @@ const Skills: React.FC<JobsListProps> = ({
   className,
 }) => {
   const getBadgeBg = (skill: string) => {
-    if (user?.skills?.includes(skill)) {
+    if (user && isApplicantUser(user) && user.skills?.includes(skill)) {
       return 'success';
     }
 

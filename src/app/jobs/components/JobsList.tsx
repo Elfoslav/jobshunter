@@ -9,13 +9,14 @@ import Skills from './Skills';
 import { ExistingJob } from '@/models/Job';
 import './JobsList.scss';
 import { getAgoString, getDaysPassed } from '@/lib/functions';
-import { ApplicantUser } from '@/models/User';
+import { User } from '@/models/User';
 import UserApplied from './UserApplied';
 import RemotePercentage from './RemotePercentage';
+import { isApplicantUser } from '@/lib/utils/user';
 
 interface JobsListProps {
   jobs: ExistingJob[];
-  user: ApplicantUser | null;
+  user: User | null;
   totalCount: number;
   page: number;
 }
@@ -89,13 +90,13 @@ const JobsList: React.FC<JobsListProps> = ({
                 <Col lg={7}>
                   <Skills
                     skills={job.requiredSkills}
-                    user={user}
+                    user={isApplicantUser(user) ? user : null}
                     primary
                     className="mt-1"
                   />
                   <Skills
                     skills={job.optionalSkills}
-                    user={user}
+                    user={isApplicantUser(user) ? user : null}
                     className="mt-2 mb-1"
                   />
                 </Col>
