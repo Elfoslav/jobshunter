@@ -6,24 +6,30 @@ import { ExistingCompany } from '@/models/Company';
 
 type Props = {
   user: User | null;
-  userType: UserType[];
-  resourceType: ResourceType;
-  resourceId: string;
+  requiredRole: UserType[];
+  resourceType?: ResourceType;
+  resourceId?: string;
   children: ReactNode;
 };
 
-export default function CanAccessResource({
+export default function CanAccess({
   user,
-  userType,
+  requiredRole,
   resourceType,
   resourceId,
   children,
 }: Props) {
-  if (!user || !hasRole(user, userType)) return null;
+  if (!user || !hasRole(user, requiredRole)) return null;
 
-  // Admin override
+  // Admin always allowed
   if (user.type === UserType.Admin) return <>{children}</>;
 
+  // If no resource checks needed, just return based on role
+  if (!resourceType || !resourceId) {
+    return <>{children}</>;
+  }
+
+  // Resource-specific checks
   switch (resourceType) {
     case ResourceType.User:
       if (user.id === resourceId) return <>{children}</>;

@@ -16,6 +16,7 @@ import { isApplicantUser, isCompanyUser } from '@/lib/utils/user';
 type UserContextType = {
   user: User | null;
   isLoading: boolean;
+  isInitialized: boolean;
   login: (userId: string) => void;
   logout: () => void;
 };
@@ -31,6 +32,7 @@ const LOCAL_STORAGE_KEY = 'loggedInUserId';
 export function UserProvider({ children }: UserProviderProps) {
   const queryClient = useQueryClient();
   const [userId, setUserId] = useState<string | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Load userId from localStorage on first render
   useEffect(() => {
@@ -38,6 +40,7 @@ export function UserProvider({ children }: UserProviderProps) {
     if (stored) {
       setUserId(stored);
     }
+    setIsInitialized(true);
   }, []);
 
   // Fetch full user object using userId
@@ -61,7 +64,9 @@ export function UserProvider({ children }: UserProviderProps) {
   }, [queryClient, userId]);
 
   return (
-    <UserContext.Provider value={{ user, login, logout, isLoading }}>
+    <UserContext.Provider
+      value={{ user, login, logout, isLoading, isInitialized }}
+    >
       {children}
     </UserContext.Provider>
   );
@@ -79,15 +84,15 @@ export function useUser(): UserContextType {
 export function useApplicantUser(): Omit<UserContextType, 'user'> & {
   user: ApplicantUser | null;
 } {
-  const { user, login, logout, isLoading } = useUser();
+  const { user, login, logout, isLoading, isInitialized } = useUser();
   const applicantUser = user && isApplicantUser(user) ? user : null;
-  return { user: applicantUser, login, logout, isLoading };
+  return { user: applicantUser, login, logout, isLoading, isInitialized };
 }
 
 export function useCompanyUser(): Omit<UserContextType, 'user'> & {
   user: CompanyUser | null;
 } {
-  const { user, login, logout, isLoading } = useUser();
+  const { user, login, logout, isLoading, isInitialized } = useUser();
   const companyUser = user && isCompanyUser(user) ? user : null;
-  return { user: companyUser, login, logout, isLoading };
+  return { user: companyUser, login, logout, isLoading, isInitialized };
 }

@@ -17,9 +17,11 @@ import { useGetJobsByIds } from '@/services/jobs/JobsService';
 import { ExistingJob } from '@/models/Job';
 import Loading from '../components/Loading';
 import DOMPurify from 'dompurify';
+import CanAccess from '../components/CanAccess';
+import { UserType } from '@/models/User';
 
 export default function UserProfile() {
-  const { user, isLoading: isUserLoading } = useApplicantUser();
+  const { user, isLoading: isUserLoading, isInitialized } = useApplicantUser();
   const { data: jobApplications, isLoading: isJobsLoading } =
     useGetJobApplicationsByUserId(user?.id || '');
   const { data: jobs = [] } = useGetJobsByIds(
@@ -30,11 +32,11 @@ export default function UserProfile() {
     return jobs.find((job) => job.id === jobId);
   };
 
-  if (isUserLoading && !user) {
+  if (!isInitialized || isUserLoading) {
     return <Loading />;
   }
 
-  if (!user && !isUserLoading) {
+  if (!user) {
     return <Container>No user found.</Container>;
   }
 
@@ -111,11 +113,17 @@ export default function UserProfile() {
           <Row className="mt-3">
             <Col></Col>
           </Row>
-          <div className="mt-3">
-            <Button variant="warning" href="/profile/edit">
-              Edit your profile
-            </Button>
-          </div>
+
+          <CanAccess
+            user={user}
+            requiredRole={[UserType.Admin, UserType.Applicant]}
+          >
+            <div className="mt-2">
+              <Button variant="warning" href="/profile/edit">
+                Edit your profile
+              </Button>
+            </div>
+          </CanAccess>
         </Card.Body>
       </Card>
 

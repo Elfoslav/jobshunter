@@ -16,7 +16,6 @@ import {
 } from 'react-bootstrap';
 import Loading from '@/app/components/Loading';
 import { useUser } from '@/app/context/UserContext';
-import { hasRole, isCompanyUser } from '@/lib/utils/user';
 import { UserType } from '@/models/User';
 import CanAccess from '@/app/components/CanAccess';
 import ResourceType from '@/models/enums/ResourceType';
@@ -27,7 +26,7 @@ export default function CompanyPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
-  const { user = null, isLoading: isUserLoading } = useUser();
+  const { user = null } = useUser();
   const { data: company, isLoading } = useGetCompanyById(id);
   const { data: jobs = [] } = useGetJobsByCompanyId(company ? company.id : '');
 
@@ -96,7 +95,7 @@ export default function CompanyPage({
 
                     <CanAccess
                       user={user}
-                      userType={[UserType.Admin, UserType.Company]}
+                      requiredRole={[UserType.Admin, UserType.Company]}
                       resourceType={ResourceType.Company}
                       resourceId={company.id}
                     >
@@ -274,7 +273,7 @@ export default function CompanyPage({
 
           <CanAccess
             user={user}
-            userType={[UserType.Admin, UserType.Company]}
+            requiredRole={[UserType.Admin, UserType.Company]}
             resourceType={ResourceType.Company}
             resourceId={company.id}
           >

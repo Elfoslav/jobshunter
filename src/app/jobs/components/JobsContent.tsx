@@ -10,6 +10,8 @@ import SelectOption from '@/models/SelectOption';
 import Skill from '@/models/Skill';
 import { useApplicantUser } from '@/app/context/UserContext';
 import Loading from '@/app/components/Loading';
+import CanAccess from '@/app/components/CanAccess';
+import { UserType } from '@/models/User';
 
 export default function JobsContent() {
   const { user } = useApplicantUser();
@@ -41,9 +43,14 @@ export default function JobsContent() {
           <JobsFilter search={searchParam} skillsOptions={skillsOptions} />
         </Col>
         <Col md={3} lg={5} className="d-flex justify-content-end">
-          <Button className="mt-2 mb-3 d-none d-lg-block" href="/jobs/add">
-            Post a job
-          </Button>
+          <CanAccess
+            user={user}
+            requiredRole={[UserType.Admin, UserType.Company]}
+          >
+            <Button className="mt-2 mb-3 d-none d-lg-block" href="/jobs/add">
+              Post a job
+            </Button>
+          </CanAccess>
         </Col>
       </Row>
 
