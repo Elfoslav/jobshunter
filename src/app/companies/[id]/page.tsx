@@ -19,6 +19,7 @@ import { useUser } from '@/app/context/UserContext';
 import { hasRole, isCompanyUser } from '@/lib/utils/user';
 import { UserType } from '@/models/User';
 import CanAccess from '@/app/components/CanAccess';
+import ResourceType from '@/models/enums/ResourceType';
 
 export default function CompanyPage({
   params,
@@ -95,7 +96,9 @@ export default function CompanyPage({
 
                     <CanAccess
                       user={user}
-                      allowed={[UserType.Admin, UserType.Company]}
+                      userType={[UserType.Admin, UserType.Company]}
+                      resourceType={ResourceType.Company}
+                      resourceId={company.id}
                     >
                       <Button variant="warning" href={`/companies/${id}/edit`}>
                         Edit Company
@@ -269,7 +272,12 @@ export default function CompanyPage({
             </Card.Body>
           </Card>
 
-          <CanAccess user={user} allowed={[UserType.Admin, UserType.Company]}>
+          <CanAccess
+            user={user}
+            userType={[UserType.Admin, UserType.Company]}
+            resourceType={ResourceType.Company}
+            resourceId={company.id}
+          >
             <div className="d-grid gap-2">
               <Button
                 variant="primary"
