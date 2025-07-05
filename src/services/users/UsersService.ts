@@ -78,9 +78,13 @@ const getApplicants = async (
   return filtered;
 };
 
-export const getApplicantsCount = async (): Promise<number> => {
+export const getApplicantsCount = async (
+  searchQuery?: string,
+  skills?: string[]
+): Promise<number> => {
   const users = await getUsers();
-  return users.filter(isApplicantUser).length;
+  const filtered = filterUsers(users, searchQuery, skills)
+  return filtered.filter(isApplicantUser).length;
 };
 
 
