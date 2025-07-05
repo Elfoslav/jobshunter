@@ -8,7 +8,7 @@ import {
 } from '@tanstack/react-query';
 import JobsStore from './JobsStore';
 import { ExistingJob, NewJob } from '@/models/Job';
-import { JOBS_PER_PAGE, JOBS_QUERIES } from '@/lib/consts';
+import { ITEMS_PER_PAGE, JOBS_QUERIES } from '@/lib/consts';
 
 const filterJobs = (
   data: ExistingJob[],
@@ -49,10 +49,10 @@ const getJobs = async (
   searchQuery: string = '',
   skills: string[]
 ): Promise<ExistingJob[]> => {
-  const offset = (page - 1) * JOBS_PER_PAGE;
+  const offset = (page - 1) * ITEMS_PER_PAGE;
   const data: ExistingJob[] = JobsStore.read();
   let filteredJobs = filterJobs(data, searchQuery, skills);
-  filteredJobs = filteredJobs.slice(offset, offset + JOBS_PER_PAGE);
+  filteredJobs = filteredJobs.slice(offset, offset + ITEMS_PER_PAGE);
   return filteredJobs;
 };
 

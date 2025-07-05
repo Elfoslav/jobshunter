@@ -39,11 +39,10 @@ export const useGetMigrationsCount = (
 ) => {
   // Note: searchQuery and migrationsFilter parameters currently unused in queryFn,
   // but included in queryKey for potential cache differentiation.
-  const result = useQuery<number, unknown>({
+  return useQuery<number, unknown>({
     queryKey: [MIGRATIONS_QUERIES.MIGRATIONS_COUNT, searchQuery, migrationsFilter],
     queryFn: getMigrationsCount,
   });
-  return { ...result };
 };
 
 export const useGetMigrationById = (migrationId: string) => {

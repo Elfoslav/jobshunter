@@ -10,7 +10,7 @@ import {
 import { GeoAltFill, Building } from 'react-bootstrap-icons';
 import useQueryParams from '@/app/components/useQueryParams';
 import Pagination from '@/app/components/Pagination';
-import { JOBS_PER_PAGE } from '@/lib/consts'; // reuse this or rename to COMPANIES_PER_PAGE
+import { ITEMS_PER_PAGE } from '@/lib/consts';
 import { ExistingCompany } from '@/models/Company';
 
 interface CompaniesListProps {
@@ -49,9 +49,9 @@ const CompaniesList: React.FC<CompaniesListProps> = ({
         {companies.map((company) => (
           <ListGroupItem
             key={company.id}
-            action
             href={`/companies/${company.id}`}
             className="job-item"
+            action
           >
             <Row>
               <Col
@@ -94,7 +94,7 @@ const CompaniesList: React.FC<CompaniesListProps> = ({
 
       <div className="mt-3 d-flex justify-content-center">
         <Pagination
-          itemsPerPage={JOBS_PER_PAGE}
+          itemsPerPage={ITEMS_PER_PAGE}
           totalItems={totalCount}
           currentPage={pageNumber}
           onPageChange={handlePageChange}

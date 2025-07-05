@@ -255,6 +255,7 @@ const jobs: ExistingJob[] = [
     id: '11',
     title: 'Software Engineer',
     company: 'Tech Solutions Ltd.',
+    companyId: '5',
     location: 'Seattle, WA',
     remotePercentage: 0,
     description:
@@ -290,6 +291,7 @@ const jobs: ExistingJob[] = [
     id: '13',
     title: 'Data Scientist',
     company: 'Data Insights Co.',
+    companyId: '6',
     location: 'New York, NY',
     remotePercentage: 0,
     description:
@@ -311,6 +313,7 @@ const jobs: ExistingJob[] = [
     id: '14',
     title: 'UX/UI Designer',
     company: 'Creative Visionaries',
+    companyId: '7',
     location: 'Los Angeles, CA',
     remotePercentage: 0,
     description:

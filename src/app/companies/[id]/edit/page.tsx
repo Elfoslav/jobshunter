@@ -39,14 +39,14 @@ export default function EditCompanyPage({
 
   if (!company) {
     return (
-      <Container className="py-4">
+      <Container className="py-3">
         <Alert variant="danger">Unable to load company data.</Alert>
       </Container>
     );
   }
 
   return (
-    <Container className="py-4">
+    <Container className="py-3">
       <CompanyForm initialValues={company} onSubmit={handleSubmit} />
     </Container>
   );

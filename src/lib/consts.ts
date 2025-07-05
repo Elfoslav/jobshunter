@@ -1,4 +1,4 @@
-export const JOBS_PER_PAGE = 5;
+export const ITEMS_PER_PAGE = 5;
 
 export const JOBS_QUERIES = {
   JOBS: 'jobs',
@@ -23,6 +23,7 @@ export const USERS_QUERIES = {
   USERS_COUNT: 'users_count',
   USER_BY_ID: 'user_by_id',
   USER_BY_EMAIL: 'user_by_email',
+  USERS_BY_IDS: 'users_by_ids',
 };
 
 export const SKILLS_QUERIES = {

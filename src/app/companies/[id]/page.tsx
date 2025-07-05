@@ -34,7 +34,7 @@ export default function CompanyPage({
 
   if (!company)
     return (
-      <Container className="py-4">
+      <Container className="py-3">
         <Alert variant="danger" className="text-center">
           Company not found or unauthorized.
         </Alert>
@@ -42,7 +42,7 @@ export default function CompanyPage({
     );
 
   return (
-    <Container className="py-4 px-0">
+    <Container className="py-3 px-0">
       <Row>
         <Col md={12} lg={8}>
           <Card className="shadow-sm">

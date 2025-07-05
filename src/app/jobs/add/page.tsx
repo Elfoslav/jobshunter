@@ -5,14 +5,18 @@ import { useRouter } from 'next/navigation';
 import JobForm from '../components/JobForm';
 import Breadcrumbs from '@/app/components/Breadcrumbs';
 import { useCreateJob } from '@/services/jobs/JobsService';
-import { ExistingJob, NewJob } from '@/models/Job';
+import { NewJob } from '@/models/Job';
+import { useCompanyUser } from '@/app/context/UserContext';
 
 export default function AddJob() {
   const router = useRouter();
+  const { user } = useCompanyUser();
   const breadcrumbs = [{ link: '/', title: 'Jobs' }, { title: 'New job' }];
   const { mutate: createJob, isPending } = useCreateJob();
 
   const handleAdd = (job: NewJob) => {
+    // TODO: do it on the server when it's available
+    job.companyId = user?.companyData.id;
     createJob(job, {
       onSuccess: () => {
         router.push('/jobs');

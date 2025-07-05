@@ -3,7 +3,26 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import UsersStore from './UsersStore';
 import { User, ApplicantUser, CompanyUser, UserType } from '@/models/User';
-import { USERS_QUERIES } from '@/lib/consts';
+import { ITEMS_PER_PAGE, USERS_QUERIES } from '@/lib/consts';
+import { isApplicantUser, isCompanyUser } from '@/lib/utils/user';
+
+const USERS_PER_PAGE = ITEMS_PER_PAGE;
+
+const filterUsers = (
+  data: User[],
+  searchQuery: string = '',
+  skills: string[] = [],
+): User[] => {
+  let filtered = data.sort((a, b) => b.registeredAt.getTime() - a.registeredAt.getTime());
+
+  if (searchQuery) {
+    filtered = filtered.filter((c) =>
+      c.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }
+
+  return filtered;
+};
 
 export const getUsers = async (): Promise<User[]> => {
   const data: User[] = UsersStore.read();
@@ -13,6 +32,18 @@ export const getUsers = async (): Promise<User[]> => {
 const getUsersCount = async (): Promise<number> => {
   const data: User[] = UsersStore.read();
   return Promise.resolve(data.length);
+};
+
+export const getUsersById = async (id: string): Promise<User[]> => {
+  const users: User[] = UsersStore.read();
+  const user = users.filter((user) => user.id === id);
+  return Promise.resolve(user);
+};
+
+export const getUsersByIds = async (ids: string[]): Promise<User[]> => {
+  const users: User[] = UsersStore.read();
+  const filteredUsers = users.filter((user) => ids.includes(user.id));
+  return Promise.resolve(filteredUsers);
 };
 
 export const getUserById = async (id: string): Promise<User | null> => {
@@ -27,14 +58,40 @@ export const getUserByEmail = async (email: string): Promise<User | null> => {
   return Promise.resolve(user);
 };
 
-export const getApplicants = async (): Promise<ApplicantUser[]> => {
+const getApplicants = async (
+  page: number = 1,
+  searchQuery = '',
+  skills?: string[]
+): Promise<ApplicantUser[]> => {
+  const offset = (page - 1) * USERS_PER_PAGE; // Adjust USERS_PER_PAGE constant accordingly
   const users = await getUsers();
-  return users.filter((u): u is ApplicantUser => u.type === UserType.Applicant);
+
+  // Filter out only Applicant users
+  const applicants = users.filter(isApplicantUser);
+
+  // Optionally filter by searchQuery and skills
+  const filtered = filterUsers(applicants, searchQuery, skills).slice(
+    offset,
+    offset + USERS_PER_PAGE
+  ) as ApplicantUser[];
+
+  return filtered;
 };
 
-export const getCompanies = async (): Promise<CompanyUser[]> => {
+export const getApplicantsCount = async (): Promise<number> => {
   const users = await getUsers();
-  return users.filter((u): u is CompanyUser => u.type === UserType.Company);
+  return users.filter(isApplicantUser).length;
+};
+
+
+export const getApplicantsByIds = async (ids: string[]): Promise<ApplicantUser[]> => {
+  const users = await getUsersByIds(ids);
+  return users.filter(isApplicantUser);
+};
+
+export const getCompaniesUsers = async (): Promise<CompanyUser[]> => {
+  const users = await getUsers();
+  return users.filter(isCompanyUser);
 };
 
 const createUser = async (newUser: User): Promise<void> => {
@@ -66,11 +123,10 @@ export const useGetUsersCount = (
   searchQuery: string = '',
   skills: string[] = []
 ) => {
-  const result = useQuery<number, unknown>({
+  return useQuery<number, unknown>({
     queryKey: [USERS_QUERIES.USERS_COUNT, searchQuery, skills],
     queryFn: getUsersCount,
   });
-  return { ...result };
 };
 
 export const useGetUserById = (userId: string) => {
@@ -87,17 +143,32 @@ export const useGetUserByEmail = (email: string) => {
   });
 };
 
-export const useGetApplicants = () => {
+export const useGetApplicants = (page = 1, searchQuery = '', skills?: string[]) => {
   return useQuery<ApplicantUser[], unknown>({
     queryKey: [USERS_QUERIES.USERS, UserType.Applicant],
-    queryFn: getApplicants,
+    queryFn: () => getApplicants(page, searchQuery, skills),
   });
 };
 
-export const useGetCompanies = () => {
+export const useGetApplicantsCount = (searchQuery = '', skills?: string[]) => {
+  return useQuery<number, unknown>({
+    queryKey: [USERS_QUERIES.USERS, UserType.Applicant, searchQuery, skills],
+    queryFn: () => getApplicantsCount(searchQuery, skills),
+  });
+};
+
+export const useGetApplicantsByIds = (ids: string[]) => {
+  return useQuery<ApplicantUser[], unknown>({
+    queryKey: [USERS_QUERIES.USERS_BY_IDS, UserType.Applicant, ids],
+    queryFn: () => getApplicantsByIds(ids),
+    enabled: ids.length > 0, // prevent running the query if no ids
+  });
+};
+
+export const useGetCompaniesUsers = () => {
   return useQuery<CompanyUser[], unknown>({
     queryKey: [USERS_QUERIES.USERS, UserType.Company],
-    queryFn: getCompanies,
+    queryFn: getCompaniesUsers,
   });
 };
 

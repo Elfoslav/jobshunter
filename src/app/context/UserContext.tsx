@@ -12,6 +12,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { ApplicantUser, CompanyUser, User, UserType } from '@/models/User';
 import { getUserById } from '@/services/users/UsersService';
 import { isApplicantUser, isCompanyUser } from '@/lib/utils/user';
+import { ExistingCompany } from '@/models/Company';
 
 type UserContextType = {
   user: User | null;
@@ -90,9 +91,14 @@ export function useApplicantUser(): Omit<UserContextType, 'user'> & {
 }
 
 export function useCompanyUser(): Omit<UserContextType, 'user'> & {
-  user: CompanyUser | null;
+  user: (CompanyUser & { companyData: ExistingCompany }) | null;
 } {
   const { user, login, logout, isLoading, isInitialized } = useUser();
-  const companyUser = user && isCompanyUser(user) ? user : null;
-  return { user: companyUser, login, logout, isLoading, isInitialized };
+
+  if (user && isCompanyUser(user)) {
+    const companyUser = user as CompanyUser & { companyData: ExistingCompany };
+    return { user: companyUser, login, logout, isLoading, isInitialized };
+  }
+
+  return { user: null, login, logout, isLoading, isInitialized };
 }

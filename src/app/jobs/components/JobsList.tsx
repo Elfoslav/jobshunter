@@ -4,7 +4,7 @@ import { ListGroup, ListGroupItem, Row, Col } from 'react-bootstrap';
 import { GeoAltFill, SuitcaseLgFill } from 'react-bootstrap-icons';
 import useQueryParams from '@/app/components/useQueryParams';
 import Pagination from '@/app/components/Pagination';
-import { JOBS_PER_PAGE, JOBS_QUERIES } from '@/lib/consts';
+import { ITEMS_PER_PAGE, JOBS_QUERIES } from '@/lib/consts';
 import Skills from './Skills';
 import { ExistingJob } from '@/models/Job';
 import './JobsList.scss';
@@ -118,7 +118,7 @@ const JobsList: React.FC<JobsListProps> = ({
 
       <div className="mt-3 d-flex justify-content-center">
         <Pagination
-          itemsPerPage={JOBS_PER_PAGE}
+          itemsPerPage={ITEMS_PER_PAGE}
           totalItems={totalCount}
           currentPage={pageNumber}
           onPageChange={handlePageChange}

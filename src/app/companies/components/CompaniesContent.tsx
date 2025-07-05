@@ -21,10 +21,7 @@ export default function CompaniesContent() {
     searchParam,
     skillsParamArray
   );
-  const { data: companiesCount } = useGetCompaniesCount(
-    searchParam,
-    skillsParamArray
-  );
+  const { data: companiesTotalCount } = useGetCompaniesCount();
 
   return (
     <div>
@@ -38,7 +35,7 @@ export default function CompaniesContent() {
 
       <CompaniesList
         companies={companies || []}
-        totalCount={companiesCount || 0}
+        totalCount={companiesTotalCount || 0}
         page={page}
       />
     </div>

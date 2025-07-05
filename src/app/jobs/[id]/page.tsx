@@ -36,6 +36,7 @@ import { isApplicantUser } from '@/lib/utils/user';
 import CanAccess from '@/app/components/CanAccess';
 import { UserType } from '@/models/User';
 import ResourceType from '@/models/enums/ResourceType';
+import JobApplicationsList from '../components/JobApplicationsList';
 
 export default function JobsPage({
   params,
@@ -191,6 +192,20 @@ export default function JobsPage({
               </Card.Body>
             </Card>
 
+            <CanAccess
+              user={user}
+              requiredRole={[UserType.Admin, UserType.Company]}
+              resourceType={ResourceType.Company}
+              resourceId={job.companyId}
+            >
+              {jobApplications && jobApplications.length > 0 && (
+                <JobApplicationsList
+                  className="mt-4 d-none d-md-block"
+                  jobApplications={jobApplications}
+                />
+              )}
+            </CanAccess>
+
             {similarJobs && similarJobs.length > 0 && (
               <SimilarJobs
                 className="mt-4 d-none d-md-block"
@@ -243,7 +258,6 @@ export default function JobsPage({
                       </div>
                     </Col>
                   )}
-
                   <CanAccess
                     user={user}
                     requiredRole={[UserType.Admin, UserType.Company]}

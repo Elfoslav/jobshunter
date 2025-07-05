@@ -18,14 +18,20 @@ const filterCompanies = (
 ): ExistingCompany[] => {
   let filtered = data.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
-  if (searchQuery) {
-    filtered = filtered.filter((c) =>
-      c.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+  if (searchQuery.trim()) {
+    const terms = searchQuery.toLowerCase().split(/\s+/); // Split by space
+
+    filtered = filtered.filter((c) => {
+      const name = c.name.toLowerCase();
+      const location = c?.location?.toLowerCase();
+
+      return terms.some((term) => name.includes(term) || location?.includes(term));
+    });
   }
 
   return filtered;
 };
+
 
 const getCompanies = async (
   page: number,

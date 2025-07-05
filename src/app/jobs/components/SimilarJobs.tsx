@@ -10,7 +10,7 @@ interface SimilarJobsProps {
   className?: string;
 }
 
-export default function SimilarJobsCard({
+export default function SimilarJobs({
   similarJobs,
   className,
 }: SimilarJobsProps) {
