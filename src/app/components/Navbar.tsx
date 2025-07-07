@@ -18,10 +18,6 @@ export default function AppNavbar() {
     router.push('/');
   };
 
-  const getActiveKey = () => {
-    return pathname.includes('job') ? '/jobs' : '/';
-  };
-
   return (
     <Navbar expand="lg" className="bg-light mb-3">
       <Container>
@@ -32,16 +28,19 @@ export default function AppNavbar() {
           </Button>
         </div>
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav activeKey={getActiveKey()} className="me-auto">
+          <Nav activeKey={pathname} className="me-auto">
             <Nav.Item>
               <Nav.Link href="/jobs">Jobs</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link href="/companies">Companies</Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link href="/applicants">Applicants</Nav.Link>
             </Nav.Item>
           </Nav>
           <Nav className="ms-auto">
             {/* Use ml-auto class to align items to the right */}
-            <Nav.Item>
-              <Nav.Link href="/companies">Companies</Nav.Link>
-            </Nav.Item>
 
             {isLoading ? (
               <Nav.Item>

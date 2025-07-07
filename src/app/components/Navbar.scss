@@ -10,8 +10,33 @@
     &:hover {
       color: darken($primary, 10%) !important;
     }
-    &.active:hover {
-      color: darken($primary, 10%);
+    &.active {
+      color: darken($primary, 5%) !important;
+      &:hover {
+        color: darken($primary, 10%) !important;
+      }
+    }
+  }
+}
+
+@media (min-width: 992px) {
+  .navbar {
+    .nav-link {
+      &.active {
+        text-decoration: underline;
+        text-decoration-thickness: 4px;
+        text-underline-offset: 21px;
+      }
+    }
+  }
+}
+
+@media (max-width: 991px) {
+  .navbar-collapse {
+    .nav-link {
+      &.active {
+        color: darken($primary, 20%) !important;
+      }
     }
   }
 }
