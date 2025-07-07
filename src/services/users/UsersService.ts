@@ -75,6 +75,8 @@ const getApplicants = async (
     offset + USERS_PER_PAGE
   ) as ApplicantUser[];
 
+  console.log('page, filtered users:', page, filtered);
+
   return filtered;
 };
 
@@ -148,8 +150,9 @@ export const useGetUserByEmail = (email: string) => {
 };
 
 export const useGetApplicants = (page = 1, searchQuery = '', skills?: string[]) => {
+  console.log('page: ', page);
   return useQuery<ApplicantUser[], unknown>({
-    queryKey: [USERS_QUERIES.USERS, UserType.Applicant],
+    queryKey: [USERS_QUERIES.USERS, UserType.Applicant, page, searchQuery, skills],
     queryFn: () => getApplicants(page, searchQuery, skills),
   });
 };

@@ -38,7 +38,7 @@ export default function JobApplicationsList({
         {jobApplications.map((jobApplication) => (
           <div key={jobApplication.id} className="mb-1">
             <Link
-              href={`/users/${jobApplication.userId}`}
+              href={`/applicants/${jobApplication.userId}`}
               className="text-decoration-none"
             >
               <strong>{getApplicantName(jobApplication.userId)}</strong> —{' '}
