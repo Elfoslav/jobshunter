@@ -12,6 +12,7 @@ import { ApplicantUser, UserType } from '@/models/User'; // Adjust this import p
 import { getSkillClass } from '@/lib/functions';
 import CanAccess from '@/app/components/CanAccess';
 import { useApplicantUser } from '@/app/context/UserContext';
+import DOMPurify from 'dompurify';
 
 interface ApplicantProfileProps {
   applicant: ApplicantUser;
@@ -110,7 +111,14 @@ const ApplicantProfile: React.FC<ApplicantProfileProps> = ({ applicant }) => {
           <Col md={8}>
             {/* Bio */}
             <h5>About</h5>
-            <p>{applicant.bio}</p>
+            <div
+              className="mt-1 mb-4"
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(
+                  applicant.bio.replace(/\n/g, '<br />')
+                ),
+              }}
+            />
 
             {/* Skills */}
             {applicant.skills && applicant.skills.length > 0 && (
