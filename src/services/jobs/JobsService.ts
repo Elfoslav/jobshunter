@@ -9,12 +9,13 @@ import {
 import JobsStore from './JobsStore';
 import { ExistingJob, NewJob } from '@/models/Job';
 import { ITEMS_PER_PAGE, JOBS_QUERIES } from '@/lib/consts';
+import { getSkillsByIds } from '../skills/SkillsService';
 
-const filterJobs = (
+const filterJobs = async (
   data: ExistingJob[],
   searchQuery: string = '',
-  skills: string[] = []
-): ExistingJob[] => {
+  skills: string[] = [], // names of skills
+): Promise<ExistingJob[]> => {
   let filteredJobs = data.sort(
     (job1, job2) => job2.postedAt.getTime() - job1.postedAt.getTime()
   );
@@ -35,10 +36,23 @@ const filterJobs = (
   }
 
   if (skills.length && skills[0] !== '') {
-    filteredJobs = filteredJobs.filter((job) => {
-      const jobSkills = [...job.requiredSkills, ...job.optionalSkills];
-      return skills.every((skill) => jobSkills.includes(skill));
-    });
+    const skillSet = new Set(skills);
+
+    const results: ExistingJob[] = [];
+    for (const job of filteredJobs) {
+      const allSkillIds = [...job.requiredSkills, ...job.optionalSkills];
+      const jobSkills = await getSkillsByIds(allSkillIds);
+      console.log(jobSkills, skillSet);
+
+      const skillNames = jobSkills.map((s) => s.name);
+      const hasMatchingSkill = skillNames.some((name) => skillSet.has(name));
+
+      if (hasMatchingSkill) {
+        results.push(job);
+      }
+    }
+
+    return results;
   }
 
   return filteredJobs;
@@ -51,7 +65,7 @@ const getJobs = async (
 ): Promise<ExistingJob[]> => {
   const offset = (page - 1) * ITEMS_PER_PAGE;
   const data: ExistingJob[] = JobsStore.read();
-  let filteredJobs = filterJobs(data, searchQuery, skills);
+  let filteredJobs = await filterJobs(data, searchQuery, skills);
   filteredJobs = filteredJobs.slice(offset, offset + ITEMS_PER_PAGE);
   return filteredJobs;
 };
@@ -61,7 +75,7 @@ const getJobsCount = async (
   skills: string[]
 ): Promise<number> => {
   const data: ExistingJob[] = JobsStore.read();
-  const filteredJobs = filterJobs(data, searchQuery, skills);
+  const filteredJobs = await filterJobs(data, searchQuery, skills);
   return filteredJobs.length;
 };
 

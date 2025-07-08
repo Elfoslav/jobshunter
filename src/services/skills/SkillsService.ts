@@ -15,6 +15,11 @@ const getSkillsCount = async (): Promise<number> => {
   return data.length;
 };
 
+export const getSkillsByIds = async (ids: string[]): Promise<Skill[]> => {
+  const skills = await getSkills();
+  return skills.filter((skill) => ids.includes(skill.id));
+};
+
 const getSkillById = async (id: string): Promise<Skill | null> => {
   const skills: Skill[] = SkillsStore.read();
   return skills.find((skill) => skill.id === id) || null;
