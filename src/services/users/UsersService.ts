@@ -8,11 +8,11 @@ import { isApplicantUser, isCompanyUser } from '@/lib/utils/user';
 
 const USERS_PER_PAGE = ITEMS_PER_PAGE;
 
-const filterUsers = (
-  data: User[],
+const filterApplicantUsers = (
+  data: ApplicantUser[],
   searchQuery: string = '',
   skills: string[] = [],
-): User[] => {
+): ApplicantUser[] => {
   let filtered = data.sort((a, b) => b.registeredAt.getTime() - a.registeredAt.getTime());
 
   if (searchQuery) {
@@ -58,34 +58,33 @@ export const getUserByEmail = async (email: string): Promise<User | null> => {
   return Promise.resolve(user);
 };
 
-const getApplicants = async (
-  page: number = 1,
-  searchQuery = '',
+export const getApplicants = async (
+  page?: number,
+  searchQuery?: string,
   skills?: string[]
 ): Promise<ApplicantUser[]> => {
-  const offset = (page - 1) * USERS_PER_PAGE; // Adjust USERS_PER_PAGE constant accordingly
   const users = await getUsers();
-
-  // Filter out only Applicant users
   const applicants = users.filter(isApplicantUser);
 
-  // Optionally filter by searchQuery and skills
-  const filtered = filterUsers(applicants, searchQuery, skills).slice(
-    offset,
-    offset + USERS_PER_PAGE
-  ) as ApplicantUser[];
+  // If no search query or skills provided, skip filtering
+  const filtered = searchQuery || (skills && skills.length > 0)
+    ? filterApplicantUsers(applicants, searchQuery || '', skills)
+    : applicants;
 
-  console.log('page, filtered users:', page, filtered);
+  // If no page specified, return all
+  if (!page) return filtered;
 
-  return filtered;
+  const offset = (page - 1) * USERS_PER_PAGE;
+  return filtered.slice(offset, offset + USERS_PER_PAGE);
 };
+
 
 export const getApplicantsCount = async (
   searchQuery?: string,
   skills?: string[]
 ): Promise<number> => {
-  const users = await getUsers();
-  const filtered = filterUsers(users, searchQuery, skills)
+  const users = await getApplicants();
+  const filtered = filterApplicantUsers(users, searchQuery, skills)
   return filtered.filter(isApplicantUser).length;
 };
 
@@ -150,7 +149,6 @@ export const useGetUserByEmail = (email: string) => {
 };
 
 export const useGetApplicants = (page = 1, searchQuery = '', skills?: string[]) => {
-  console.log('page: ', page);
   return useQuery<ApplicantUser[], unknown>({
     queryKey: [USERS_QUERIES.USERS, UserType.Applicant, page, searchQuery, skills],
     queryFn: () => getApplicants(page, searchQuery, skills),
@@ -169,6 +167,17 @@ export const useGetApplicantsByIds = (ids: string[]) => {
     queryKey: [USERS_QUERIES.USERS_BY_IDS, UserType.Applicant, ids],
     queryFn: () => getApplicantsByIds(ids),
     enabled: ids.length > 0, // prevent running the query if no ids
+  });
+};
+
+export const useGetApplicantById = (id: string) => {
+  return useQuery<ApplicantUser | null>({
+    queryKey: ['applicant', id],
+    queryFn: async () => {
+      const user = await getUserById(id);
+      return user && isApplicantUser(user) ? user : null;
+    },
+    enabled: !!id, // avoid running the query if id is falsy
   });
 };
 

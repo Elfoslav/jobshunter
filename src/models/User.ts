@@ -1,5 +1,6 @@
 import { Company } from './Company';
 import EmploymentType from './enums/EmploymentType';
+import { ApplicantSkill } from './Skill';
 
 export enum UserType {
   Admin = 'Admin',
@@ -9,18 +10,47 @@ export enum UserType {
 
 interface BaseUser {
   id: string;
-  name: string;
   email: string;
-  phone: string;
   registeredAt: Date;
   updatedAt?: Date;
   type: UserType;
 }
 
+// Experience
+interface Experience {
+  company: string;
+  role: string;
+  startDate: Date;
+  endDate?: Date;
+  description?: string;
+}
+
+// Education
+interface Education {
+  institution: string;
+  degree: string;
+  fieldOfStudy: string;
+  startYear: number;
+  endYear?: number;
+}
+
+// External link
+interface ProfileLink {
+  label: string;
+  url: string;
+}
+
+interface Language {
+  name: string;
+  proficiency: 'Basic' | 'Intermediate' | 'Fluent' | 'Native';
+}
+
 export interface ApplicantUser extends BaseUser {
+  name: string;
+  phone: string;
   bio: string;
-  skills?: string[];
   location?: string;
+  skills?: ApplicantSkill[];
   preferences: {
     locations: string[];
     remotePercentage: number;
@@ -28,6 +58,17 @@ export interface ApplicantUser extends BaseUser {
     salaryMin: number;
     salaryMax: number;
   };
+  experience?: Experience[];
+  education?: Education[];
+  resumeUrl?: string;
+  portfolioUrl?: string;
+  links?: ProfileLink[];
+  languages?: Language[];
+  availabilityDate?: Date;
+  preferredRoles?: string[];
+  softSkills?: string[];
+  isVisible?: boolean;
+  isOpenToWork?: boolean;
 }
 
 export interface CompanyUser extends BaseUser {

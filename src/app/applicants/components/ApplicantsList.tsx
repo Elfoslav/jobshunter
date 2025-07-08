@@ -69,8 +69,8 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
                   <strong>Skills:</strong>
                   <div className="d-flex flex-wrap gap-1 mt-1">
                     {applicant.skills?.slice(0, 3).map((skill) => (
-                      <Badge key={skill} bg="primary">
-                        {skill}
+                      <Badge key={skill.name} bg="primary">
+                        {skill.name}
                       </Badge>
                     ))}
                   </div>

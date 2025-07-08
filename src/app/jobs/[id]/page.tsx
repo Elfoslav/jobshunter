@@ -179,10 +179,10 @@ export default function JobsPage({
                 </div>
 
                 <h3 className="fs-5">Required skills:</h3>
-                <Skills skills={job.requiredSkills} user={user} primary />
+                <Skills skillsIds={job.requiredSkills} user={user} primary />
 
                 <h3 className="fs-5 mt-2">Nice to have skills:</h3>
-                <Skills skills={job.optionalSkills} user={user} />
+                <Skills skillsIds={job.optionalSkills} user={user} />
 
                 {/* Applications Count */}
                 <div className="text-muted mt-2">

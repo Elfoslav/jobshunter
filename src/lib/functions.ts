@@ -1,3 +1,5 @@
+import { SkillLevel } from "@/models/Skill";
+
 export const getDaysPassed = (date: Date): number => {
   const currentDate = new Date();
   const timeDiff = currentDate.getTime() - date.getTime();
@@ -56,4 +58,15 @@ export const dateReviver = (key: string, value: any) => {
     return new Date(value);
   }
   return value;
+};
+
+export const getSkillClass = (level: SkillLevel) => {
+  switch (level) {
+    case SkillLevel.Senior:
+      return 'primary';
+    case SkillLevel.Medior:
+      return 'secondary';
+    default:
+      return 'warning';
+  }
 };

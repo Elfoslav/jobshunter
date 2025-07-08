@@ -5,7 +5,7 @@ import SkillsStore from './SkillsStore';
 import Skill from '@/models/Skill';
 import { SKILLS_QUERIES } from '@/lib/consts';
 
-const getSkills = async (): Promise<Skill[]> => {
+export const getSkills = async (): Promise<Skill[]> => {
   const data: Skill[] = SkillsStore.read();
   return data;
 };

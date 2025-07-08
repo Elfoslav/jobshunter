@@ -4,6 +4,21 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Select, { MultiValue } from 'react-select';
 import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import {
   Container,
   Form,
   Button,
@@ -20,6 +35,9 @@ import { useUpdateUser } from '@/services/users/UsersService';
 import { useNotification } from '@/app/context/NotificationContext';
 import RemotePercentageInput from '@/app/jobs/components/RemotePercentageInput';
 import TextEditor from '@/app/components/TextEditor';
+import { ApplicantSkill, SkillLevel } from '@/models/Skill';
+import SortableSkillRow from './SortableSkillRow';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface ApplicantProfileFormProps {
   user?: ApplicantUser;
@@ -33,6 +51,7 @@ const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
   const { data: skills } = useGetSkills();
   const updateUserMutation = useUpdateUser();
   const [isSaving, setIsSaving] = useState(false);
+  const queryClient = useQueryClient();
 
   const [formData, setFormData] = useState<ApplicantUser>({
     id: user?.id ?? '',
@@ -44,30 +63,62 @@ const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
     skills: user?.skills ? [...user.skills] : [],
     type: user?.type ?? UserType.Applicant,
     preferences: {
-      locations: user?.preferences?.locations
-        ? [...user.preferences.locations]
-        : [],
+      locations: user?.preferences?.locations ?? [],
       remotePercentage: user?.preferences?.remotePercentage ?? 0,
-      employmentTypes: user?.preferences?.employmentTypes
-        ? [...user.preferences.employmentTypes]
-        : [],
+      employmentTypes: user?.preferences?.employmentTypes ?? [],
       salaryMin: user?.preferences?.salaryMin ?? 0,
       salaryMax: user?.preferences?.salaryMax ?? 0,
     },
+    experience: user?.experience ?? [],
+    education: user?.education ?? [],
+    resumeUrl: user?.resumeUrl ?? '',
+    portfolioUrl: user?.portfolioUrl ?? '',
+    links: user?.links ?? [],
+    languages: user?.languages ?? [],
+    availabilityDate: user?.availabilityDate ?? undefined,
+    preferredRoles: user?.preferredRoles ?? [],
+    softSkills: user?.softSkills ?? [],
+    isVisible: user?.isVisible ?? true,
+    isOpenToWork: user?.isOpenToWork ?? true,
     registeredAt: user?.registeredAt || new Date(),
     updatedAt: user?.updatedAt || undefined,
   });
 
-  const skillsOptions =
-    skills?.map((skill) => ({ value: skill.name, label: skill.name })) || [];
-  const defaultSkillsOptions = formData?.skills?.map((skill) => ({
-    value: skill,
-    label: skill,
-  }));
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const oldIndex =
+        formData.skills?.findIndex((s) => s.name === active.id) || 0;
+      const newIndex =
+        formData.skills?.findIndex((s) => s.name === over.id) || 0;
+
+      const reordered = arrayMove(formData.skills || [], oldIndex, newIndex);
+      setFormData({ ...formData, skills: reordered });
+    }
+  }
+
+  const getFilteredSkillsOptions = (selectedSkills: ApplicantSkill[]) => {
+    const selectedNames = selectedSkills.map((skill) => skill.name);
+    return (
+      skills
+        ?.filter((skill) => !selectedNames.includes(skill.name))
+        .map((skill) => ({ value: skill.name, label: skill.name })) || []
+    );
+  };
+
   const employmentTypeOptions = Object.values(EmploymentType).map((type) => ({
     value: type,
     label: type,
   }));
+
   const defaultEmploymentOptions = formData?.preferences?.employmentTypes.map(
     (type) => ({ value: type, label: type })
   );
@@ -89,9 +140,27 @@ const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
     });
   };
 
-  const onSkillChange = (newValue: unknown) => {
-    const options = newValue as MultiValue<SelectOption>;
-    setFormData({ ...formData, skills: options.map((opt) => opt.value) });
+  const handleSkillNameChange = (index: number, name: string) => {
+    const updatedSkills = [...(formData.skills ?? [])];
+    updatedSkills[index].name = name;
+    setFormData({ ...formData, skills: updatedSkills });
+  };
+
+  const handleSkillLevelChange = (index: number, level: SkillLevel) => {
+    const updatedSkills = [...(formData.skills ?? [])];
+    updatedSkills[index].level = level;
+    setFormData({ ...formData, skills: updatedSkills });
+  };
+
+  const handleRemoveSkill = (index: number) => {
+    const updatedSkills = (formData.skills ?? []).filter((_, i) => i !== index);
+    setFormData({ ...formData, skills: updatedSkills });
+  };
+
+  const handleAddSkill = () => {
+    const updatedSkills = [...(formData.skills ?? [])];
+    updatedSkills.push({ id: '', name: '', level: SkillLevel.Junior });
+    setFormData({ ...formData, skills: updatedSkills });
   };
 
   const onEmploymentTypeChange = (newValue: unknown) => {
@@ -108,6 +177,7 @@ const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
     setTimeout(() => {
       updateUserMutation.mutate(formData, {
         onSuccess() {
+          queryClient.invalidateQueries({ queryKey: ['user'] });
           setIsSaving(false);
           showNotification('Your profile has been updated!');
           router.push('/profile');
@@ -196,29 +266,7 @@ const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
                   }
                 />
               </Col>
-              <Col md={6} lg={4}>
-                <Form.Group controlId="skills">
-                  <Form.Label>Skills</Form.Label>
-                  <Select
-                    defaultValue={defaultSkillsOptions}
-                    options={skillsOptions}
-                    isMulti
-                    onChange={onSkillChange}
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={6} lg={4}>
-                <Form.Group controlId="employmentTypes">
-                  <Form.Label>Preferred Employment Types</Form.Label>
-                  <Select
-                    defaultValue={defaultEmploymentOptions}
-                    options={employmentTypeOptions}
-                    isMulti
-                    onChange={onEmploymentTypeChange}
-                  />
-                </Form.Group>
-              </Col>
-              <Col md={6} lg={4}>
+              <Col md={3} lg={4}>
                 <Form.Group controlId="salaryMin">
                   <Form.Label>Min Salary ($)</Form.Label>
                   <Form.Control
@@ -233,7 +281,7 @@ const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
                   />
                 </Form.Group>
               </Col>
-              <Col md={6} lg={4}>
+              <Col md={3} lg={4}>
                 <Form.Group controlId="salaryMax">
                   <Form.Label>Max Salary ($)</Form.Label>
                   <Form.Control
@@ -248,6 +296,17 @@ const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
                   />
                 </Form.Group>
               </Col>
+              <Col md={6} lg={4}>
+                <Form.Group controlId="employmentTypes">
+                  <Form.Label>Preferred Employment Types</Form.Label>
+                  <Select
+                    defaultValue={defaultEmploymentOptions}
+                    options={employmentTypeOptions}
+                    isMulti
+                    onChange={onEmploymentTypeChange}
+                  />
+                </Form.Group>
+              </Col>
               <Col md={12}>
                 <Form.Group controlId="bio">
                   <Form.Label>Bio</Form.Label>
@@ -257,6 +316,39 @@ const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
                   />
                 </Form.Group>
               </Col>
+              <Col md={12} lg={6}>
+                <Form.Group controlId="skills">
+                  <Form.Label>Skills</Form.Label>
+                  <DndContext
+                    sensors={sensors}
+                    collisionDetection={closestCenter}
+                    onDragEnd={handleDragEnd}
+                  >
+                    <SortableContext
+                      items={formData.skills?.map((s) => s.name) || []}
+                    >
+                      {formData.skills?.map((skill, index) => (
+                        <SortableSkillRow
+                          key={skill.name}
+                          skill={skill}
+                          index={index}
+                          handleRemoveSkill={handleRemoveSkill}
+                          handleSkillNameChange={handleSkillNameChange}
+                          handleSkillLevelChange={handleSkillLevelChange}
+                          skillsOptions={getFilteredSkillsOptions(
+                            formData?.skills || []
+                          )}
+                        />
+                      ))}
+                    </SortableContext>
+                  </DndContext>
+
+                  <Button variant="outline-primary" onClick={handleAddSkill}>
+                    Add Skill
+                  </Button>
+                </Form.Group>
+              </Col>
+              {/* Add more fields like experience, education, etc., here as needed */}
               <Col md={12} className="d-flex gap-3">
                 <Button
                   type="submit"
@@ -284,7 +376,6 @@ const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
                     )}
                   </span>
                 </Button>
-
                 <Button
                   type="button"
                   variant="secondary"

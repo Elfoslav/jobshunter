@@ -1,4 +1,5 @@
 import EmploymentType from '@/models/enums/EmploymentType';
+import { SkillLevel } from '@/models/Skill';
 import { User, UserType } from '@/models/User';
 
 const ApplicantsDummyData: User[] = [
@@ -13,7 +14,11 @@ I enjoy collaborating with designers, working in agile teams, and turning comple
 
 Currently exploring: TypeScript, React Server Components, and AI-driven UI tools.`,
     location: 'New York, NY',
-    skills: ['JavaScript', 'React', 'Node.js'],
+    skills: [
+      { id: '', name: 'JavaScript', level: SkillLevel.Senior },
+      { id: '',name: 'React', level: SkillLevel.Medior },
+      { id: '', name: 'Node.js', level: SkillLevel.Medior },
+    ],
     preferences: {
       locations: ['New York, NY', 'San Francisco, CA'],
       remotePercentage: 51,
@@ -32,7 +37,11 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
     phone: '987-654-3210',
     bio: 'Front-end developer with a passion for user interfaces.',
     location: 'San Francisco, CA',
-    skills: ['HTML', 'CSS', 'React'],
+    skills: [
+      { id: '', name: 'HTML', level: SkillLevel.Senior },
+      { id: '', name: 'CSS', level: SkillLevel.Senior },
+      { id: '',name: 'React', level: SkillLevel.Medior },
+    ],
     preferences: {
       locations: ['San Francisco, CA'],
       remotePercentage: 30,
@@ -51,7 +60,11 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
     phone: '555-555-5555',
     bio: 'Software engineer with a passion for open-source projects.',
     location: 'Los Angeles, CA',
-    skills: ['JavaScript', 'Node.js', 'Python'],
+    skills: [
+      { id: '', name: 'JavaScript', level: SkillLevel.Senior },
+      { id: '', name: 'Python', level: SkillLevel.Senior },
+      { id: '',name: 'Node.js', level: SkillLevel.Medior },
+    ],
     preferences: {
       locations: ['Los Angeles, CA', 'San Diego, CA'],
       remotePercentage: 20,
@@ -70,7 +83,11 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
     phone: '123-987-4560',
     bio: 'Product manager with experience in agile development.',
     location: 'Austin, TX',
-    skills: ['Product Management', 'Agile', 'Scrum'],
+    skills: [
+      { id: '', name: 'Product Management', level: SkillLevel.Senior },
+      { id: '', name: 'Agile', level: SkillLevel.Senior },
+      { id: '',name: 'Scrum', level: SkillLevel.Medior },
+    ],
     preferences: {
       locations: ['Austin, TX'],
       remotePercentage: 10,
@@ -89,7 +106,11 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
     phone: '555-123-4567',
     bio: 'Experienced UI/UX designer with a love for creative work.',
     location: 'Chicago, IL',
-    skills: ['UI Design', 'UX Design', 'Figma'],
+    skills: [
+      { id: '', name: 'UI Design', level: SkillLevel.Junior },
+      { id: '', name: 'UX Design', level: SkillLevel.Junior },
+      { id: '',name: 'Figma', level: SkillLevel.Medior },
+    ],
     preferences: {
       locations: ['Chicago, IL'],
       remotePercentage: 40,
@@ -108,7 +129,12 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
     phone: '123-555-7890',
     bio: 'Experienced data scientist passionate about data analysis.',
     location: 'San Diego, CA',
-    skills: ['Python', 'Data Analysis', 'Machine Learning'],
+    skills: [
+      { id: '', name: 'Python', level: SkillLevel.Senior },
+      { id: '', name: 'MySQL', level: SkillLevel.Senior },
+      { id: '',name: 'Data Analysis', level: SkillLevel.Medior },
+      { id: '',name: 'Machine Learning', level: SkillLevel.Medior },
+    ],
     preferences: {
       locations: ['San Diego, CA', 'Los Angeles, CA'],
       remotePercentage: 25,
@@ -127,7 +153,11 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
     phone: '555-789-1234',
     bio: 'Experienced marketing manager with a focus on digital marketing.',
     location: 'Miami, FL',
-    skills: ['Digital Marketing', 'SEO', 'Social Media'],
+    skills: [
+      { id: '', name: 'Digital Marketing', level: SkillLevel.Senior },
+      { id: '', name: 'SEO', level: SkillLevel.Senior },
+      { id: '',name: 'Social Media', level: SkillLevel.Medior },
+    ],
     preferences: {
       locations: ['Miami, FL'],
       remotePercentage: 60,
@@ -146,7 +176,11 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
     phone: '555-123-7890',
     bio: 'Experienced iOS developer with a passion for mobile app development.',
     location: 'San Jose, CA',
-    skills: ['Swift', 'iOS Development', 'Objective-C'],
+    skills: [
+      { id: '', name: 'Swift', level: SkillLevel.Senior },
+      { id: '', name: 'iOS Development', level: SkillLevel.Senior },
+      { id: '',name: 'Objective-C', level: SkillLevel.Medior },
+    ],
     preferences: {
       locations: ['San Jose, CA'],
       remotePercentage: 15,
@@ -165,7 +199,11 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
     phone: '555-789-4567',
     bio: 'Creative graphic designer specializing in visual communication.',
     location: 'Denver, CO',
-    skills: ['Graphic Design', 'Illustration', 'Web Design'],
+    skills: [
+      { id: '', name: 'Graphic Design', level: SkillLevel.Senior },
+      { id: '', name: 'Illustration', level: SkillLevel.Senior },
+      { id: '',name: 'Web Design', level: SkillLevel.Medior },
+    ],
     preferences: {
       locations: ['Denver, CO'],
       remotePercentage: 20,
@@ -184,7 +222,11 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
     phone: '123-555-7890',
     bio: 'Quality assurance engineer dedicated to ensuring software quality.',
     location: 'Boston, MA',
-    skills: ['Quality Assurance', 'Testing', 'Selenium'],
+    skills: [
+      { id: '', name: 'Quality Assurance', level: SkillLevel.Junior },
+      { id: '', name: 'Testing', level: SkillLevel.Senior },
+      { id: '',name: 'Selenium', level: SkillLevel.Medior },
+    ],
     preferences: {
       locations: ['Boston, MA', 'New York, NY'],
       remotePercentage: 10,
@@ -203,7 +245,11 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
     phone: '123-123-1234',
     bio: 'Software engineer passionate about building innovative software solutions.',
     location: 'Seattle, WA',
-    skills: ['JavaScript', 'React', 'Node.js'],
+    skills: [
+      { id: '', name: 'JavaScript', level: SkillLevel.Senior },
+      { id: '', name: 'React', level: SkillLevel.Senior },
+      { id: '',name: 'Node.js', level: SkillLevel.Medior },
+    ],
     preferences: {
       locations: ['Seattle, WA'],
       remotePercentage: 40,

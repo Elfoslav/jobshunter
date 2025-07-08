@@ -1,7 +1,6 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { Container } from 'react-bootstrap';
 import ApplicantsList from './ApplicantsList';
 import Loading from '@/app/components/Loading';
 import {
@@ -16,7 +15,6 @@ export default function ApplicantsContent() {
   const skillsParam = searchParams.get('skills') || '';
   const skillsParamArray = skillsParam ? skillsParam.split(',') : [];
   const page = parseInt(pageParam);
-  console.log(pageParam);
   const { data: applicants, isLoading } = useGetApplicants(
     page,
     searchParam,

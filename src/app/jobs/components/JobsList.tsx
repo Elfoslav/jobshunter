@@ -89,13 +89,13 @@ const JobsList: React.FC<JobsListProps> = ({
                 </Col>
                 <Col lg={7}>
                   <Skills
-                    skills={job.requiredSkills}
+                    skillsIds={job.requiredSkills}
                     user={isApplicantUser(user) ? user : null}
                     primary
                     className="mt-1"
                   />
                   <Skills
-                    skills={job.optionalSkills}
+                    skillsIds={job.optionalSkills}
                     user={isApplicantUser(user) ? user : null}
                     className="mt-2 mb-1"
                   />

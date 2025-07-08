@@ -5,13 +5,19 @@ import { PersonFill, BuildingsFill } from 'react-bootstrap-icons';
 import { usePathname, useRouter } from 'next/navigation';
 import './Navbar.scss';
 import { useUser } from '../context/UserContext';
-import { isCompanyUser } from '@/lib/utils/user';
+import { isApplicantUser, isCompanyUser } from '@/lib/utils/user';
 import { ExistingCompany } from '@/models/Company';
 
 export default function AppNavbar() {
   const pathname = usePathname();
   const { user, isLoading, logout } = useUser();
   const router = useRouter();
+
+  const getAccountName = () => {
+    if (isApplicantUser(user)) return user.name;
+    if (isCompanyUser(user)) return user.companyData.name;
+    return 'Account';
+  };
 
   const handleLogout = () => {
     logout();
@@ -57,7 +63,7 @@ export default function AppNavbar() {
                 title={
                   <span className="d-inline-flex align-items-center gap-1">
                     <PersonFill size={20} />
-                    {user.name || 'Account'}
+                    {getAccountName()}
                   </span>
                 }
                 id="user-nav-dropdown"
