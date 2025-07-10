@@ -6,6 +6,8 @@ export default interface JobApplication {
   userId: string;
   coverLetter: string;
   status: JobApplicationStatus;
+  cvUrl?: string;
   note?: string;
+  rating?: number; // 1 - 5 stars
   createdAt: Date;
 }

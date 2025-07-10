@@ -1,13 +1,10 @@
 enum JobApplicationStatus {
-  Submitted = 'Submitted',
-  UnderReview = 'Under Review',
-  DeclinedByCompany = 'Declined By Company',
-  DeclinedByCandidate = 'Declined By Candidate',
-  InterviewScheduled = 'Interview Scheduled',
-  Proposal = 'Proposal',
-  OfferAccepted = 'Offer Accepted',
-  Closed = 'Closed',
-  Other = 'Other',
+  Submitted = 'Submitted', // Default initial state
+  InReview = 'In Review', // When someone has looked at it
+  Interview = 'Interview Scheduled', // Moved forward
+  Offer = 'Offer', // Final selection
+  Accepted = 'Accepted Offer', // Candidate said yes
+  Rejected = 'Rejected', // Rejected by company or candidate
 }
 
 export default JobApplicationStatus;

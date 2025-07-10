@@ -18,6 +18,10 @@ const getJobApplicationsCount = async (): Promise<number> => {
   return JobApplicationsStore.read().length;
 };
 
+const getJobApplicationsCountByJobId = async (id: string): Promise<number> => {
+  return (await getJobApplicationsByJobId(id)).length;
+};
+
 export const getJobApplicationById = async (
   id: string
 ): Promise<JobApplication | null> => {
@@ -66,6 +70,13 @@ export const useGetJobApplicationsCount = () => {
   return useQuery({
     queryKey: [JOB_APPLICATIONS_QUERIES.JOB_APPLICATIONS_COUNT],
     queryFn: getJobApplicationsCount,
+  });
+};
+
+export const useGetJobApplicationsCountByJobId = (id: string) => {
+  return useQuery({
+    queryKey: [JOB_APPLICATIONS_QUERIES.JOB_APPLICATIONS_COUNT],
+    queryFn: () => getJobApplicationsCountByJobId(id),
   });
 };
 

@@ -90,12 +90,14 @@ export default function AppNavbar() {
               </NavDropdown>
             ) : (
               <Nav.Item>
-                <Nav.Link
+                <Button
                   href="/login"
-                  className="d-flex align-items-center gap-1"
+                  variant="outline-primary"
+                  className="me-2"
                 >
                   Login
-                </Nav.Link>
+                </Button>
+                <Button href="/register">Register</Button>
               </Nav.Item>
             )}
           </Nav>

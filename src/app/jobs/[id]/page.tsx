@@ -36,7 +36,7 @@ import { isApplicantUser } from '@/lib/utils/user';
 import CanAccess from '@/app/components/CanAccess';
 import { UserType } from '@/models/User';
 import ResourceType from '@/models/enums/ResourceType';
-import JobApplicationsList from '../components/JobApplicationsList';
+import JobApplicationsPreview from '../components/JobApplicationsPreview';
 
 export default function JobsPage({
   params,
@@ -199,9 +199,11 @@ export default function JobsPage({
               resourceId={job.companyId}
             >
               {jobApplications && jobApplications.length > 0 && (
-                <JobApplicationsList
-                  className="mt-4 d-none d-md-block"
-                  jobApplications={jobApplications}
+                <JobApplicationsPreview
+                  className="mt-4"
+                  jobApplications={jobApplications.slice(0, 3)}
+                  totalApplicationsCount={jobApplications.length}
+                  jobId={job.id}
                 />
               )}
             </CanAccess>

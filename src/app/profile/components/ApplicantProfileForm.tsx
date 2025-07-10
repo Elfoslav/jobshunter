@@ -16,7 +16,6 @@ import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import {
   Container,
@@ -35,9 +34,11 @@ import { useUpdateUser } from '@/services/users/UsersService';
 import { useNotification } from '@/app/context/NotificationContext';
 import RemotePercentageInput from '@/app/jobs/components/RemotePercentageInput';
 import TextEditor from '@/app/components/TextEditor';
+import UrlInput from '@/app/components/UrlInput';
 import { ApplicantSkill, SkillLevel } from '@/models/Skill';
 import SortableSkillRow from './SortableSkillRow';
 import { useQueryClient } from '@tanstack/react-query';
+import CreatableSelect from 'react-select/creatable';
 
 interface ApplicantProfileFormProps {
   user?: ApplicantUser;
@@ -307,6 +308,96 @@ const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
                   />
                 </Form.Group>
               </Col>
+              <Col md={6} lg={4}>
+                <UrlInput
+                  label="Resume URL"
+                  name="resumeUrl"
+                  value={formData.resumeUrl}
+                  onChange={handleInputChange}
+                  placeholder="https://your-resume.com"
+                />
+              </Col>
+              <Col md={6} lg={4}>
+                <UrlInput
+                  label="Portfolio URL"
+                  name="portfolioUrl"
+                  value={formData.portfolioUrl}
+                  onChange={handleInputChange}
+                  placeholder="https://your-portfolio.com"
+                />
+              </Col>
+              <Col md={6} lg={4}>
+                <Form.Group controlId="availabilityDate">
+                  <Form.Label>Availability Date</Form.Label>
+                  <Form.Control
+                    type="date"
+                    value={
+                      formData.availabilityDate?.toISOString().split('T')[0] ??
+                      ''
+                    }
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        availabilityDate: new Date(e.target.value),
+                      })
+                    }
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group controlId="preferredRoles">
+                  <Form.Label>Preferred Roles</Form.Label>
+                  <CreatableSelect
+                    isMulti
+                    placeholder="e.g. Frontend Developer, UX Designer"
+                    value={(formData.preferredRoles || []).map((role) => ({
+                      label: role,
+                      value: role,
+                    }))}
+                    onChange={(selected) =>
+                      setFormData({
+                        ...formData,
+                        preferredRoles: selected.map((opt) => opt.value),
+                      })
+                    }
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group controlId="softSkills">
+                  <Form.Label>Soft Skills</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="softSkills"
+                    value={formData.softSkills?.join(', ')}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        softSkills: e.target.value
+                          .split(',')
+                          .map((s) => s.trim()),
+                      })
+                    }
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={12}>
+                <Form.Group controlId="links">
+                  <Form.Label>Profile Links (comma-separated)</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={formData.links?.map((l) => l.url).join(', ') || ''}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        links: e.target.value
+                          .split(',')
+                          .map((s) => ({ label: s.trim(), url: s.trim() })),
+                      })
+                    }
+                  />
+                </Form.Group>
+              </Col>
               <Col md={12}>
                 <Form.Group controlId="bio">
                   <Form.Label>Bio</Form.Label>
@@ -348,7 +439,36 @@ const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
                   </Button>
                 </Form.Group>
               </Col>
-              {/* Add more fields like experience, education, etc., here as needed */}
+            </Row>
+            <Row className="mt-4">
+              <Col md={6}>
+                <Form.Group controlId="isVisible">
+                  <Form.Check
+                    type="switch"
+                    label="Profile Visible to Employers"
+                    checked={formData.isVisible}
+                    onChange={(e) =>
+                      setFormData({ ...formData, isVisible: e.target.checked })
+                    }
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group controlId="isOpenToWork">
+                  <Form.Check
+                    type="switch"
+                    label="Open to Work"
+                    checked={formData.isOpenToWork}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        isOpenToWork: e.target.checked,
+                      })
+                    }
+                  />
+                </Form.Group>
+              </Col>
+
               <Col md={12} className="d-flex gap-3">
                 <Button
                   type="submit"

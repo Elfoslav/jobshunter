@@ -1,4 +1,5 @@
 import { SkillLevel } from "@/models/Skill";
+import ApplicationStatus from '@/models/enums/JobApplicationStatus';
 
 export const getDaysPassed = (date: Date): number => {
   const currentDate = new Date();
@@ -70,3 +71,22 @@ export const getSkillClass = (level: SkillLevel) => {
       return 'warning';
   }
 };
+
+export const getApplicationStatusColor = (status: ApplicationStatus): string => {
+    switch (status) {
+      case ApplicationStatus.Accepted:
+        return 'success';
+      case ApplicationStatus.Rejected:
+        return 'danger';
+      case ApplicationStatus.Interview:
+        return 'info';
+      case ApplicationStatus.InReview:
+        return 'warning';
+      case ApplicationStatus.Offer:
+        return 'primary';
+      case ApplicationStatus.Submitted:
+        return 'secondary';
+      default:
+        return 'light';
+    }
+  };
