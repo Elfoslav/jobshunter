@@ -7,6 +7,7 @@ import './Navbar.scss';
 import { useUser } from '../context/UserContext';
 import { isApplicantUser, isCompanyUser } from '@/lib/utils/user';
 import { ExistingCompany } from '@/models/Company';
+import Image from 'next/image';
 
 export default function AppNavbar() {
   const pathname = usePathname();
@@ -35,6 +36,15 @@ export default function AppNavbar() {
         </div>
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav activeKey={pathname} className="me-auto">
+            <Navbar.Brand href="/" className="pe-0">
+              <Image
+                src="/images/jobs-hunt-logo-small.png"
+                width="50"
+                height="32"
+                className="d-inline-block align-top ms-lg-2"
+                alt="JobsHunt logo"
+              />
+            </Navbar.Brand>
             <Nav.Item>
               <Nav.Link href="/jobs">Jobs</Nav.Link>
             </Nav.Item>

@@ -44,7 +44,7 @@ export default function JobApplicationsPreview({
           </div>
         )}
 
-        <div className="d-flex flex-column gap-3">
+        <div className="d-flex flex-column gap-1">
           {jobApplications.map((app) => (
             <div
               key={app.id}
