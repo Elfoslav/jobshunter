@@ -8,6 +8,9 @@ import { useUser } from '../context/UserContext';
 import { isApplicantUser, isCompanyUser } from '@/lib/utils/user';
 import { ExistingCompany } from '@/models/Company';
 import Image from 'next/image';
+import CanAccess from './CanAccess';
+import { UserType } from '@/models/User';
+import LoginRegisterButtons from './LoginRegisterButtons';
 
 export default function AppNavbar() {
   const pathname = usePathname();
@@ -29,11 +32,21 @@ export default function AppNavbar() {
     <Navbar expand="lg" className="bg-light mb-3">
       <Container>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <div className="d-flex d-lg-none justify-content-end">
-          <Button className="mt-2 mb-3" href="/jobs/add">
-            Post a job
-          </Button>
-        </div>
+        <CanAccess
+          user={user}
+          requiredRole={[UserType.Admin, UserType.Company]}
+          fallback={
+            <div className="d-flex d-lg-none justify-content-end">
+              <LoginRegisterButtons />
+            </div>
+          }
+        >
+          <div className="d-flex d-lg-none justify-content-end">
+            <Button className="mt-2 mb-3" href="/jobs/add">
+              Post a job
+            </Button>
+          </div>
+        </CanAccess>
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav activeKey={pathname} className="me-auto">
             <Navbar.Brand href="/" className="pe-0">
@@ -99,15 +112,8 @@ export default function AppNavbar() {
                 </NavDropdown.Item>
               </NavDropdown>
             ) : (
-              <Nav.Item>
-                <Button
-                  href="/login"
-                  variant="outline-primary"
-                  className="me-2"
-                >
-                  Login
-                </Button>
-                <Button href="/register">Register</Button>
+              <Nav.Item className="d-none d-lg-block">
+                <LoginRegisterButtons />
               </Nav.Item>
             )}
           </Nav>

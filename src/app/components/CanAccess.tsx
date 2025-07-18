@@ -10,6 +10,7 @@ type Props = {
   resourceType?: ResourceType;
   resourceId?: string;
   children: ReactNode;
+  fallback?: React.ReactNode;
 };
 
 export default function CanAccess({
@@ -18,8 +19,9 @@ export default function CanAccess({
   resourceType,
   resourceId,
   children,
+  fallback = null,
 }: Props) {
-  if (!user || !hasRole(user, requiredRole)) return null;
+  if (!user || !hasRole(user, requiredRole)) return <>{fallback}</>;
 
   // Admin always allowed
   if (user.type === UserType.Admin) return <>{children}</>;
@@ -31,23 +33,21 @@ export default function CanAccess({
 
   // Resource-specific checks
   switch (resourceType) {
-    case ResourceType.User:
-      if (user.id === resourceId) return <>{children}</>;
-      break;
+    case ResourceType.User: {
+      const hasAccess = user.id === resourceId;
+      return <>{hasAccess ? children : fallback}</>;
+    }
 
-    case ResourceType.Company:
-      if (
+    case ResourceType.Company: {
+      const hasAccess =
         user.type === UserType.Company &&
         'companyData' in user &&
-        (user.companyData as ExistingCompany).id === resourceId
-      ) {
-        return <>{children}</>;
-      }
-      break;
+        (user.companyData as ExistingCompany).id === resourceId;
+
+      return <>{hasAccess ? children : fallback}</>;
+    }
 
     default:
       return null;
   }
-
-  return null;
 }
