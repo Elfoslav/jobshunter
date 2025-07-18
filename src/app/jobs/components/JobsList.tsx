@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { ListGroup, ListGroupItem, Row, Col } from 'react-bootstrap';
+import { Card, Row, Col, Badge } from 'react-bootstrap';
 import { GeoAltFill, SuitcaseLgFill } from 'react-bootstrap-icons';
 import useQueryParams from '@/app/components/useQueryParams';
 import Pagination from '@/app/components/Pagination';
@@ -28,15 +28,12 @@ const JobsList: React.FC<JobsListProps> = ({
   page,
 }) => {
   const queryClient = useQueryClient();
-  const { setQueryParams } = useQueryParams<{
-    page?: number;
-  }>();
-
-  const [pageNumber, setpageNumber] = useState(1);
+  const { setQueryParams } = useQueryParams<{ page?: number }>();
+  const [pageNumber, setPageNumber] = useState(1);
 
   useEffect(() => {
     if (page && !isNaN(Number(page))) {
-      setpageNumber(Number(page));
+      setPageNumber(Number(page));
       queryClient.invalidateQueries({
         queryKey: [JOBS_QUERIES.JOBS],
       });
@@ -44,7 +41,7 @@ const JobsList: React.FC<JobsListProps> = ({
   }, [page, queryClient]);
 
   const handlePageChange = (page: number) => {
-    setpageNumber(page);
+    setPageNumber(page);
     setQueryParams({ page });
   };
 
@@ -54,67 +51,67 @@ const JobsList: React.FC<JobsListProps> = ({
 
   return (
     <div>
-      <ListGroup>
-        {jobs.map((job) => {
-          return (
-            <ListGroupItem
-              key={job.id}
-              action
-              href={`/jobs/${job.id}`}
-              className="job-item"
+      {jobs.map((job) => (
+        <Card
+          key={job.id}
+          className="mb-3 job-card"
+          as="a"
+          href={`/jobs/${job.id}`}
+          style={{ textDecoration: 'none', color: 'inherit' }}
+        >
+          <Card.Body>
+            <div
+              className={`date mb-2 ${
+                getDaysPassed(job.postedAt) === 0 ? 'text-success' : ''
+              }`}
+              style={{ fontSize: '0.9rem', fontWeight: '500' }}
             >
-              <div
-                className={`date ${getDaysPassed(job.postedAt) === 0 ? 'text-success' : ''}`}
+              {getAgoString(job.postedAt)}
+            </div>
+            <Row>
+              <Col lg={3} md={12}>
+                <h5 className="mb-2">{job.title}</h5>
+                <div className="d-flex align-items-center mb-1 text-muted">
+                  <GeoAltFill className="me-1" />
+                  <span>{job.location}</span>
+                </div>
+                <div className="mb-1">
+                  <RemotePercentage remotePercentage={job.remotePercentage} />
+                </div>
+                {job.employmentTypes.length > 0 && (
+                  <div className="d-flex align-items-center mb-2 text-muted">
+                    <SuitcaseLgFill className="me-1" />
+                    <span>{job.employmentTypes.join(', ')}</span>
+                  </div>
+                )}
+              </Col>
+              <Col lg={7} md={12}>
+                <Skills
+                  skillsIds={job.requiredSkills}
+                  user={isApplicantUser(user) ? user : null}
+                  primary
+                  className="mb-2"
+                />
+                <Skills
+                  skillsIds={job.optionalSkills}
+                  user={isApplicantUser(user) ? user : null}
+                  className="mb-1"
+                />
+              </Col>
+              <Col
+                lg={2}
+                md={12}
+                className="d-flex flex-column align-items-end justify-content-between"
+                style={{ fontSize: '0.85rem' }}
               >
-                {getAgoString(job.postedAt)}
-              </div>
-              <Row>
-                <Col lg={3}>
-                  <h4 className="title">{job.title}</h4>
-                  <div className="d-flex align-items-center mb-1">
-                    <GeoAltFill className="me-1" /> {job.location}
-                  </div>
-                  <div className="d-flex align-items-center mb-1">
-                    <RemotePercentage remotePercentage={job.remotePercentage} />
-                  </div>
-                  {job.employmentTypes.length > 0 && (
-                    <div className="d-flex mb-1">
-                      <SuitcaseLgFill
-                        className="mt-1 me-1"
-                        style={{ flexShrink: 0 }}
-                      />
-                      <span>{job.employmentTypes.join(', ')}</span>
-                    </div>
-                  )}
-                </Col>
-                <Col lg={7}>
-                  <Skills
-                    skillsIds={job.requiredSkills}
-                    user={isApplicantUser(user) ? user : null}
-                    primary
-                    className="mt-1"
-                  />
-                  <Skills
-                    skillsIds={job.optionalSkills}
-                    user={isApplicantUser(user) ? user : null}
-                    className="mt-2 mb-1"
-                  />
-                </Col>
-                <Col className="d-none d-lg-block">
-                  <div
-                    className={`text-end ${getDaysPassed(job.postedAt) === 0 ? 'text-success' : ''}`}
-                  >
-                    {getAgoString(job.postedAt)}
-                  </div>
-                  <div className="text-end text-info">
-                    <UserApplied job={job} user={user} />
-                  </div>
-                </Col>
-              </Row>
-            </ListGroupItem>
-          );
-        })}
-      </ListGroup>
+                <div className="text-info">
+                  <UserApplied job={job} user={user} />
+                </div>
+              </Col>
+            </Row>
+          </Card.Body>
+        </Card>
+      ))}
 
       <div className="mt-3 d-flex justify-content-center">
         <Pagination
