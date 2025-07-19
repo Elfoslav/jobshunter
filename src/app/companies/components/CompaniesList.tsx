@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import {
-  ListGroup,
-  ListGroupItem,
-  Row,
-  Col,
-  Image as RBImage,
-} from 'react-bootstrap';
+import { Card, Row, Col, Image as RBImage } from 'react-bootstrap';
 import { GeoAltFill, Building } from 'react-bootstrap-icons';
 import useQueryParams from '@/app/components/useQueryParams';
 import Pagination from '@/app/components/Pagination';
@@ -26,7 +20,6 @@ const CompaniesList: React.FC<CompaniesListProps> = ({
 }) => {
   const queryClient = useQueryClient();
   const { setQueryParams } = useQueryParams<{ page?: number }>();
-
   const [pageNumber, setPageNumber] = useState(1);
 
   useEffect(() => {
@@ -45,14 +38,17 @@ const CompaniesList: React.FC<CompaniesListProps> = ({
 
   return (
     <div>
-      <ListGroup>
-        {companies.map((company) => (
-          <ListGroupItem
-            key={company.id}
-            href={`/companies/${company.id}`}
-            className="job-item"
-            action
-          >
+      <h5 className="mb-3">
+        Showing {companies.length} of {totalCount} companies
+      </h5>
+      {companies.map((company) => (
+        <Card
+          key={company.id}
+          className="mb-3 shadow-sm"
+          as="a"
+          href={`/companies/${company.id}`}
+        >
+          <Card.Body>
             <Row>
               <Col
                 lg={2}
@@ -69,28 +65,30 @@ const CompaniesList: React.FC<CompaniesListProps> = ({
                   <Building size={40} className="text-muted" />
                 )}
               </Col>
+
               <Col lg={6}>
-                <h4 className="title">{company.name}</h4>
+                <h4 className="mb-1">{company.name}</h4>
                 {company.description && (
                   <p className="text-muted mb-1">{company.description}</p>
                 )}
-                <div className="d-flex align-items-center mb-1">
+                <div className="d-flex align-items-center text-muted">
                   <GeoAltFill className="me-1" />
                   {company.location || 'Remote'}
                 </div>
               </Col>
+
               <Col lg={4}>
                 <p className="mb-1">
                   <strong>Industry:</strong> {company.industry || 'N/A'}
                 </p>
-                <p className="mb-1">
+                <p className="mb-0">
                   <strong>Team Size:</strong> {company.size || 'N/A'}
                 </p>
               </Col>
             </Row>
-          </ListGroupItem>
-        ))}
-      </ListGroup>
+          </Card.Body>
+        </Card>
+      ))}
 
       <div className="mt-3 d-flex justify-content-center">
         <Pagination

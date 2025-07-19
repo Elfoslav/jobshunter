@@ -1,12 +1,7 @@
 .job-card {
   position: relative;
   border: 1px solid #dee2e6;
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
 
-  &:hover {
-    background-color: #fafafa;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px !important;
-  }
   .title {
     margin-bottom: 4px;
   }
