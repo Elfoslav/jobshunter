@@ -36,9 +36,11 @@ export default function AppNavbar() {
           user={user}
           requiredRole={[UserType.Admin, UserType.Company]}
           fallback={
-            <div className="d-flex d-lg-none justify-content-end">
-              <LoginRegisterButtons />
-            </div>
+            !user && (
+              <div className="d-flex d-lg-none justify-content-end">
+                <LoginRegisterButtons />
+              </div>
+            )
           }
         >
           <div className="d-flex d-lg-none justify-content-end">

@@ -10,14 +10,10 @@
   .title {
     margin-bottom: 4px;
   }
-  .date {
+  .applied {
     position: absolute;
-    top: 8px;
-    right: 12px;
-    display: none;
-
-    @media (max-width: 991px) {
-      display: block;
-    }
+    top: 1px;
+    left: -23px;
+    transform: rotate(-45deg);
   }
 }

@@ -31,6 +31,19 @@ const JobsList: React.FC<JobsListProps> = ({
   const { setQueryParams } = useQueryParams<{ page?: number }>();
   const [pageNumber, setPageNumber] = useState(1);
 
+  const renderDaysAgo = (job: ExistingJob, classes?: string) => {
+    return (
+      <div
+        className={`${classes} ${
+          getDaysPassed(job.postedAt) === 0 ? 'text-success' : ''
+        }`}
+        style={{ fontSize: '0.9rem', fontWeight: '500' }}
+      >
+        {getAgoString(job.postedAt)}
+      </div>
+    );
+  };
+
   useEffect(() => {
     if (page && !isNaN(Number(page))) {
       setPageNumber(Number(page));
@@ -50,7 +63,7 @@ const JobsList: React.FC<JobsListProps> = ({
   }
 
   return (
-    <div>
+    <div className="mt-3 mt-md-2">
       {jobs.map((job) => (
         <Card
           key={job.id}
@@ -60,17 +73,15 @@ const JobsList: React.FC<JobsListProps> = ({
           style={{ textDecoration: 'none', color: 'inherit' }}
         >
           <Card.Body>
-            <div
-              className={`date mb-2 ${
-                getDaysPassed(job.postedAt) === 0 ? 'text-success' : ''
-              }`}
-              style={{ fontSize: '0.9rem', fontWeight: '500' }}
-            >
-              {getAgoString(job.postedAt)}
-            </div>
+            <Badge className="applied">
+              <UserApplied job={job} user={user} />
+            </Badge>
             <Row>
               <Col lg={3} md={12}>
-                <h5 className="mb-2">{job.title}</h5>
+                <div className="d-flex justify-content-between align-items-start mb-2 flex-wrap">
+                  <h5 className="mb-0 me-2">{job.title}</h5>
+                  <div className="text-end d-lg-none">{renderDaysAgo(job)}</div>
+                </div>
                 <div className="d-flex align-items-center mb-1 text-muted">
                   <GeoAltFill className="me-1" />
                   <span>{job.location}</span>
@@ -98,15 +109,8 @@ const JobsList: React.FC<JobsListProps> = ({
                   className="mb-1"
                 />
               </Col>
-              <Col
-                lg={2}
-                md={12}
-                className="d-flex flex-column align-items-end justify-content-between"
-                style={{ fontSize: '0.85rem' }}
-              >
-                <div className="text-info">
-                  <UserApplied job={job} user={user} />
-                </div>
+              <Col className="d-none d-lg-block">
+                {renderDaysAgo(job, 'text-end')}
               </Col>
             </Row>
           </Card.Body>
