@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { ListGroup, ListGroupItem, Row, Col, Badge } from 'react-bootstrap';
+import { Card, Row, Col, Badge } from 'react-bootstrap';
 import {
   GeoAltFill,
   CalendarEvent,
@@ -44,28 +44,32 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
 
   return (
     <>
-      <ListGroup>
+      <h5 className="mb-3">
+        Showing {applicants.length} of {totalCount} applicants
+      </h5>
+      <div className="d-flex flex-column gap-3">
         {applicants.map((applicant) => (
-          <ListGroupItem
+          <Card
             key={applicant.id}
+            as="a"
             href={`/applicants/${applicant.id}`}
-            action
+            className="text-decoration-none text-dark shadow-sm"
           >
-            <Row>
-              <Col md={4}>
-                <h5 className="mb-1">{applicant.name}</h5>
-                <div className="text-muted d-flex align-items-center mb-1">
-                  <GeoAltFill className="me-1" />
-                  {applicant.location}
-                </div>
-                <div className="text-muted d-flex align-items-center mb-1">
-                  <CalendarEvent className="me-1" />
-                  Registered: {formatDate(applicant.registeredAt)}
-                </div>
-              </Col>
+            <Card.Body>
+              <Row>
+                <Col md={4}>
+                  <h5 className="mb-1">{applicant.name}</h5>
+                  <div className="text-muted d-flex align-items-center mb-1">
+                    <GeoAltFill className="me-1" />
+                    {applicant.location}
+                  </div>
+                  <div className="text-muted d-flex align-items-center mb-1">
+                    <CalendarEvent className="me-1" />
+                    Registered: {formatDate(applicant.registeredAt)}
+                  </div>
+                </Col>
 
-              <Col md={4}>
-                <div className="mb-2">
+                <Col md={4}>
                   <strong>Skills:</strong>
                   <div className="d-flex flex-wrap gap-1 mt-1">
                     {applicant.skills?.slice(0, 3).map((skill) => (
@@ -74,11 +78,9 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
                       </Badge>
                     ))}
                   </div>
-                </div>
-              </Col>
+                </Col>
 
-              <Col md={4}>
-                <div className="mb-2">
+                <Col md={4}>
                   <strong>Preferences:</strong>
                   <div className="text-muted">
                     <BriefcaseFill className="me-1" />
@@ -91,14 +93,14 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
                   <div className="text-muted">
                     Remote: {applicant.preferences.remotePercentage}%
                   </div>
-                </div>
-              </Col>
-            </Row>
-          </ListGroupItem>
+                </Col>
+              </Row>
+            </Card.Body>
+          </Card>
         ))}
-      </ListGroup>
+      </div>
 
-      <div className="mt-3 d-flex justify-content-center">
+      <div className="mt-4 d-flex justify-content-center">
         <Pagination
           itemsPerPage={ITEMS_PER_PAGE}
           totalItems={totalCount}

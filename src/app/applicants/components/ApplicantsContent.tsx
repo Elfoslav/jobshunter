@@ -28,9 +28,7 @@ export default function ApplicantsContent() {
         <Loading />
       ) : applicants?.length === 0 ? (
         <div>No applicants.</div>
-      ) : (
-        <h4>{applicantsTotalCount} Applicants found</h4>
-      )}
+      ) : null}
 
       <ApplicantsList
         applicants={applicants || []}
