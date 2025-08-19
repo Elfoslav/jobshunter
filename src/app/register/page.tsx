@@ -19,6 +19,7 @@ export default function RegisterPage() {
   ) => {
     setLoading(true);
     setError(null);
+    console.log(email, password, role);
 
     try {
       // 🔐 Replace this with your backend registration logic

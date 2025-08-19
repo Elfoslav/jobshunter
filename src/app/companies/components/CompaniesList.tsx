@@ -58,8 +58,10 @@ const CompaniesList: React.FC<CompaniesListProps> = ({
                   <RBImage
                     src={company.logoUrl}
                     alt={`${company.name} logo`}
-                    roundedCircle
-                    style={{ width: 60, height: 60, objectFit: 'cover' }}
+                    style={{
+                      width: 60,
+                      objectFit: 'contain',
+                    }}
                   />
                 ) : (
                   <Building size={40} className="text-muted" />

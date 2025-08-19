@@ -63,7 +63,7 @@ export default function CompanyPage({
                         src={company.logoUrl}
                         alt={`${company.name} logo`}
                         fill
-                        style={{ objectFit: 'cover' }}
+                        style={{ objectFit: 'contain', padding: '8px' }}
                         sizes="(max-width: 576px) 80px, 120px"
                         unoptimized
                       />
