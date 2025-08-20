@@ -13,7 +13,7 @@ const filterApplicantUsers = (
   searchQuery: string = '',
   skills: string[] = [],
 ): ApplicantUser[] => {
-  let filtered = data.sort((a, b) => b.registeredAt.getTime() - a.registeredAt.getTime());
+  let filtered = data.sort((a, b) => (b.registeredAt?.getTime() || 0) - (a.registeredAt?.getTime() || 0));
 
   if (searchQuery) {
     filtered = filtered.filter((c) =>
@@ -42,7 +42,7 @@ export const getUsersById = async (id: string): Promise<User[]> => {
 
 export const getUsersByIds = async (ids: string[]): Promise<User[]> => {
   const users: User[] = UsersStore.read();
-  const filteredUsers = users.filter((user) => ids.includes(user.id));
+  const filteredUsers = users.filter((user) => user.id && ids.includes(user.id));
   return Promise.resolve(filteredUsers);
 };
 
@@ -99,11 +99,11 @@ export const getCompaniesUsers = async (): Promise<CompanyUser[]> => {
   return users.filter(isCompanyUser);
 };
 
-const createUser = async (newUser: User): Promise<void> => {
-  UsersStore.create(newUser);
+const createUser = async (newUser: User): Promise<User> => {
+  return UsersStore.create(newUser);
 };
 
-const updateUser = async (updatedUser: User): Promise<User> => {
+const updateUser = async (updatedUser: User & { id: string }): Promise<User> => {
   UsersStore.update(updatedUser.id, updatedUser);
   return Promise.resolve(updatedUser);
 };
@@ -191,7 +191,7 @@ export const useGetCompaniesUsers = () => {
 export const useCreateUser = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<void, unknown, User>({
+  return useMutation<User, unknown, User>({
     mutationFn: createUser,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [USERS_QUERIES.USERS] });
@@ -202,7 +202,7 @@ export const useCreateUser = () => {
 export const useUpdateUser = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<User, unknown, User>({
+  return useMutation<User, unknown, User & { id: string }>({
     mutationFn: updateUser,
     onSuccess: (updatedUser) => {
       if (updatedUser?.id) {

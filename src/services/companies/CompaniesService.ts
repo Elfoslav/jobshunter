@@ -16,7 +16,7 @@ const filterCompanies = (
   searchQuery: string = '',
   skills: string[] = []
 ): ExistingCompany[] => {
-  let filtered = data.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  let filtered = data.sort((a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0));
 
   if (searchQuery.trim()) {
     const terms = searchQuery.toLowerCase().split(/\s+/); // Split by space
@@ -62,12 +62,12 @@ const getCompaniesByIds = async (ids: string[]): Promise<ExistingCompany[]> => {
   return companies.filter((c) => ids.includes(c.id));
 };
 
-const createCompany = async (newCompany: NewCompany): Promise<void> => {
+const createCompany = async (newCompany: NewCompany): Promise<ExistingCompany> => {
   const companyWithId: ExistingCompany = {
     ...newCompany,
     id: crypto.randomUUID(),
   };
-  CompaniesStore.create(companyWithId);
+  return CompaniesStore.create(companyWithId);
 };
 
 const updateCompany = async (updatedCompany: ExistingCompany): Promise<void> => {

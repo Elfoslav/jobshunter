@@ -26,8 +26,8 @@ interface CompanyBase {
   techStack?: string[];
   subscriptionPlan?: SubscriptionPlan;
   billingCustomerId?: string; // for Stripe or other service
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
   lastLogin?: Date;
 }
 

@@ -21,7 +21,7 @@ export default function LoginPage() {
     try {
       const user = await getUserByEmail(email);
       if (user) {
-        login(user.id);
+        user.id && login(user.id);
         router.push('/jobs');
       } else {
         throw new Error('Invalid credentials');

@@ -43,6 +43,7 @@ class GeneralStore<T extends EntityWithId> {
     item.id = this.getLatestId();
     this.data.push(item);
     this.save();
+    return item;
   }
 
   read(): T[] {

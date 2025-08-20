@@ -8,9 +8,10 @@ export enum UserType {
   Applicant = 'Applicant',
 }
 
-interface BaseUser {
-  id: string;
+export interface BaseUser {
+  id?: string; // optional for new users
   email: string;
+  password?: string; // optional if using external auth
   registeredAt: Date;
   updatedAt?: Date;
   type: UserType;
@@ -47,11 +48,11 @@ interface Language {
 
 export interface ApplicantUser extends BaseUser {
   name: string;
-  phone: string;
-  bio: string;
+  phone?: string;
+  bio?: string;
   location?: string;
   skills?: ApplicantSkill[];
-  preferences: {
+  preferences?: {
     locations: string[];
     remotePercentage: number;
     employmentTypes: EmploymentType[];
@@ -72,7 +73,7 @@ export interface ApplicantUser extends BaseUser {
 }
 
 export interface CompanyUser extends BaseUser {
-  companyData: Company;
+  companyData?: Company;
 }
 
 export type User = ApplicantUser | CompanyUser;

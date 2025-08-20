@@ -109,16 +109,19 @@ const ApplicantProfile: React.FC<ApplicantProfileProps> = ({ applicant }) => {
           </Col>
 
           <Col md={8}>
-            {/* Bio */}
-            <h5>About</h5>
-            <div
-              className="mt-1 mb-4"
-              dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(
-                  applicant.bio.replace(/\n/g, '<br />')
-                ),
-              }}
-            />
+            {applicant.bio && (
+              <>
+                <h5>About</h5>
+                <div
+                  className="mt-1 mb-4"
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(
+                      applicant.bio.replace(/\n/g, '<br />')
+                    ),
+                  }}
+                />
+              </>
+            )}
 
             {/* Skills */}
             {applicant.skills && applicant.skills.length > 0 && (
@@ -207,27 +210,30 @@ const ApplicantProfile: React.FC<ApplicantProfileProps> = ({ applicant }) => {
               </>
             )}
 
-            {/* Preferences */}
-            <h5>Preferences</h5>
-            <ListGroup horizontal className="mb-3">
-              <ListGroup.Item>
-                <strong>Preferred Locations:</strong>{' '}
-                {applicant.preferences.locations.join(', ')}
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <strong>Remote %:</strong>{' '}
-                {applicant.preferences.remotePercentage}%
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <strong>Employment Types:</strong>{' '}
-                {applicant.preferences.employmentTypes.join(', ')}
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <strong>Salary Range:</strong> $
-                {applicant.preferences.salaryMin.toLocaleString()} - $
-                {applicant.preferences.salaryMax.toLocaleString()}
-              </ListGroup.Item>
-            </ListGroup>
+            {applicant.preferences && (
+              <>
+                <h5>Preferences</h5>
+                <ListGroup horizontal className="mb-3">
+                  <ListGroup.Item>
+                    <strong>Preferred Locations:</strong>{' '}
+                    {applicant.preferences.locations.join(', ')}
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    <strong>Remote %:</strong>{' '}
+                    {applicant.preferences.remotePercentage}%
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    <strong>Employment Types:</strong>{' '}
+                    {applicant.preferences.employmentTypes.join(', ')}
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    <strong>Salary Range:</strong> $
+                    {applicant.preferences.salaryMin.toLocaleString()} - $
+                    {applicant.preferences.salaryMax.toLocaleString()}
+                  </ListGroup.Item>
+                </ListGroup>
+              </>
+            )}
           </Col>
         </Row>
       </Card.Body>

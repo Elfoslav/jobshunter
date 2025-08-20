@@ -19,7 +19,7 @@ export default function AppNavbar() {
 
   const getAccountName = () => {
     if (isApplicantUser(user)) return user.name;
-    if (isCompanyUser(user)) return user.companyData.name;
+    if (isCompanyUser(user)) return user.companyData?.name;
     return 'Account';
   };
 
@@ -94,7 +94,7 @@ export default function AppNavbar() {
                 id="user-nav-dropdown"
                 align="end"
               >
-                {isCompanyUser(user) ? (
+                {isCompanyUser(user) && user.companyData ? (
                   <NavDropdown.Item
                     href={`/companies/${(user.companyData as ExistingCompany).id}`}
                   >

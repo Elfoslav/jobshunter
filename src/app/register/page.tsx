@@ -5,32 +5,115 @@ import RegisterForm from './components/RegisterForm';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { UserType } from '@/models/User';
+import { useUser } from '../context/UserContext';
+import {
+  ApplicantUser,
+  BaseUser,
+  CompanyUser,
+  User,
+  UserType,
+} from '@/models/User';
+import {
+  getUserByEmail,
+  useCreateUser,
+  useUpdateUser,
+} from '@/services/users/UsersService';
+import { useCreateCompany } from '@/services/companies/CompaniesService';
+import { NewCompany } from '@/models/Company';
 
 export default function RegisterPage() {
+  const { mutate: createUser } = useCreateUser();
+  const { mutate: createCompany } = useCreateCompany();
+  const { mutate: updateUser } = useUpdateUser();
+  const { login } = useUser();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [clientError, setClientError] = useState<string | null>(null);
   const router = useRouter();
 
-  const handleRegister = async (
-    email: string,
-    password: string,
-    role: UserType
-  ) => {
+  const handleRegister = async ({ email, password, type }: BaseUser) => {
     setLoading(true);
-    setError(null);
-    console.log(email, password, role);
+    setClientError(null);
+
+    const loginAndRedirect = (user: User) => {
+      login(user.id!);
+      router.push('/jobs');
+      setLoading(false);
+    };
 
     try {
-      // 🔐 Replace this with your backend registration logic
-      if (email && password && name && role) {
-        router.push('/jobs');
-      } else {
+      if (!email || !password || !type) {
         throw new Error('All fields are required');
       }
+
+      const existingUser = await getUserByEmail(email);
+      if (existingUser) {
+        throw new Error('User with given email already exists.');
+      }
+
+      const userData: BaseUser & Partial<ApplicantUser> & Partial<CompanyUser> =
+        {
+          id: 'temporary-id',
+          email,
+          password,
+          type,
+          registeredAt: new Date(),
+        };
+
+      if (type === UserType.Applicant) {
+        // set default name from email
+        userData.name = email.split('@')[0];
+      }
+
+      // TODO move to server
+      createUser(userData, {
+        onSuccess: (newUser) => {
+          if (!newUser.id) {
+            throw new Error('Failed to get user ID after creation.');
+          }
+
+          if (type === UserType.Company) {
+            const companyData: NewCompany = {
+              name: email.split('@')[0],
+              email,
+              isVerified: false,
+            };
+
+            createCompany(companyData, {
+              onSuccess: (createdCompany) => {
+                updateUser(
+                  {
+                    ...newUser,
+                    id: newUser.id,
+                    companyData: createdCompany,
+                  } as CompanyUser & { id: string },
+                  {
+                    onSuccess: () => {
+                      loginAndRedirect(newUser);
+                    },
+                    onError: (err: any) => {
+                      setClientError(
+                        err.message ||
+                          'Failed to update user with company data.'
+                      );
+                      setLoading(false);
+                    },
+                  }
+                );
+              },
+            });
+          } else {
+            loginAndRedirect(newUser);
+          }
+        },
+        onError: (err: any) => {
+          setClientError(err.message || 'Registration failed');
+        },
+        onSettled: () => {
+          setLoading(false); // stop loading in both success and error
+        },
+      });
     } catch (err: any) {
-      setError(err.message || 'Registration failed');
-    } finally {
+      setClientError(err.message || 'Registration failed');
       setLoading(false);
     }
   };
@@ -54,7 +137,7 @@ export default function RegisterPage() {
               <RegisterForm
                 onSubmit={handleRegister}
                 isLoading={loading}
-                error={error}
+                error={clientError}
               />
             </Card.Body>
           </Card>

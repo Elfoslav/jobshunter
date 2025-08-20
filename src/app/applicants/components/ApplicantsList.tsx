@@ -82,17 +82,24 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
 
                 <Col md={4}>
                   <strong>Preferences:</strong>
-                  <div className="text-muted">
-                    <BriefcaseFill className="me-1" />
-                    {applicant.preferences.employmentTypes.join(', ')}
-                  </div>
-                  <div className="text-muted">
-                    Salary: ${applicant.preferences.salaryMin.toLocaleString()}{' '}
-                    - ${applicant.preferences.salaryMax.toLocaleString()}
-                  </div>
-                  <div className="text-muted">
-                    Remote: {applicant.preferences.remotePercentage}%
-                  </div>
+                  {applicant.preferences ? (
+                    <>
+                      <div className="text-muted">
+                        <BriefcaseFill className="me-1" />
+                        {applicant.preferences.employmentTypes.join(', ')}
+                      </div>
+                      <div className="text-muted">
+                        Salary: $
+                        {applicant.preferences.salaryMin.toLocaleString()} - $
+                        {applicant.preferences.salaryMax.toLocaleString()}
+                      </div>
+                      <div className="text-muted">
+                        Remote: {applicant.preferences.remotePercentage}%
+                      </div>
+                    </>
+                  ) : (
+                    <div className="text-muted">No preferences set</div>
+                  )}
                 </Col>
               </Row>
             </Card.Body>

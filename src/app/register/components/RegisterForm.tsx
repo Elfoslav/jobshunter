@@ -5,7 +5,11 @@ import { useState } from 'react';
 import { UserType } from '@/models/User';
 
 interface RegisterFormProps {
-  onSubmit: (email: string, password: string, role: UserType) => void;
+  onSubmit: (formData: {
+    email: string;
+    password: string;
+    type: UserType;
+  }) => void;
   isLoading?: boolean;
   error?: string | null;
 }
@@ -17,11 +21,11 @@ export default function RegisterForm({
 }: RegisterFormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState<UserType>(UserType.Applicant);
+  const [type, setType] = useState<UserType>(UserType.Applicant);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(email, password, role);
+    onSubmit({ email, password, type });
   };
 
   return (
@@ -51,8 +55,8 @@ export default function RegisterForm({
       <Form.Group className="mb-4">
         <Form.Label>Registering as</Form.Label>
         <Form.Select
-          value={role}
-          onChange={(e) => setRole(e.target.value as UserType)}
+          value={type}
+          onChange={(e) => setType(e.target.value as UserType)}
         >
           <option value={UserType.Applicant}>Applicant</option>
           <option value={UserType.Company}>Company</option>
