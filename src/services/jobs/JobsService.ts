@@ -102,7 +102,7 @@ const getJobsByIds = async (ids: string[]): Promise<ExistingJob[]> => {
   return jobs.filter((job) => ids.includes(job.id));
 };
 
-const getJobsByCompanyId = async (companyId: string): Promise<ExistingJob[]> => {
+export const getJobsByCompanyId = async (companyId: string): Promise<ExistingJob[]> => {
   const jobs: ExistingJob[] = JobsStore.read();
   return jobs.filter((job) => job.companyId === companyId);
 };

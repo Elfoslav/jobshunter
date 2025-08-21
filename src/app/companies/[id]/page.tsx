@@ -2,6 +2,7 @@
 
 import { use } from 'react';
 import Image from 'next/image';
+import { Building } from 'react-bootstrap-icons';
 import { useGetCompanyById } from '@/services/companies/CompaniesService';
 import { useGetJobsByCompanyId } from '@/services/jobs/JobsService';
 import {
@@ -70,7 +71,7 @@ export default function CompanyPage({
                     </div>
                   ) : (
                     <div
-                      className="rounded-circle bg-secondary text-white d-flex justify-content-center align-items-center mx-auto"
+                      className="rounded-circle border border-tertiary text-white d-flex justify-content-center align-items-center mx-auto"
                       style={{
                         width: '100%',
                         maxWidth: 120,
@@ -78,7 +79,7 @@ export default function CompanyPage({
                         fontSize: 'clamp(24px, 6vw, 48px)', // font size adjusts between 24px and 48px based on viewport width
                       }}
                     >
-                      {company.name.charAt(0)}
+                      <Building size={40} className="text-muted" />
                     </div>
                   )}
                 </Col>

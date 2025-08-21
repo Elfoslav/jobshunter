@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { Card, Row, Col, Image as RBImage } from 'react-bootstrap';
+import { Card, Row, Col, Badge, Image as RBImage } from 'react-bootstrap';
 import { GeoAltFill, Building } from 'react-bootstrap-icons';
 import useQueryParams from '@/app/components/useQueryParams';
 import Pagination from '@/app/components/Pagination';
 import { ITEMS_PER_PAGE } from '@/lib/consts';
 import { ExistingCompany } from '@/models/Company';
+import { getJobsByCompanyId } from '@/services/jobs/JobsService';
+import './CompaniesList.scss';
 
 interface CompaniesListProps {
   companies: ExistingCompany[];
@@ -21,6 +23,24 @@ const CompaniesList: React.FC<CompaniesListProps> = ({
   const queryClient = useQueryClient();
   const { setQueryParams } = useQueryParams<{ page?: number }>();
   const [pageNumber, setPageNumber] = useState(1);
+  const [jobsCountMap, setJobsCountMap] = useState<Record<string, number>>({});
+
+  const getJobsCount = async (id: string) => {
+    const jobs = await getJobsByCompanyId(id);
+    return jobs.length;
+  };
+
+  useEffect(() => {
+    const fetchJobsCounts = async () => {
+      const counts: Record<string, number> = {};
+      for (const company of companies) {
+        counts[company.id] = (await getJobsCount(company.id)) || 0;
+      }
+      setJobsCountMap(counts);
+    };
+
+    fetchJobsCounts();
+  }, [companies]);
 
   useEffect(() => {
     if (page && !isNaN(Number(page))) {
@@ -44,7 +64,7 @@ const CompaniesList: React.FC<CompaniesListProps> = ({
       {companies.map((company) => (
         <Card
           key={company.id}
-          className="mb-3 shadow-sm"
+          className="mb-3 shadow-sm company"
           as="a"
           href={`/companies/${company.id}`}
         >
@@ -88,6 +108,12 @@ const CompaniesList: React.FC<CompaniesListProps> = ({
                 </p>
               </Col>
             </Row>
+            {jobsCountMap[company.id] > 0 && (
+              <Badge className="jobs-count">
+                {jobsCountMap[company.id]}{' '}
+                {jobsCountMap[company.id] > 1 ? 'Jobs' : 'Job'}
+              </Badge>
+            )}
           </Card.Body>
         </Card>
       ))}

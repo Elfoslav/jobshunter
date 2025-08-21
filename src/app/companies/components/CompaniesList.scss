@@ -1,0 +1,11 @@
+.company {
+  position: relative;
+  .jobs-count {
+    position: absolute;
+    top: 0;
+    right: -20px;
+    width: 60px;
+    height: 20px;
+    transform: rotate(45deg);
+  }
+}
