@@ -9,15 +9,25 @@ export enum UserType {
 }
 
 export interface BaseUser {
-  id?: string; // optional for new users
   email: string;
   password?: string; // optional if using external auth
-  registeredAt: Date;
+  createdAt?: Date;
   updatedAt?: Date;
   type: UserType;
 }
 
-// Experience
+// --- Generic Helpers ---
+export type ExistingBaseUser<T extends BaseUser = BaseUser> = T & {
+  id: string;
+  createdAt: Date;
+};
+
+export type NewBaseUser<T extends BaseUser = BaseUser> = Omit<T, 'createdAt'> & {
+  id?: never; // new users cannot set id
+  createdAt?: Date; // server/store assigns this
+};
+
+// --- Shared Value Objects ---
 interface Experience {
   company: string;
   role: string;
@@ -26,7 +36,6 @@ interface Experience {
   description?: string;
 }
 
-// Education
 interface Education {
   institution: string;
   degree: string;
@@ -35,7 +44,6 @@ interface Education {
   endYear?: number;
 }
 
-// External link
 interface ProfileLink {
   label: string;
   url: string;
@@ -46,19 +54,22 @@ interface Language {
   proficiency: 'Basic' | 'Intermediate' | 'Fluent' | 'Native';
 }
 
+export interface Preferences {
+  locations: string[];
+  remotePercentage: number;
+  employmentTypes: EmploymentType[];
+  salaryMin: number;
+  salaryMax: number;
+}
+
+// --- Users ---
 export interface ApplicantUser extends BaseUser {
   name: string;
   phone?: string;
   bio?: string;
   location?: string;
   skills?: ApplicantSkill[];
-  preferences?: {
-    locations: string[];
-    remotePercentage: number;
-    employmentTypes: EmploymentType[];
-    salaryMin: number;
-    salaryMax: number;
-  };
+  preferences?: Preferences;
   experience?: Experience[];
   education?: Education[];
   resumeUrl?: string;
@@ -72,8 +83,16 @@ export interface ApplicantUser extends BaseUser {
   isOpenToWork?: boolean;
 }
 
+export type NewApplicantUser = NewBaseUser<ApplicantUser>;
+export type ExistingApplicantUser = ExistingBaseUser<ApplicantUser>;
+
 export interface CompanyUser extends BaseUser {
   companyData?: Company;
 }
 
-export type User = ApplicantUser | CompanyUser;
+export type NewCompanyUser = NewBaseUser<CompanyUser>;
+export type ExistingCompanyUser = ExistingBaseUser<CompanyUser>;
+
+// --- Union Types ---
+export type NewUser = NewApplicantUser | NewCompanyUser;
+export type ExistingUser = ExistingApplicantUser | ExistingCompanyUser;

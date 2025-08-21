@@ -9,11 +9,11 @@ import {
 import useQueryParams from '@/app/components/useQueryParams';
 import Pagination from '@/app/components/Pagination';
 import { ITEMS_PER_PAGE } from '@/lib/consts';
-import { ApplicantUser } from '@/models/User';
+import { ExistingApplicantUser } from '@/models/User';
 import { formatDate } from '@/lib/functions';
 
 interface ApplicantsListProps {
-  applicants: ApplicantUser[];
+  applicants: ExistingApplicantUser[];
   totalCount: number;
   page: number;
 }
@@ -63,10 +63,12 @@ const ApplicantsList: React.FC<ApplicantsListProps> = ({
                     <GeoAltFill className="me-1" />
                     {applicant.location}
                   </div>
-                  <div className="text-muted d-flex align-items-center mb-1">
-                    <CalendarEvent className="me-1" />
-                    Registered: {formatDate(applicant.registeredAt)}
-                  </div>
+                  {applicant.createdAt && (
+                    <div className="text-muted d-flex align-items-center mb-1">
+                      <CalendarEvent className="me-1" />
+                      Registered: {formatDate(applicant.createdAt)}
+                    </div>
+                  )}
                 </Col>
 
                 <Col md={4}>

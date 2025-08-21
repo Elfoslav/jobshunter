@@ -2,18 +2,18 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import UsersStore from './UsersStore';
-import { User, ApplicantUser, CompanyUser, UserType } from '@/models/User';
+import { NewUser, ExistingUser, ExistingApplicantUser, CompanyUser, UserType } from '@/models/User';
 import { ITEMS_PER_PAGE, USERS_QUERIES } from '@/lib/consts';
 import { isApplicantUser, isCompanyUser } from '@/lib/utils/user';
 
 const USERS_PER_PAGE = ITEMS_PER_PAGE;
 
 const filterApplicantUsers = (
-  data: ApplicantUser[],
+  data: ExistingApplicantUser[],
   searchQuery: string = '',
   skills: string[] = [],
-): ApplicantUser[] => {
-  let filtered = data.sort((a, b) => (b.registeredAt?.getTime() || 0) - (a.registeredAt?.getTime() || 0));
+): ExistingApplicantUser[] => {
+  let filtered = data.sort((a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0));
 
   if (searchQuery) {
     filtered = filtered.filter((c) =>
@@ -24,36 +24,36 @@ const filterApplicantUsers = (
   return filtered;
 };
 
-export const getUsers = async (): Promise<User[]> => {
-  const data: User[] = UsersStore.read();
+export const getUsers = async (): Promise<ExistingUser[]> => {
+  const data: ExistingUser[] = UsersStore.read();
   return Promise.resolve(data);
 };
 
 const getUsersCount = async (): Promise<number> => {
-  const data: User[] = UsersStore.read();
+  const data: ExistingUser[] = UsersStore.read();
   return Promise.resolve(data.length);
 };
 
-export const getUsersById = async (id: string): Promise<User[]> => {
-  const users: User[] = UsersStore.read();
+export const getUsersById = async (id: string): Promise<ExistingUser[]> => {
+  const users: ExistingUser[] = UsersStore.read();
   const user = users.filter((user) => user.id === id);
   return Promise.resolve(user);
 };
 
-export const getUsersByIds = async (ids: string[]): Promise<User[]> => {
-  const users: User[] = UsersStore.read();
+export const getUsersByIds = async (ids: string[]): Promise<ExistingUser[]> => {
+  const users: ExistingUser[] = UsersStore.read();
   const filteredUsers = users.filter((user) => user.id && ids.includes(user.id));
   return Promise.resolve(filteredUsers);
 };
 
-export const getUserById = async (id: string): Promise<User | null> => {
-  const users: User[] = UsersStore.read();
+export const getUserById = async (id: string): Promise<ExistingUser | null> => {
+  const users: ExistingUser[] = UsersStore.read();
   const user = users.find((user) => user.id === id) || null;
   return Promise.resolve(user);
 };
 
-export const getUserByEmail = async (email: string): Promise<User | null> => {
-  const users: User[] = UsersStore.read();
+export const getUserByEmail = async (email: string): Promise<ExistingUser | null> => {
+  const users: ExistingUser[] = UsersStore.read();
   const user = users.find((user) => user.email === email) || null;
   return Promise.resolve(user);
 };
@@ -62,7 +62,7 @@ export const getApplicants = async (
   page?: number,
   searchQuery?: string,
   skills?: string[]
-): Promise<ApplicantUser[]> => {
+): Promise<ExistingApplicantUser[]> => {
   const users = await getUsers();
   const applicants = users.filter(isApplicantUser);
 
@@ -89,7 +89,7 @@ export const getApplicantsCount = async (
 };
 
 
-export const getApplicantsByIds = async (ids: string[]): Promise<ApplicantUser[]> => {
+export const getApplicantsByIds = async (ids: string[]): Promise<ExistingApplicantUser[]> => {
   const users = await getUsersByIds(ids);
   return users.filter(isApplicantUser);
 };
@@ -99,11 +99,11 @@ export const getCompaniesUsers = async (): Promise<CompanyUser[]> => {
   return users.filter(isCompanyUser);
 };
 
-const createUser = async (newUser: User): Promise<User> => {
+const createUser = async (newUser: NewUser): Promise<ExistingUser> => {
   return UsersStore.create(newUser);
 };
 
-const updateUser = async (updatedUser: User & { id: string }): Promise<User> => {
+const updateUser = async (updatedUser: ExistingUser & { id: string }): Promise<ExistingUser> => {
   UsersStore.update(updatedUser.id, updatedUser);
   return Promise.resolve(updatedUser);
 };
@@ -117,7 +117,7 @@ export const useGetUsers = (
   searchQuery: string = '',
   skills: string[] = []
 ) => {
-  const result = useQuery<User[], unknown>({
+  const result = useQuery<ExistingUser[], unknown>({
     queryKey: [USERS_QUERIES.USERS, page, searchQuery, skills],
     queryFn: getUsers,
   });
@@ -135,21 +135,21 @@ export const useGetUsersCount = (
 };
 
 export const useGetUserById = (userId: string) => {
-  return useQuery<User | null, unknown>({
+  return useQuery<ExistingUser | null, unknown>({
     queryKey: [USERS_QUERIES.USER_BY_ID, userId],
     queryFn: () => getUserById(userId),
   });
 };
 
 export const useGetUserByEmail = (email: string) => {
-  return useQuery<User | null, unknown>({
+  return useQuery<ExistingUser | null, unknown>({
     queryKey: [USERS_QUERIES.USER_BY_EMAIL, email],
     queryFn: () => getUserByEmail(email),
   });
 };
 
 export const useGetApplicants = (page = 1, searchQuery = '', skills?: string[]) => {
-  return useQuery<ApplicantUser[], unknown>({
+  return useQuery<ExistingApplicantUser[], unknown>({
     queryKey: [USERS_QUERIES.USERS, UserType.Applicant, page, searchQuery, skills],
     queryFn: () => getApplicants(page, searchQuery, skills),
   });
@@ -163,7 +163,7 @@ export const useGetApplicantsCount = (searchQuery = '', skills?: string[]) => {
 };
 
 export const useGetApplicantsByIds = (ids: string[]) => {
-  return useQuery<ApplicantUser[], unknown>({
+  return useQuery<ExistingApplicantUser[], unknown>({
     queryKey: [USERS_QUERIES.USERS_BY_IDS, UserType.Applicant, ids],
     queryFn: () => getApplicantsByIds(ids),
     enabled: ids.length > 0, // prevent running the query if no ids
@@ -171,7 +171,7 @@ export const useGetApplicantsByIds = (ids: string[]) => {
 };
 
 export const useGetApplicantById = (id: string) => {
-  return useQuery<ApplicantUser | null>({
+  return useQuery<ExistingApplicantUser | null>({
     queryKey: ['applicant', id],
     queryFn: async () => {
       const user = await getUserById(id);
@@ -191,7 +191,7 @@ export const useGetCompaniesUsers = () => {
 export const useCreateUser = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<User, unknown, User>({
+  return useMutation<ExistingUser, unknown, NewUser>({
     mutationFn: createUser,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [USERS_QUERIES.USERS] });
@@ -202,7 +202,7 @@ export const useCreateUser = () => {
 export const useUpdateUser = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<User, unknown, User & { id: string }>({
+  return useMutation<ExistingUser, unknown, ExistingUser & { id: string }>({
     mutationFn: updateUser,
     onSuccess: (updatedUser) => {
       if (updatedUser?.id) {

@@ -2,7 +2,14 @@ import { dateReviver } from '@/lib/functions';
 
 interface EntityWithId {
   id: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
+
+type NewEntity<T extends EntityWithId> = Omit<T, 'id' | 'createdAt'> & {
+  id?: string;
+  createdAt?: Date;
+};
 
 class GeneralStore<T extends EntityWithId> {
   private data: T[] = [];
@@ -39,11 +46,15 @@ class GeneralStore<T extends EntityWithId> {
     return latestId.toString();
   }
 
-  create(item: T) {
-    item.id = this.getLatestId();
-    this.data.push(item);
+  create(item: NewEntity<T>): T {
+    const newItem: T = {
+      ...item,
+      id: this.getLatestId(),
+    } as T;
+
+    this.data.push(newItem);
     this.save();
-    return item;
+    return newItem;
   }
 
   read(): T[] {

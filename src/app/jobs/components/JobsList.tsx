@@ -9,14 +9,14 @@ import Skills from './Skills';
 import { ExistingJob } from '@/models/Job';
 import './JobsList.scss';
 import { getAgoString, getDaysPassed } from '@/lib/functions';
-import { User } from '@/models/User';
+import { ExistingUser } from '@/models/User';
 import UserApplied from './UserApplied';
 import RemotePercentage from './RemotePercentage';
 import { isApplicantUser } from '@/lib/utils/user';
 
 interface JobsListProps {
   jobs: ExistingJob[];
-  user: User | null;
+  user: ExistingUser | null;
   totalCount: number;
   page: number;
 }

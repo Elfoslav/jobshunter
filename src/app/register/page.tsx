@@ -7,10 +7,12 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useUser } from '../context/UserContext';
 import {
-  ApplicantUser,
+  NewApplicantUser,
   BaseUser,
-  CompanyUser,
-  User,
+  NewCompanyUser,
+  ExistingCompanyUser,
+  NewUser,
+  ExistingUser,
   UserType,
 } from '@/models/User';
 import {
@@ -34,8 +36,8 @@ export default function RegisterPage() {
     setLoading(true);
     setClientError(null);
 
-    const loginAndRedirect = (user: User) => {
-      login(user.id!);
+    const loginAndRedirect = (user: ExistingUser) => {
+      user.id && login(user.id);
       router.push('/jobs');
       setLoading(false);
     };
@@ -50,14 +52,13 @@ export default function RegisterPage() {
         throw new Error('User with given email already exists.');
       }
 
-      const userData: BaseUser & Partial<ApplicantUser> & Partial<CompanyUser> =
-        {
-          id: 'temporary-id',
-          email,
-          password,
-          type,
-          registeredAt: new Date(),
-        };
+      const userData: NewUser &
+        Partial<NewApplicantUser> &
+        Partial<NewCompanyUser> = {
+        email,
+        password,
+        type,
+      };
 
       if (type === UserType.Applicant) {
         // set default name from email
@@ -80,25 +81,23 @@ export default function RegisterPage() {
 
             createCompany(companyData, {
               onSuccess: (createdCompany) => {
-                updateUser(
-                  {
-                    ...newUser,
-                    id: newUser.id,
-                    companyData: createdCompany,
-                  } as CompanyUser & { id: string },
-                  {
-                    onSuccess: () => {
-                      loginAndRedirect(newUser);
-                    },
-                    onError: (err: any) => {
-                      setClientError(
-                        err.message ||
-                          'Failed to update user with company data.'
-                      );
-                      setLoading(false);
-                    },
-                  }
-                );
+                const existingCompanyUser = {
+                  ...newUser,
+                  id: newUser.id,
+                  companyData: createdCompany,
+                } as ExistingCompanyUser;
+
+                updateUser(existingCompanyUser, {
+                  onSuccess: () => {
+                    loginAndRedirect(newUser);
+                  },
+                  onError: (err: any) => {
+                    setClientError(
+                      err.message || 'Failed to update user with company data.'
+                    );
+                    setLoading(false);
+                  },
+                });
               },
             });
           } else {

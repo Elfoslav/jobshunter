@@ -9,13 +9,17 @@ import React, {
   useEffect,
 } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { ApplicantUser, CompanyUser, User, UserType } from '@/models/User';
+import {
+  ExistingApplicantUser,
+  ExistingCompanyUser,
+  ExistingUser,
+} from '@/models/User';
 import { getUserById } from '@/services/users/UsersService';
 import { isApplicantUser, isCompanyUser } from '@/lib/utils/user';
 import { ExistingCompany } from '@/models/Company';
 
 type UserContextType = {
-  user: User | null;
+  user: ExistingUser | null;
   isLoading: boolean;
   isInitialized: boolean;
   login: (userId: string) => void;
@@ -45,7 +49,7 @@ export function UserProvider({ children }: UserProviderProps) {
   }, []);
 
   // Fetch full user object using userId
-  const { data: user = null, isLoading } = useQuery<User | null>({
+  const { data: user = null, isLoading } = useQuery<ExistingUser | null>({
     queryKey: ['user', userId],
     queryFn: () => (userId ? getUserById(userId) : Promise.resolve(null)),
     enabled: !!userId, // only fetch when userId exists
@@ -83,7 +87,7 @@ export function useUser(): UserContextType {
 }
 
 export function useApplicantUser(): Omit<UserContextType, 'user'> & {
-  user: ApplicantUser | null;
+  user: ExistingApplicantUser | null;
 } {
   const { user, login, logout, isLoading, isInitialized } = useUser();
   const applicantUser = user && isApplicantUser(user) ? user : null;
@@ -91,12 +95,14 @@ export function useApplicantUser(): Omit<UserContextType, 'user'> & {
 }
 
 export function useCompanyUser(): Omit<UserContextType, 'user'> & {
-  user: (CompanyUser & { companyData: ExistingCompany }) | null;
+  user: (ExistingCompanyUser & { companyData: ExistingCompany }) | null;
 } {
   const { user, login, logout, isLoading, isInitialized } = useUser();
 
   if (user && isCompanyUser(user)) {
-    const companyUser = user as CompanyUser & { companyData: ExistingCompany };
+    const companyUser = user as ExistingCompanyUser & {
+      companyData: ExistingCompany;
+    };
     return { user: companyUser, login, logout, isLoading, isInitialized };
   }
 

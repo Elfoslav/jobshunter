@@ -1,11 +1,11 @@
 import { ReactNode } from 'react';
-import { User, UserType } from '@/models/User';
+import { ExistingUser, UserType } from '@/models/User';
 import { hasRole } from '@/lib/utils/user';
 import ResourceType from '@/models/enums/ResourceType';
 import { ExistingCompany } from '@/models/Company';
 
 type Props = {
-  user: User | null;
+  user: ExistingUser | null;
   requiredRole: UserType[];
   resourceType?: ResourceType;
   resourceId?: string;

@@ -8,14 +8,14 @@ import {
   Button,
   Stack,
 } from 'react-bootstrap';
-import { ApplicantUser, UserType } from '@/models/User'; // Adjust this import path to your project
+import { ExistingApplicantUser, UserType } from '@/models/User'; // Adjust this import path to your project
 import { getSkillClass } from '@/lib/functions';
 import CanAccess from '@/app/components/CanAccess';
 import { useApplicantUser } from '@/app/context/UserContext';
 import DOMPurify from 'dompurify';
 
 interface ApplicantProfileProps {
-  applicant: ApplicantUser;
+  applicant: ExistingApplicantUser;
 }
 
 const formatDate = (date?: Date) =>
@@ -227,7 +227,7 @@ const ApplicantProfile: React.FC<ApplicantProfileProps> = ({ applicant }) => {
                     {applicant.preferences.employmentTypes.join(', ')}
                   </ListGroup.Item>
                   <ListGroup.Item>
-                    <strong>Salary Range:</strong> $
+                    <strong>Salary Range:</strong> <br />$
                     {applicant.preferences.salaryMin.toLocaleString()} - $
                     {applicant.preferences.salaryMax.toLocaleString()}
                   </ListGroup.Item>

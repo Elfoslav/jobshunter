@@ -1,5 +1,5 @@
 import Migration from '@/models/Migration';
-import { ApplicantUser, UserType } from '@/models/User';
+import { ExistingApplicantUser, UserType } from '@/models/User';
 import { createMigration, getMigrations } from '@/services/migrations/MigrationsService';
 import { getSkills } from '@/services/skills/SkillsService';
 
@@ -21,7 +21,7 @@ export const addUserTypeApplicant = async () => {
   if (!raw) return;
 
   try {
-    const parsed = JSON.parse(raw) as Omit<ApplicantUser, 'type'>[];
+    const parsed = JSON.parse(raw) as Omit<ExistingApplicantUser, 'type'>[];
 
     // Extra safety: skip if already migrated in raw data
     if (parsed.length > 0 && 'type' in parsed[0]) {

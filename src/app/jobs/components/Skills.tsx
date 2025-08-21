@@ -1,12 +1,12 @@
 import { isApplicantUser } from '@/lib/utils/user';
 import Skill from '@/models/Skill';
-import { User } from '@/models/User';
+import { ExistingUser } from '@/models/User';
 import { useGetSkills } from '@/services/skills/SkillsService';
 import { Badge } from 'react-bootstrap';
 
 interface JobsListProps {
   skillsIds: string[];
-  user: User | null;
+  user: ExistingUser | null;
   primary?: boolean;
   className?: string;
 }

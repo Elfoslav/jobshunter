@@ -27,7 +27,7 @@ import {
   Card,
 } from 'react-bootstrap';
 import EmploymentType from '@/models/enums/EmploymentType';
-import { ApplicantUser, UserType } from '@/models/User';
+import { ExistingApplicantUser, Preferences, UserType } from '@/models/User';
 import { useGetSkills } from '@/services/skills/SkillsService';
 import SelectOption from '@/models/SelectOption';
 import { useUpdateUser } from '@/services/users/UsersService';
@@ -41,7 +41,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import CreatableSelect from 'react-select/creatable';
 
 interface ApplicantProfileFormProps {
-  user?: ApplicantUser;
+  user?: ExistingApplicantUser;
 }
 
 const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
@@ -54,7 +54,15 @@ const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
   const [isSaving, setIsSaving] = useState(false);
   const queryClient = useQueryClient();
 
-  const [formData, setFormData] = useState<ApplicantUser>({
+  const defaultPreferences: Preferences = {
+    locations: [],
+    remotePercentage: 0,
+    employmentTypes: [],
+    salaryMin: 0,
+    salaryMax: 0,
+  };
+
+  const [formData, setFormData] = useState<ExistingApplicantUser>({
     id: user?.id ?? '',
     name: user?.name ?? '',
     email: user?.email ?? '',
@@ -63,13 +71,7 @@ const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
     location: user?.location ?? '',
     skills: user?.skills ? [...user.skills] : [],
     type: user?.type ?? UserType.Applicant,
-    preferences: {
-      locations: user?.preferences?.locations ?? [],
-      remotePercentage: user?.preferences?.remotePercentage ?? 0,
-      employmentTypes: user?.preferences?.employmentTypes ?? [],
-      salaryMin: user?.preferences?.salaryMin ?? 0,
-      salaryMax: user?.preferences?.salaryMax ?? 0,
-    },
+    preferences: { ...defaultPreferences, ...user?.preferences },
     experience: user?.experience ?? [],
     education: user?.education ?? [],
     resumeUrl: user?.resumeUrl ?? '',
@@ -81,7 +83,7 @@ const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
     softSkills: user?.softSkills ?? [],
     isVisible: user?.isVisible ?? true,
     isOpenToWork: user?.isOpenToWork ?? true,
-    registeredAt: user?.registeredAt || new Date(),
+    createdAt: user?.createdAt || new Date(),
     updatedAt: user?.updatedAt || undefined,
   });
 
@@ -135,7 +137,8 @@ const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
     setFormData({
       ...formData,
       preferences: {
-        ...formData.preferences,
+        ...defaultPreferences,
+        ...formData.preferences, // overwrite preferences from user data
         [key]: value,
       },
     });
@@ -176,14 +179,17 @@ const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
     e.preventDefault();
     setIsSaving(true);
     setTimeout(() => {
-      updateUserMutation.mutate(formData, {
-        onSuccess() {
-          queryClient.invalidateQueries({ queryKey: ['user'] });
-          setIsSaving(false);
-          showNotification('Your profile has been updated!');
-          router.push('/profile');
-        },
-      });
+      updateUserMutation.mutate(
+        { ...formData, id: formData.id! },
+        {
+          onSuccess() {
+            queryClient.invalidateQueries({ queryKey: ['user'] });
+            setIsSaving(false);
+            showNotification('Your profile has been updated!');
+            router.push('/profile');
+          },
+        }
+      );
     }, 1000);
   };
 
@@ -246,7 +252,7 @@ const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
                   <Form.Control
                     type="text"
                     name="preferredLocations"
-                    value={formData.preferences.locations.join(', ')}
+                    value={formData.preferences?.locations.join(', ') || ''}
                     onChange={(e) =>
                       handlePreferencesChange(
                         'locations',
@@ -258,7 +264,7 @@ const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
               </Col>
               <Col md={6} lg={4}>
                 <RemotePercentageInput
-                  value={formData.preferences.remotePercentage}
+                  value={formData.preferences?.remotePercentage || 0}
                   onChange={(e) =>
                     handlePreferencesChange(
                       'remotePercentage',
@@ -272,7 +278,7 @@ const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
                   <Form.Label>Min Salary ($)</Form.Label>
                   <Form.Control
                     type="number"
-                    value={formData.preferences.salaryMin}
+                    value={formData.preferences?.salaryMin}
                     onChange={(e) =>
                       handlePreferencesChange(
                         'salaryMin',
@@ -287,7 +293,7 @@ const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
                   <Form.Label>Max Salary ($)</Form.Label>
                   <Form.Control
                     type="number"
-                    value={formData.preferences.salaryMax}
+                    value={formData.preferences?.salaryMax}
                     onChange={(e) =>
                       handlePreferencesChange(
                         'salaryMax',
@@ -402,7 +408,7 @@ const ApplicantProfileForm: React.FC<ApplicantProfileFormProps> = ({
                 <Form.Group controlId="bio">
                   <Form.Label>Bio</Form.Label>
                   <TextEditor
-                    text={formData.bio}
+                    text={formData.bio || ''}
                     onBlur={(val) => setFormData({ ...formData, bio: val })}
                   />
                 </Form.Group>

@@ -1,8 +1,8 @@
 import EmploymentType from '@/models/enums/EmploymentType';
 import { SkillLevel } from '@/models/Skill';
-import { User, UserType } from '@/models/User';
+import { ExistingUser, UserType } from '@/models/User';
 
-const ApplicantsDummyData: User[] = [
+const ApplicantsDummyData: ExistingUser[] = [
   {
     id: '1',
     name: 'John Doe',
@@ -27,7 +27,7 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
       salaryMax: 90000,
     },
     type: UserType.Applicant,
-    registeredAt: new Date('2022-01-15'),
+    createdAt: new Date('2022-01-15'),
     updatedAt: new Date('2022-09-20'),
   },
   {
@@ -50,7 +50,7 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
       salaryMax: 100000,
     },
     type: UserType.Applicant,
-    registeredAt: new Date('2021-11-05'),
+    createdAt: new Date('2021-11-05'),
     updatedAt: new Date('2022-08-10'),
   },
   {
@@ -73,7 +73,7 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
       salaryMax: 110000,
     },
     type: UserType.Applicant,
-    registeredAt: new Date('2022-03-12'),
+    createdAt: new Date('2022-03-12'),
     updatedAt: new Date('2022-10-25'),
   },
   {
@@ -96,7 +96,7 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
       salaryMax: 120000,
     },
     type: UserType.Applicant,
-    registeredAt: new Date('2022-02-28'),
+    createdAt: new Date('2022-02-28'),
     updatedAt: new Date('2022-09-15'),
   },
   {
@@ -119,7 +119,7 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
       salaryMax: 100000,
     },
     type: UserType.Applicant,
-    registeredAt: new Date('2022-06-10'),
+    createdAt: new Date('2022-06-10'),
     updatedAt: new Date('2022-12-12'),
   },
   {
@@ -143,7 +143,7 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
       salaryMax: 110000,
     },
     type: UserType.Applicant,
-    registeredAt: new Date('2021-12-04'),
+    createdAt: new Date('2021-12-04'),
     updatedAt: new Date('2022-08-21'),
   },
   {
@@ -166,7 +166,7 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
       salaryMax: 110000,
     },
     type: UserType.Applicant,
-    registeredAt: new Date('2022-01-25'),
+    createdAt: new Date('2022-01-25'),
     updatedAt: new Date('2022-10-11'),
   },
   {
@@ -189,7 +189,7 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
       salaryMax: 105000,
     },
     type: UserType.Applicant,
-    registeredAt: new Date('2022-02-19'),
+    createdAt: new Date('2022-02-19'),
     updatedAt: new Date('2022-09-30'),
   },
   {
@@ -212,7 +212,7 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
       salaryMax: 90000,
     },
     type: UserType.Applicant,
-    registeredAt: new Date('2022-03-29'),
+    createdAt: new Date('2022-03-29'),
     updatedAt: new Date('2022-11-14'),
   },
   {
@@ -235,7 +235,7 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
       salaryMax: 100000,
     },
     type: UserType.Applicant,
-    registeredAt: new Date('2022-04-15'),
+    createdAt: new Date('2022-04-15'),
     updatedAt: new Date('2022-10-30'),
   },
   {
@@ -258,7 +258,7 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
       salaryMax: 110000,
     },
     type: UserType.Applicant,
-    registeredAt: new Date('2022-05-20'),
+    createdAt: new Date('2022-05-20'),
     updatedAt: new Date('2022-12-15'),
   },
   {
@@ -267,7 +267,7 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
     email: 'aria@example.com',
     phone: '123-123-1234',
     type: UserType.Company,
-    registeredAt: new Date('2022-05-20'),
+    createdAt: new Date('2022-05-20'),
     updatedAt: new Date('2022-12-15'),
     companyData: {
       id: '1',
@@ -284,7 +284,7 @@ Currently exploring: TypeScript, React Server Components, and AI-driven UI tools
     email: 'apple@example.com',
     phone: '123-123-1234',
     type: UserType.Company,
-    registeredAt: new Date('2022-05-20'),
+    createdAt: new Date('2022-05-20'),
     updatedAt: new Date('2022-12-15'),
     companyData: {
       id: '2',

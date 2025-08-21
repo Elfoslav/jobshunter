@@ -77,7 +77,7 @@ export default function JobsPage({
   };
 
   const onJobApply = () => {
-    if (job && user) {
+    if (job && user && user.id) {
       const jobId = job.id;
 
       if (!jobId) {
@@ -93,7 +93,7 @@ export default function JobsPage({
           {
             id: '',
             jobId,
-            userId: user.id,
+            userId: user.id!,
             coverLetter: '', // empty for now
             status: ApplicationStatus.Submitted,
             note: '',
