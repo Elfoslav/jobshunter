@@ -13,6 +13,7 @@ import { getSkillClass } from '@/lib/functions';
 import CanAccess from '@/app/components/CanAccess';
 import { useApplicantUser } from '@/app/context/UserContext';
 import DOMPurify from 'dompurify';
+import './ApplicantProfile.scss';
 
 interface ApplicantProfileProps {
   applicant: ExistingApplicantUser;
@@ -27,10 +28,17 @@ const ApplicantProfile: React.FC<ApplicantProfileProps> = ({ applicant }) => {
   const { user } = useApplicantUser();
   return (
     <Card className="my-4 shadow-sm">
-      <Card.Header as="h3" className="d-flex justify-content-between">
-        <div>
+      <Card.Header
+        as="h3"
+        className="d-flex justify-content-between align-items-center"
+      >
+        <div className="applicant-name">
           {applicant.name}{' '}
-          {applicant.isOpenToWork && <Badge bg="success">Open to Work</Badge>}
+          {applicant.isOpenToWork && (
+            <Badge className="open-to-work" bg="success">
+              Open to Work
+            </Badge>
+          )}
         </div>
         <CanAccess
           user={user}

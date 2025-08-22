@@ -1,0 +1,24 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+
+.applicant-name {
+  display: flex;
+
+  .open-to-work {
+    font-size: 16px;
+  }
+
+  @include media-breakpoint-up(md) {
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  @include media-breakpoint-down(md) {
+    flex-direction: column;
+    .open-to-work {
+      font-size: 14px;
+    }
+  }
+}
